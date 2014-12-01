@@ -12,8 +12,6 @@ local abs, floor, format = abs, floor, format
 local fontNumber = "Fonts\\DAMAGE.ttf"
 local fontGeneral = STANDARD_TEXT_FONT
 
-local tarTexPath = 'Interface\\TargetingFrame\\'
-
 --------------------------------------
 --COLOR LIB
 --------------------------------------
@@ -258,20 +256,14 @@ local function StyleTemplate(self, unit, isSingle)
 		self:Tag(focustargetHpPer, "[unit:health] [unit:name]")
 	end
 
-	-- Castbar
-	if (unit == 'player' or unit == 'target') then
-		ns.CreateCastbars(self, unit)
-	end
-
 	-- Raid Target Icon
 	if (unit == 'target') then
 		self.RaidIcon = self:CreateTexture(nil, 'OVERLAY')
-		self.RaidIcon:SetTexture(tarTexPath..'UI-RaidTargetingIcons')
+		self.RaidIcon:SetTexture('Interface\\TargetingFrame\\UI-RaidTargetingIcons')
 		self.RaidIcon:SetPoint("CENTER", UIParent, 196, 12)
 		self.RaidIcon:SetAlpha(0.6)
 		self.RaidIcon:SetSize(30, 30)
 	end
-
 end
 
 oUF:Factory(function(self)

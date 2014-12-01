@@ -4,10 +4,4 @@
 ## Notes: Text only oUF layout
 ## Dependencies: oUF
 
-config.lua
-castbar.lua
-
-func\castbar.lua
-func\func.lua
-
 core.lua
