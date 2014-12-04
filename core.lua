@@ -67,7 +67,10 @@ local greenColor = GetHSVColor({r=0,g=1,b=0})
 --------------------------------------
 
 local function GetHexColor(color)
-  return format("%02x%02x%02x", color.r*255, color.g*255, color.b*255)
+	r = r <= 1 and r >= 0 and r or 1
+	g = g <= 1 and g >= 0 and g or 1
+	b = b <= 1 and b >= 0 and b or 1
+	return format("%02x%02x%02x", color.r*255, color.g*255, color.b*255)
 end
 
 --------------------------------------
