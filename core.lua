@@ -202,7 +202,7 @@ oUF.Tags.Events["unit:shorthp"] = "UNIT_HEALTH"
 
 local function StyleTemplate(self, unit, isSingle)
 	self:SetSize(64,32)
-	self:RegisterForClicks("AnyUP")
+	self:RegisterForClicks("AnyUp")
 	self:SetScript("OnEnter", UnitFrame_OnEnter)
 	self:SetScript("OnLeave", UnitFrame_OnLeave)
 
