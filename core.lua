@@ -202,7 +202,7 @@ oUF.Tags.Events["unit:shorthp"] = "UNIT_HEALTH"
 
 local function StyleTemplate(self, unit, isSingle)
 	self:SetSize(64,32)
-	self:RegisterForClicks("AnyDOWN")
+	self:RegisterForClicks("AnyUP")
 	self:SetScript("OnEnter", UnitFrame_OnEnter)
 	self:SetScript("OnLeave", UnitFrame_OnLeave)
 
@@ -269,13 +269,18 @@ local function StyleTemplate(self, unit, isSingle)
 	end
 end
 
+--------------------------------------
+--SPAWN STYLE
+--------------------------------------
+
+oUF:RegisterStyle("Style", StyleTemplate)
 oUF:Factory(function(self)
-	oUF:RegisterStyle("Style", StyleTemplate)
-	oUF:SetActiveStyle("Style")
+	self:SetActiveStyle("Style")
+
 	local player = oUF:Spawn("player")
 	player:SetPoint("CENTER", UIParent, 130, -10)
 	local pet = oUF:Spawn("pet")
-	pet:SetPoint("CENTER", UIParent, 129, 6)
+	pet:SetPoint("CENTER", UIParent, 129, 5)
 	local target = oUF:Spawn("target")
 	target:SetPoint("CENTER", player, "BOTTOMRIGHT", 36, 10)
 	local targettarget = oUF:Spawn("targettarget")
