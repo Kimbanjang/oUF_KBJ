@@ -250,7 +250,7 @@ local function StyleTemplate(self, unit, isSingle)
 		self:Tag(focusHpPer, "[unit:health]")
 		local focusName = self:CreateFontString(nil, "OVERLAY")
 		focusName:SetPoint("CENTER", focusHpPer, "TOP", 0, 6)
-		focusName:SetFont(fontGeneral, 9, 'THINOUTLINE')
+		focusName:SetFont(fontGeneral, 10, 'THINOUTLINE')
 		self:Tag(focusName, "[unit:name]")
 	elseif (unit == 'focustarget') then
 		local focustargetHpPer = self:CreateFontString(nil, "OVERLAY")
