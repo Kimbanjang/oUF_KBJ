@@ -259,6 +259,17 @@ local function StyleTemplate(self, unit, isSingle)
 		self:Tag(focustargetHpPer, "[unit:health] [unit:name]")
 	end
 
+	-- Status icons --
+	if unit == "player" then
+		self.Resting = self:CreateTexture(nil, 'OVERLAY')
+		self.Resting:SetPoint("LEFT", self, "TOPLEFT", -5, -1)
+		self.Resting:SetSize(20, 18)
+
+		self.Combat = self:CreateTexture(nil, 'OVERLAY')
+		self.Combat:SetPoint("LEFT", self, "LEFT", -3, 1)
+		self.Combat:SetSize(15, 15)
+	end
+
 	-- Raid Target Icon
 	if (unit == 'target') then
 		self.RaidIcon = self:CreateTexture(nil, 'OVERLAY')
