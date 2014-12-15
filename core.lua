@@ -260,7 +260,7 @@ local function StyleTemplate(self, unit, isSingle)
 	end
 
 	-- Status icons --
-	if unit == "player" then
+	if (unit == 'player') then
 		self.Resting = self:CreateTexture(nil, 'OVERLAY')
 		self.Resting:SetPoint("LEFT", self, "TOPLEFT", -5, -1)
 		self.Resting:SetSize(20, 18)
