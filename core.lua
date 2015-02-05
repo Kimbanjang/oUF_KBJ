@@ -51,13 +51,6 @@ local function StyleTemplate(self, unit, isSingle)
 		targetName:SetPoint("LEFT", targetHpPer, "TOP", 40, -7)
 		targetName:SetFont(fontGeneral, 12, 'THINOUTLINE')
 		self:Tag(targetName, "[unit:level] [unit:name]")
-		-- Combo Points
-		if (playerClass == "ROGUE" or playerClass == "DRUID") then
-			local comboPoints = self:CreateFontString(nil, "OVERLAY")
-			comboPoints:SetFont(fontNumber, 16, 'THINOUTLINE')
-			comboPoints:SetPoint("CENTER", targetHpPer, "BOTTOMRIGHT", -1, 5)
-			self:Tag(comboPoints, "[cpoints]")
-		end
 	elseif (unit == 'targettarget') then
 		local targettargetStat = self:CreateFontString(nil, "OVERLAY")
 		targettargetStat:SetPoint("LEFT", self, "LEFT", 0, 0)
@@ -102,9 +95,17 @@ local function StyleTemplate(self, unit, isSingle)
 	-- Combo Point
 	if (unit == 'target') and (playerClass == "ROGUE" or playerClass == "DRUID") then
 		local comboPoints = self:CreateFontString(nil, "OVERLAY")
-		comboPoints:SetFont(fontNumber, 18, 'THINOUTLINE')
-		comboPoints:SetPoint("CENTER", targetHpPer, "TOPRIGHT", 231, -3)
-		self:Tag(comboPoints, "[cpoints]")
+		comboPoints:SetFont(fontNumber, 16, 'THINOUTLINE')
+		comboPoints:SetPoint("CENTER", UIParent, 130, -40)
+		self:Tag(comboPoints, "[unit:cpoints]")
+	end
+
+	-- Warlock Spec
+	if (unit == 'player') and (playerClass == "WARLOCK") then
+		local warLockSpec = self:CreateFontString(nil, "OVERLAY")
+		warLockSpec:SetFont(fontNumber, 14, 'THINOUTLINE')
+		warLockSpec:SetPoint("CENTER", UIParent, 130, -39)
+		self:Tag(warLockSpec, "[unit:warlockspec]")
 	end
 end
 

@@ -59,9 +59,6 @@ function GetSmudgeHSVColor(colorA,colorB,percentage)
 	return colorC
 end
 
-local redColor = GetHSVColor({r=1,g=0,b=0})
-local greenColor = GetHSVColor({r=0,g=1,b=0})
-
 -- GET RGB as HEX-Color
 local function GetHexColor(color)
 	r = r <= 1 and r >= 0 and r or 1
@@ -73,7 +70,6 @@ end
 -- GetPowerColor func
 local function GetPowerColor(unit)
 	if not unit then return end
-
 	local id, power, r, g, b = UnitPowerType(unit)
 	local color = PowerBarColor[power]
 	if color then
@@ -85,7 +81,6 @@ end
 -- GetLevelColor func
 local function GetLevelColor(unit)
 	if not unit then return end
-
 	local level = UnitLevel(unit)
 	return GetQuestDifficultyColor((level > 0) and level or 99)
 end
@@ -93,7 +88,6 @@ end
 -- GetUnitColor func
 local function GetUnitColor(unit)
 	if not unit then return end
-
 	local color
 	if UnitIsDeadOrGhost(unit) or not UnitIsConnected(unit) then
 		color = {r = 0.5, g = 0.5, b = 0.5}
@@ -107,15 +101,61 @@ local function GetUnitColor(unit)
 	return color
 end
 
+local redColor = GetHSVColor({r=1,g=0,b=0})
+local greenColor = GetHSVColor({r=0,g=1,b=0})
+local whiteColor = GetHSVColor({r=1,g=1,b=1})
+local comboPointColor = GetHSVColor({r=0.9,g=0.8,b=0})
+local warlockSpecColor = GetHSVColor({r=0.9,g=0,b=0.9})
+
 -- GetHealthColor func
 local function GetHealthColor(unit)
 	if not unit then return end
-
 	local hcur, hmax = UnitHealth(unit), UnitHealthMax(unit)
 	local hper = 0
 	if hmax > 0 then hper = hcur/hmax end
 	--you may need to swap red and green color
 	return GetRGBColor(GetSmudgeHSVColor(redColor,greenColor,hper))
+end
+
+-- GetCPointColor func
+local function GetCPointColor(unit)
+	if not unit then return end
+	local cpcur = oUF.Tags.Methods["cpoints"](unit)
+	if cpcur == null then cpcur = 0 end
+	local cpmax = MAX_COMBO_POINTS
+	local cpper = 0
+	if cpmax > 0 then cpper = cpcur/cpmax end
+	return GetRGBColor(GetSmudgeHSVColor(whiteColor,comboPointColor,cpper))
+end
+
+-- GetWarlockSSColor func
+local function GetWarlockSSColor(unit)
+	if not unit then return end
+	local wlsscur = UnitPower(unit, SPELL_POWER_SOUL_SHARDS)
+	local wlssmax = UnitPowerMax(unit, SPELL_POWER_SOUL_SHARDS)
+	local wlssper = 0
+	if wlssmax > 0 then wlssper = wlsscur/wlssmax end
+	return GetRGBColor(GetSmudgeHSVColor(whiteColor,warlockSpecColor,wlssper))
+end
+
+-- GetWarlockDFColor func
+local function GetWarlockDFColor(unit)
+	if not unit then return end
+	local wldfcur = UnitPower(unit, SPELL_POWER_DEMONIC_FURY)
+	local wldfmax = UnitPowerMax(unit, SPELL_POWER_DEMONIC_FURY)
+	local wldfper = 0
+	if wldfmax > 0 then wldfper = wldfcur/wldfmax end
+	return GetRGBColor(GetSmudgeHSVColor(whiteColor,warlockSpecColor,wldfper))
+end
+
+-- GetWarlockBEColor func
+local function GetWarlockBEColor(unit)
+	if not unit then return end
+	local wlbecur = UnitPower(unit, POWER_BURNING_EMBERS)
+	local wlbemax = UnitPowerMax(unit, POWER_BURNING_EMBERS)
+	local wlbeper = 0
+	if wlbemax > 0 then wlbeper = wlbecur/wlbemax end
+	return GetRGBColor(GetSmudgeHSVColor(whiteColor,warlockSpecColor,wlbeper))
 end
 
 
@@ -193,3 +233,51 @@ oUF.Tags.Methods["unit:shorthp"] = function(unit)
 	local color = "|cffff00ff"
 end
 oUF.Tags.Events["unit:shorthp"] = "UNIT_HEALTH"
+
+-- ComboPoints Tag
+oUF.Tags.Methods["unit:cpoints"] = function(unit)
+	local cPs = oUF.Tags.Methods["cpoints"](unit)
+	if cPs == null then cPs = "" end
+	local cpcolor = GetCPointColor(unit)
+	if cpcolor then
+		return "|cff"..GetHexColor(cpcolor)..cPs.."|r"
+	else
+		return "|cffffffff"..cPs.."|r"
+	end
+end
+oUF.Tags.Events["unit:cpoints"] = "UNIT_COMBO_POINTS PLAYER_TARGET_CHANGED"
+
+-- Warlock Spec Tag
+oUF.Tags.Methods['unit:warlockspec'] = function(unit)
+	local warlockSpec
+	if IsPlayerSpell(WARLOCK_METAMORPHOSIS) then warlockSpec = 2
+	elseif IsPlayerSpell(WARLOCK_BURNING_EMBERS) then warlockSpec = 3
+	else warlockSpec = 1 end
+
+	if warlockSpec == 2 then
+		local dfcolor = GetWarlockDFColor(unit)
+		local dfcur = UnitPower(unit, SPELL_POWER_DEMONIC_FURY)
+		if dfcolor then
+			if(dfcur >= 0) then return "|cff"..GetHexColor(dfcolor)..dfcur.."|r" end
+		else
+			if(dfcur >= 0) then return "|cffffffff"..dfcur.."|r" end
+		end
+	elseif warlockSpec == 3 then
+		local becolor = GetWarlockBEColor(unit)
+		local becur = UnitPower('player', SPELL_POWER_BURNING_EMBERS)
+		if becolor then
+			if(becur >= 0) then return "|cff"..GetHexColor(becolor)..becur.."|r" end
+		else
+			if(becur >= 0) then return "|cffffffff"..becur.."|r" end
+		end
+	else
+		local sscolor = GetWarlockSSColor(unit)
+		local sscur = UnitPower('player', SPELL_POWER_SOUL_SHARDS)
+		if sscolor then
+			if(sscur >= 0) then return "|cff"..GetHexColor(sscolor)..sscur.."|r" end
+		else
+			if(sscur >= 0) then return "|cffffffff"..sscur.."|r" end
+		end
+	end
+end
+oUF.Tags.Events["unit:warlockspec"] = "UNIT_POWER SPELLS_CHANGED"
