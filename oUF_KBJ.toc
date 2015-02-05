@@ -1,7 +1,9 @@
 ## Interface: 60000
 ## Title: oUF_KBJ
 ## Author: Kimbanjang
-## Notes: Text only oUF layout
+## Notes: oUF layout for Oldboy
 ## Dependencies: oUF
 
 core.lua
+
+Func\customTag.lua
