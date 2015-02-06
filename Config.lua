@@ -16,6 +16,10 @@ ns.cfg = {
 playerFramePotion_X = 130,
 playerFramePotion_Y = -10,
 
+-- Target's Debuff
+onlyShowMyDebuff = true,	-- true/false
+dontUsedCCTimer = false,	-- ture : dont used tullaCC, OmniCC / false : used tullaCC, OmniCC
+
 -- Focus Frame
 focusFramePotion_X = 367,
 focusFramePotion_Y = 100,

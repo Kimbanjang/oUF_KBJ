@@ -7,5 +7,6 @@
 Config.lua
 
 Func\CustomTag.lua
+Func\CustomTexture.lua
 
 Template\0Basic.lua

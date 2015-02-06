@@ -93,7 +93,7 @@ local function StyleTemplate(self, unit, isSingle)
 	end
 
 	-- Combo Point
-	if (unit == 'player') and (playerClass == "ROGUE" or playerClass == "DRUID") then
+	if (unit == 'player') and (playerClass == 'ROGUE' or playerClass == 'DRUID') then
 		local comboPoints = self:CreateFontString(nil, "OVERLAY")
 		comboPoints:SetFont(fontNumber, 18, 'THINOUTLINE')
 		comboPoints:SetPoint("CENTER", self, "BOTTOM", 0, -13)
@@ -106,6 +106,27 @@ local function StyleTemplate(self, unit, isSingle)
 		warlockResource:SetFont(fontNumber, 14, 'THINOUTLINE')
 		warlockResource:SetPoint("CENTER", self, "BOTTOM", 0, -12)
 		self:Tag(warlockResource, "[unit:warlockresource]")
+	end
+
+	-- Auras (for Target Debuff)
+	if (unit == "target") then
+		local Debuffs = CreateFrame('Frame', nil, self)
+		Debuffs:SetSize(150, 30)
+		Debuffs.PostCreateIcon = ns.PostCreateAura
+		Debuffs.PostUpdateIcon = ns.PostUpdateDebuff		
+		Debuffs:SetPoint('BOTTOMLEFT', self, 'BOTTOMRIGHT', 11, -25)
+		-- Debuffs.disableCooldown : Do not display the cooldown spiral
+		-- Debuffs.filter : custom filter list for debuffs to display
+		Debuffs.initialAnchor = 'BOTTOMLEFT'
+		Debuffs.num = 5
+		Debuffs.onlyShowPlayer = cfg.onlyShowMyDebuff
+		Debuffs.size = 26
+		Debuffs.spacing = 4
+		-- Debuffs['growth-x'] : horizontal growth direction (default is 'RIGHT')
+		Debuffs['growth-y'] = 'DOWN'
+		-- Debuffs['spacing-x'] : horizontal space between each debuff button (takes priority over Debuffs.spacing)
+		-- Debuffs['spacing-y'] : vertical space between each debuff button (takes priority over Debuffs.spacing)
+		self.Debuffs = Debuffs
 	end
 end
 
