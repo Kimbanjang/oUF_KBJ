@@ -1,9 +1,10 @@
 ## Interface: 60000
 ## Title: oUF_KBJ
 ## Author: Kimbanjang
-## Notes: oUF layout for Oldboy
+## Notes: oUF layout for Large Screen
 ## Dependencies: oUF
 
-core.lua
+Config.lua
+Style_Template.lua
 
-Func\customTag.lua
+Func\CustomTag.lua

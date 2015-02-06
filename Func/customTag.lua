@@ -104,7 +104,7 @@ end
 local redColor = GetHSVColor({r=1,g=0,b=0})
 local greenColor = GetHSVColor({r=0,g=1,b=0})
 local whiteColor = GetHSVColor({r=1,g=1,b=1})
-local comboPointColor = GetHSVColor({r=0.9,g=0.8,b=0})
+local comboPointColor = GetHSVColor({r=1,g=0.3,b=0.3})
 local warlockSpecColor = GetHSVColor({r=0.9,g=0,b=0.9})
 
 -- GetHealthColor func
@@ -247,8 +247,8 @@ oUF.Tags.Methods["unit:cpoints"] = function(unit)
 end
 oUF.Tags.Events["unit:cpoints"] = "UNIT_COMBO_POINTS PLAYER_TARGET_CHANGED"
 
--- Warlock Spec Tag
-oUF.Tags.Methods['unit:warlockspec'] = function(unit)
+-- Warlock Resource Tag
+oUF.Tags.Methods['unit:warlockresource'] = function(unit)
 	local warlockSpec
 	if IsPlayerSpell(WARLOCK_METAMORPHOSIS) then warlockSpec = 2
 	elseif IsPlayerSpell(WARLOCK_BURNING_EMBERS) then warlockSpec = 3
@@ -280,4 +280,4 @@ oUF.Tags.Methods['unit:warlockspec'] = function(unit)
 		end
 	end
 end
-oUF.Tags.Events["unit:warlockspec"] = "UNIT_POWER SPELLS_CHANGED"
+oUF.Tags.Events["unit:warlockresource"] = "UNIT_POWER SPELLS_CHANGED"
