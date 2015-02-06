@@ -1,4 +1,4 @@
--- base source : http://www.wowinterface.com/downloads/info22575-oUF_Ascii.html by zork
+-- base source : http://www.wowinterface.com/downloads/info22575-oUF_Ascii.html by Zork
 
 --------------------------------------
 -- VARIABLES

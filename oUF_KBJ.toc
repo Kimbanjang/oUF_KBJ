@@ -5,6 +5,7 @@
 ## Dependencies: oUF
 
 Config.lua
-Style_Template.lua
 
 Func\CustomTag.lua
+
+Template\0Basic.lua
