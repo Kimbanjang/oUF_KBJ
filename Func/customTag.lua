@@ -105,7 +105,8 @@ local redColor = GetHSVColor({r=1,g=0,b=0})
 local greenColor = GetHSVColor({r=0,g=1,b=0})
 local whiteColor = GetHSVColor({r=1,g=1,b=1})
 local comboPointColor = GetHSVColor({r=1,g=0.3,b=0.3})
-local warlockSpecColor = GetHSVColor({r=0.9,g=0,b=0.9})
+local warlockSpecColor = GetHSVColor({r=0.9,g=0.37,b=0.37})
+local chiColor = GetHSVColor({r=0.52,g=1,b=0.52})
 
 -- GetHealthColor func
 local function GetHealthColor(unit)
@@ -158,6 +159,16 @@ local function GetWarlockBEColor(unit)
 	return GetRGBColor(GetSmudgeHSVColor(whiteColor,warlockSpecColor,wlbeper))
 end
 
+-- GetMonkChiColor func
+local function GetMonkChiColor(unit)
+	if not unit then return end
+	local chicur = oUF.Tags.Methods["chi"](unit)
+	if chicur == null then chicur = 0 end
+	local chimax = UnitPowerMax('player', SPELL_POWER_CHI)
+	local chiper = 0
+	if chimax > 0 then chiper = chicur/chimax end
+	return GetRGBColor(GetSmudgeHSVColor(whiteColor,chiColor,chiper))
+end
 
 --------------------------------------
 -- Custom Tag
@@ -281,3 +292,16 @@ oUF.Tags.Methods['unit:warlockresource'] = function(unit)
 	end
 end
 oUF.Tags.Events["unit:warlockresource"] = "UNIT_POWER SPELLS_CHANGED"
+
+-- Monk Chi Tag
+oUF.Tags.Methods["unit:monkchi"] = function(unit)
+	local mChi = oUF.Tags.Methods["chi"](unit)
+	if mChi == null then mChi = "" end
+	local mChiColor = GetMonkChiColor(unit)
+	if mChiColor then
+		return "|cff"..GetHexColor(mChiColor)..mChi.."|r"
+	else
+		return "|cffffffff"..mChi.."|r"
+	end
+end
+oUF.Tags.Events["unit:monkchi"] = "UNIT_POWER"

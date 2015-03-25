@@ -108,6 +108,14 @@ local function StyleTemplate(self, unit, isSingle)
 		self:Tag(warlockResource, "[unit:warlockresource]")
 	end
 
+	-- Monk Chi
+	if (unit == 'player') and (playerClass == "MONK") then
+		local monkChi = self:CreateFontString(nil, "OVERLAY")
+		monkChi:SetFont(fontNumber, 18, 'THINOUTLINE')
+		monkChi:SetPoint("CENTER", self, "BOTTOM", 0, -13)
+		self:Tag(monkChi, "[unit:monkchi]")
+	end
+
 	-- Auras (for Target Debuff)
 	if (unit == "target") then
 		local Debuffs = CreateFrame('Frame', nil, self)
