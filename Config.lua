@@ -24,6 +24,10 @@ dontUsedCCTimer = false,	-- ture : dont used tullaCC, OmniCC / false : used tull
 focusFramePotion_X = 367,
 focusFramePotion_Y = 100,
 
+-- Party/PartyPet/PartyTarget Frame
+PartyFramePotion_X = 265,
+PartyFramePotion_Y = -80,
+
 --[[ not ready
 -- Arena Frame
 -- Boss Frame

@@ -51,7 +51,12 @@ local function StyleTemplate(self, unit, isSingle)
 		local targetName = self:CreateFontString(nil, "OVERLAY")
 		targetName:SetPoint("LEFT", targetHpPer, "TOP", 40, -7)
 		targetName:SetFont(fontGeneral, 12, 'THINOUTLINE')
-		self:Tag(targetName, "[unit:level] [unit:name]")
+
+		if (UnitLevel(unit) > 99) then
+			self:Tag(targetName, "[unit:name]")
+		else
+			self:Tag(targetName, "[unit:level] [unit:name]")
+		end
 	elseif (unit == 'targettarget') then
 		local targettargetStat = self:CreateFontString(nil, "OVERLAY")
 		targettargetStat:SetPoint("LEFT", self, "LEFT", 0, 0)
@@ -71,6 +76,19 @@ local function StyleTemplate(self, unit, isSingle)
 		focustargetHpPer:SetPoint("LEFT", self, "LEFT", 0, 0)
 		focustargetHpPer:SetFont(fontGeneral, 10, 'THINOUTLINE')
 		self:Tag(focustargetHpPer, "[unit:health] [unit:name]")
+	elseif (unit == 'party') then
+		local partyHpPer = self:CreateFontString(nil, "OVERLAY")
+		partyHpPer:SetPoint("CENTER", self, "CENTER", 0, 0)
+		partyHpPer:SetFont(fontNumber, 18, 'THINOUTLINE')
+		self:Tag(partyHpPer, "[unit:health]")
+		local partyPpPer = self:CreateFontString(nil, "OVERLAY")
+		partyPpPer:SetPoint("CENTER", partyHpPer, "BOTTOM", 0, -4)
+		partyPpPer:SetFont(fontNumber, 10, 'THINOUTLINE')
+		self:Tag(partyPpPer, "[unit:power]")
+		local partyName = self:CreateFontString(nil, "OVERLAY")
+		partyName:SetPoint("LEFT", partyHpPer, "TOP", 25, -7)
+		partyName:SetFont(fontGeneral, 12, 'THINOUTLINE')
+		self:Tag(partyName, "[unit:level] [unit:name]")
 	end
 
 	-- Status icons --
@@ -158,4 +176,15 @@ oUF:Factory(function(self)
 	focus:SetPoint("CENTER", UIParent, cfg.focusFramePotion_X, cfg.focusFramePotion_Y)
 	local focustarget = oUF:Spawn("focustarget")
 	focustarget:SetPoint("CENTER", focus, "RIGHT", 25, 2)
+
+        --local party = oUF:SpawnHeader('party', nil, (config.units.party.hideInRaid and 'party') or 'party,raid',
+
+	local party = self:SpawnHeader(nil, nil, 'raid,party,solo',
+		'showParty', true,
+		'showPlayer', true,
+		'showSolo', true,
+		'yOffset', -20
+	)
+	party:SetPoint("CENTER", UIParent, cfg.PartyFramePotion_X, cfg.PartyFramePotion_Y)
+
 end)
