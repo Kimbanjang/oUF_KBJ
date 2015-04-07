@@ -30,7 +30,7 @@ PartyFramePotion_Y = -75,
 
 --[[ not ready
 -- Arena Frame
--- Boss Frame
+-- Raid Frame
 
 -- Player Castbar
 playerCastbar = true,		-- true/false
