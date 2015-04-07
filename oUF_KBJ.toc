@@ -4,9 +4,8 @@
 ## Notes: oUF layout for Large Screen
 ## Dependencies: oUF
 
-Config.lua
-
 Func\CustomTag.lua
 Func\CustomTexture.lua
 
-Template\0Basic.lua
+Config.lua
+StyleTemplate.lua
