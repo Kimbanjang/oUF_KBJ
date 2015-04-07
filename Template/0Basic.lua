@@ -30,7 +30,7 @@ local function StyleTemplate(self, unit, isSingle)
 		playerPpPer:SetPoint("CENTER", playerHpPer, "BOTTOM", 0, -4)
 		playerPpPer:SetFont(fontNumber, 10, 'THINOUTLINE')
 		self:Tag(playerPpPer, "[unit:power]")
-	elseif (unit == 'pet') then
+	elseif (unit == 'pet' or unit == 'partypet') then
 		local petHpPer = self:CreateFontString(nil, "OVERLAY")
 		petHpPer:SetPoint("CENTER", self, "CENTER", 0, 0)
 		petHpPer:SetFont(fontGeneral, 10, 'THINOUTLINE')
@@ -51,13 +51,8 @@ local function StyleTemplate(self, unit, isSingle)
 		local targetName = self:CreateFontString(nil, "OVERLAY")
 		targetName:SetPoint("LEFT", targetHpPer, "TOP", 40, -7)
 		targetName:SetFont(fontGeneral, 12, 'THINOUTLINE')
-
-		if (UnitLevel(unit) > 99) then
-			self:Tag(targetName, "[unit:name]")
-		else
-			self:Tag(targetName, "[unit:level] [unit:name]")
-		end
-	elseif (unit == 'targettarget') then
+		self:Tag(targetName, "[unit:level] [unit:name]")
+	elseif (unit == 'targettarget' or unit == 'focustarget' or unit == 'partytarget') then
 		local targettargetStat = self:CreateFontString(nil, "OVERLAY")
 		targettargetStat:SetPoint("LEFT", self, "LEFT", 0, 0)
 		targettargetStat:SetFont(fontGeneral, 12, 'THINOUTLINE')
@@ -65,17 +60,12 @@ local function StyleTemplate(self, unit, isSingle)
 	elseif (unit == 'focus') then
 		local focusHpPer = self:CreateFontString(nil, "OVERLAY")
 		focusHpPer:SetPoint("CENTER", self, "CENTER", 0, 0)
-		focusHpPer:SetFont(fontNumber, 20, 'THINOUTLINE')
+		focusHpPer:SetFont(fontNumber, 18, 'THINOUTLINE')
 		self:Tag(focusHpPer, "[unit:health]")
 		local focusName = self:CreateFontString(nil, "OVERLAY")
 		focusName:SetPoint("CENTER", focusHpPer, "TOP", 0, 6)
 		focusName:SetFont(fontGeneral, 10, 'THINOUTLINE')
 		self:Tag(focusName, "[unit:name]")
-	elseif (unit == 'focustarget') then
-		local focustargetHpPer = self:CreateFontString(nil, "OVERLAY")
-		focustargetHpPer:SetPoint("LEFT", self, "LEFT", 0, 0)
-		focustargetHpPer:SetFont(fontGeneral, 10, 'THINOUTLINE')
-		self:Tag(focustargetHpPer, "[unit:health] [unit:name]")
 	elseif (unit == 'party') then
 		local partyHpPer = self:CreateFontString(nil, "OVERLAY")
 		partyHpPer:SetPoint("CENTER", self, "CENTER", 0, 0)
@@ -86,12 +76,12 @@ local function StyleTemplate(self, unit, isSingle)
 		partyPpPer:SetFont(fontNumber, 10, 'THINOUTLINE')
 		self:Tag(partyPpPer, "[unit:power]")
 		local partyName = self:CreateFontString(nil, "OVERLAY")
-		partyName:SetPoint("LEFT", partyHpPer, "TOP", 25, -7)
-		partyName:SetFont(fontGeneral, 12, 'THINOUTLINE')
-		self:Tag(partyName, "[unit:level] [unit:name]")
+		partyName:SetPoint("CENTER", partyHpPer, "TOP", 0, 7)
+		partyName:SetFont(fontGeneral, 10, 'THINOUTLINE')
+		self:Tag(partyName, "[unit:name]")
 	end
 
-	-- Status icons --
+	-- Status Icons --
 	if (unit == 'player') then
 		self.Resting = self:CreateTexture(nil, 'OVERLAY')
 		self.Resting:SetPoint("LEFT", self, "TOPLEFT", -5, -1)
@@ -102,12 +92,16 @@ local function StyleTemplate(self, unit, isSingle)
 	end
 
 	-- Raid Target Icon
+	self.RaidIcon = self:CreateTexture(nil, 'OVERLAY')
+	self.RaidIcon:SetTexture('Interface\\TargetingFrame\\UI-RaidTargetingIcons')
 	if (unit == 'target') then
-		self.RaidIcon = self:CreateTexture(nil, 'OVERLAY')
-		self.RaidIcon:SetTexture('Interface\\TargetingFrame\\UI-RaidTargetingIcons')
 		self.RaidIcon:SetPoint("CENTER", self, "TOP", 0, 12)
 		self.RaidIcon:SetAlpha(0.6)
 		self.RaidIcon:SetSize(30, 30)
+	elseif (unit == 'party') then
+		self.RaidIcon:SetPoint("CENTER", self, "TOP", 0, 5)
+		self.RaidIcon:SetAlpha(0.6)
+		self.RaidIcon:SetSize(20, 20)
 	end
 
 	-- Combo Point
@@ -178,13 +172,31 @@ oUF:Factory(function(self)
 	focustarget:SetPoint("CENTER", focus, "RIGHT", 25, 2)
 
         --local party = oUF:SpawnHeader('party', nil, (config.units.party.hideInRaid and 'party') or 'party,raid',
-
 	local party = self:SpawnHeader(nil, nil, 'raid,party,solo',
 		'showParty', true,
 		'showPlayer', true,
-		'showSolo', true,
-		'yOffset', -20
+		'showSolo', true, -- debug
+		'yOffset', -15
 	)
-	party:SetPoint("CENTER", UIParent, cfg.PartyFramePotion_X, cfg.PartyFramePotion_Y)
-
+	party:SetPoint("TOP", UIParent, "CENTER", cfg.PartyFramePotion_X, cfg.PartyFramePotion_Y)
+	local pets = oUF:SpawnHeader(nil, nil, 'raid,party,solo',
+		'showParty', true,
+		'showPlayer', true,
+		'showSolo', true, -- debug
+		'yOffset', -15,
+		'oUF-initialConfigFunction', ([[
+			self:SetAttribute('unitsuffix', 'pet')
+		]])
+	)
+	pets:SetPoint("CENTER", party, "LEFT", 0, -2)
+	local partytargets = oUF:SpawnHeader(nil, nil, 'raid,party,solo',
+		'showParty', true,
+		'showPlayer', true,
+		'showSolo', true, -- debug
+		'yOffset', -15,
+		'oUF-initialConfigFunction', ([[
+			self:SetAttribute('unitsuffix', 'target')
+		]])
+	)
+	partytargets:SetPoint("CENTER", party, "RIGHT", 25, 2)
 end)
