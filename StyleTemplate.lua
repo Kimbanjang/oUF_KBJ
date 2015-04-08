@@ -215,7 +215,7 @@ oUF:Factory(function(self)
 			self:SetAttribute('unitsuffix', 'pet')
 		]])
 	)
-	pets:SetPoint("CENTER", party, "LEFT", -18, 0)
+	pets:SetPoint("CENTER", party, "LEFT", -18, 1)
 	local partytargets = oUF:SpawnHeader(nil, nil, 'raid,party', -- raid,party,solo for debug
 		'showParty', true,
 		-- 'showPlayer', true, 'showSolo', true, -- debug

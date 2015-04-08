@@ -25,7 +25,7 @@ focusFramePotion_X = 367,
 focusFramePotion_Y = 100,
 
 -- Party/PartyPet/PartyTarget Frame
-PartyFramePotion_X = 262,
+PartyFramePotion_X = 280,
 PartyFramePotion_Y = -75,
 
 --[[ not ready
