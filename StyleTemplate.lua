@@ -15,6 +15,8 @@ local playerClass = select(2, UnitClass("player"))
 --------------------------------------
 
 local function StyleTemplate(self, unit, isSingle)
+	unit = unit:match('(boss)%d?$') or unit:match('(arena)%d?$') or unit
+
 	self:SetSize(64,32)
 	self:RegisterForClicks("AnyUp")
 	self:SetScript("OnEnter", UnitFrame_OnEnter)
@@ -79,33 +81,62 @@ local function StyleTemplate(self, unit, isSingle)
 		partyName:SetPoint("CENTER", partyHpPer, "TOP", 0, 7)
 		partyName:SetFont(fontGeneral, 10, 'THINOUTLINE')
 		self:Tag(partyName, "[unit:name]")
+	elseif (unit == 'arena') then
+		local arenaHpPer = self:CreateFontString(nil, "OVERLAY")
+		arenaHpPer:SetPoint("CENTER", self, "CENTER", 0, 0)
+		arenaHpPer:SetFont(fontNumber, 32, 'THINOUTLINE')
+		self:Tag(arenaHpPer, "[unit:health]")
+		local arenaHpCur = self:CreateFontString(nil, "OVERLAY")
+		arenaHpCur:SetPoint("CENTER", arenaHpPer, "TOP", 0, 5)
+		arenaHpCur:SetFont(fontGeneral, 10, 'THINOUTLINE')
+		self:Tag(arenaHpCur, "[unit:shorthp]")
+		local arenaPpPer = self:CreateFontString(nil, "OVERLAY")
+		arenaPpPer:SetPoint("CENTER", arenaHpPer, "BOTTOM", 1, -8)
+		arenaPpPer:SetFont(fontNumber, 20, 'THINOUTLINE')
+		self:Tag(arenaPpPer, "[unit:power]")
+		local arenaName = self:CreateFontString(nil, "OVERLAY")
+		arenaName:SetPoint("LEFT", arenaHpPer, "TOP", 40, -7)
+		arenaName:SetFont(fontGeneral, 12, 'THINOUTLINE')
+		self:Tag(arenaName, "[unit:name]")		
 	end
 
-	-- Status Icons --
-	if (unit == 'player') then
-		self.Resting = self:CreateTexture(nil, 'OVERLAY')
+	-- Status Icons
+	self.Leader = self:CreateTexture(nil, "OVERLAY")
+	if (unit == 'player') then		
+		self.Leader:SetPoint("LEFT", self, "LEFT", 8, 14)
+		self.Leader:SetSize(12, 12)
+		self.Resting = self:CreateTexture(nil, "OVERLAY")
 		self.Resting:SetPoint("LEFT", self, "TOPLEFT", -5, -1)
 		self.Resting:SetSize(20, 18)
-		self.Combat = self:CreateTexture(nil, 'OVERLAY')
+		self.Combat = self:CreateTexture(nil, "OVERLAY")
 		self.Combat:SetPoint("LEFT", self, "LEFT", -3, 1)
 		self.Combat:SetSize(15, 15)
+	elseif (unit == 'party') then
+		self.Leader:SetPoint("CENTER", self, "LEFT", 1, -13)
+		self.Leader:SetSize(12, 12)
 	end
 
 	-- Raid Target Icon
 	self.RaidIcon = self:CreateTexture(nil, 'OVERLAY')
-	self.RaidIcon:SetTexture('Interface\\TargetingFrame\\UI-RaidTargetingIcons')
 	if (unit == 'target') then
 		self.RaidIcon:SetPoint("CENTER", self, "TOP", 0, 12)
 		self.RaidIcon:SetAlpha(0.6)
 		self.RaidIcon:SetSize(30, 30)
 	elseif (unit == 'party') then
-		self.RaidIcon:SetPoint("CENTER", self, "TOP", 0, 5)
+		self.RaidIcon:SetPoint("CENTER", self, "TOP", 0, 0)
 		self.RaidIcon:SetAlpha(0.6)
 		self.RaidIcon:SetSize(20, 20)
 	end
 
+	-- Role icons
+	if (unit == "party") then
+		self.LFDRole = self:CreateTexture(nil, "OVERLAY")
+		self.LFDRole:SetPoint("CENTER", self, "LEFT", 1, 0)
+		self.LFDRole:SetSize(14, 14)
+	end
+
 	-- Combo Point
-	if (unit == 'player') and (playerClass == 'ROGUE' or playerClass == 'DRUID') then
+	if (unit == 'player') and (playerClass == "ROGUE" or playerClass == "DRUID") then
 		local comboPoints = self:CreateFontString(nil, "OVERLAY")
 		comboPoints:SetFont(fontNumber, 18, 'THINOUTLINE')
 		comboPoints:SetPoint("CENTER", self, "BOTTOM", 0, -13)
@@ -129,7 +160,7 @@ local function StyleTemplate(self, unit, isSingle)
 	end
 
 	-- Auras (for Target Debuff)
-	if (unit == "target") then
+	if (unit == 'target') then
 		local Debuffs = CreateFrame('Frame', nil, self)
 		Debuffs:SetSize(150, 30)
 		Debuffs.PostCreateIcon = ns.PostCreateAura
@@ -161,7 +192,7 @@ oUF:Factory(function(self)
 	local player = oUF:Spawn("player")
 	player:SetPoint("CENTER", UIParent, cfg.playerFramePotion_X, cfg.playerFramePotion_Y)
 	local pet = oUF:Spawn("pet")
-	pet:SetPoint("CENTER", player, "TOP", -1, -1)
+	pet:SetPoint("CENTER", player, "TOP", -1, -2)
 	local target = oUF:Spawn("target")
 	target:SetPoint("CENTER", player, "BOTTOMRIGHT", 36, 10)
 	local targettarget = oUF:Spawn("targettarget")
@@ -170,29 +201,24 @@ oUF:Factory(function(self)
 	focus:SetPoint("CENTER", UIParent, cfg.focusFramePotion_X, cfg.focusFramePotion_Y)
 	local focustarget = oUF:Spawn("focustarget")
 	focustarget:SetPoint("CENTER", focus, "RIGHT", 25, 2)
-
-        --local party = oUF:SpawnHeader('party', nil, (config.units.party.hideInRaid and 'party') or 'party,raid',
-	local party = self:SpawnHeader(nil, nil, 'raid,party,solo',
+	local party = self:SpawnHeader(nil, nil, 'raid,party', -- raid,party,solo for debug
 		'showParty', true,
-		'showPlayer', true,
-		'showSolo', true, -- debug
+		-- 'showPlayer', true, 'showSolo', true, -- debug
 		'yOffset', -15
 	)
 	party:SetPoint("TOP", UIParent, "CENTER", cfg.PartyFramePotion_X, cfg.PartyFramePotion_Y)
-	local pets = oUF:SpawnHeader(nil, nil, 'raid,party,solo',
+	local pets = oUF:SpawnHeader(nil, nil, 'raid,party', -- raid,party,solo for debug
 		'showParty', true,
-		'showPlayer', true,
-		'showSolo', true, -- debug
+		-- 'showPlayer', true, 'showSolo', true, -- debug
 		'yOffset', -15,
 		'oUF-initialConfigFunction', ([[
 			self:SetAttribute('unitsuffix', 'pet')
 		]])
 	)
-	pets:SetPoint("CENTER", party, "LEFT", 0, -2)
-	local partytargets = oUF:SpawnHeader(nil, nil, 'raid,party,solo',
+	pets:SetPoint("CENTER", party, "LEFT", -18, 0)
+	local partytargets = oUF:SpawnHeader(nil, nil, 'raid,party', -- raid,party,solo for debug
 		'showParty', true,
-		'showPlayer', true,
-		'showSolo', true, -- debug
+		-- 'showPlayer', true, 'showSolo', true, -- debug
 		'yOffset', -15,
 		'oUF-initialConfigFunction', ([[
 			self:SetAttribute('unitsuffix', 'target')

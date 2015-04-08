@@ -211,6 +211,16 @@ oUF.Tags.Methods["unit:level"] = function(unit)
 end
 oUF.Tags.Events["unit:level"] = "UNIT_NAME_UPDATE UNIT_CONNECTION"
 
+-- Å×½ºÆ®
+-- Unit Specialization Tag
+oUF.Tags.Methods["unit:spec"] = function(unit)
+	local spec = GetSpecialization()
+	local specclass = GetSpecializationInfoByID(s)
+
+	return specclass
+end
+oUF.Tags.Events["unit:spec"] = "UNIT_NAME_UPDATE UNIT_CONNECTION"
+
 -- Unit Health Tag 
 oUF.Tags.Methods["unit:health"] = function(unit)
 	local perhp = oUF.Tags.Methods["perhp"](unit)
