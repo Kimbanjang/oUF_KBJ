@@ -36,7 +36,7 @@ local function StyleTemplate(self, unit, isSingle)
 		local petHpPer = self:CreateFontString(nil, "OVERLAY")
 		petHpPer:SetPoint("CENTER", self, "CENTER", 0, 0)
 		petHpPer:SetFont(fontGeneral, 10, 'THINOUTLINE')
-		self:Tag(petHpPer, "[unit:health]")
+		self:Tag(petHpPer, "P:[unit:health]")
 	elseif (unit == 'target') then
 		local targetHpPer = self:CreateFontString(nil, "OVERLAY")
 		targetHpPer:SetPoint("CENTER", self, "CENTER", 0, 0)
@@ -54,7 +54,7 @@ local function StyleTemplate(self, unit, isSingle)
 		targetName:SetPoint("LEFT", targetHpPer, "TOP", 40, -7)
 		targetName:SetFont(fontGeneral, 12, 'THINOUTLINE')
 		self:Tag(targetName, "[unit:level] [unit:name]")
-	elseif (unit == 'targettarget' or unit == 'focustarget' or unit == 'partytarget') then
+	elseif (unit == 'targettarget' or unit == 'focustarget' or unit == 'partytarget' or unit == 'arenatarget') then
 		local targettargetStat = self:CreateFontString(nil, "OVERLAY")
 		targettargetStat:SetPoint("LEFT", self, "LEFT", 0, 0)
 		targettargetStat:SetFont(fontGeneral, 12, 'THINOUTLINE')
@@ -81,23 +81,49 @@ local function StyleTemplate(self, unit, isSingle)
 		partyName:SetPoint("CENTER", partyHpPer, "TOP", 0, 7)
 		partyName:SetFont(fontGeneral, 10, 'THINOUTLINE')
 		self:Tag(partyName, "[unit:name]")
+
+		local t = CreateFrame('Frame', nil, self)
+		t:SetSize(32, 32)
+		t:SetPoint('TOPRIGHT', self, 'LEFT', -10, 17)
+		t.framebd = framebd(t, t)
+		self.Trinket = t		
+		local at = CreateFrame('Frame', nil, self)
+		at:SetAllPoints(t)
+		at:SetFrameStrata('HIGH')
+		at.icon = at:CreateTexture(nil, 'ARTWORK')
+		at.icon:SetAllPoints(at)
+		at.icon:SetTexCoord(0.07,0.93,0.07,0.93)  
+		self.AuraTracker = at
 	elseif (unit == 'arena') then
 		local arenaHpPer = self:CreateFontString(nil, "OVERLAY")
 		arenaHpPer:SetPoint("CENTER", self, "CENTER", 0, 0)
-		arenaHpPer:SetFont(fontNumber, 32, 'THINOUTLINE')
-		self:Tag(arenaHpPer, "[unit:health]")
+		arenaHpPer:SetFont(fontNumber, 28, 'THINOUTLINE')
+		self:Tag(arenaHpPer, "[unit:arenahealth]")
 		local arenaHpCur = self:CreateFontString(nil, "OVERLAY")
-		arenaHpCur:SetPoint("CENTER", arenaHpPer, "TOP", 0, 5)
+		arenaHpCur:SetPoint("CENTER", arenaHpPer, "TOP", 0, 6)
 		arenaHpCur:SetFont(fontGeneral, 10, 'THINOUTLINE')
-		self:Tag(arenaHpCur, "[unit:shorthp]")
+		self:Tag(arenaHpCur, "[unit:arenahp]")
 		local arenaPpPer = self:CreateFontString(nil, "OVERLAY")
-		arenaPpPer:SetPoint("CENTER", arenaHpPer, "BOTTOM", 1, -8)
-		arenaPpPer:SetFont(fontNumber, 20, 'THINOUTLINE')
+		arenaPpPer:SetPoint("CENTER", arenaHpPer, "BOTTOM", 1, -4)
+		arenaPpPer:SetFont(fontNumber, 16, 'THINOUTLINE')
 		self:Tag(arenaPpPer, "[unit:power]")
 		local arenaName = self:CreateFontString(nil, "OVERLAY")
-		arenaName:SetPoint("LEFT", arenaHpPer, "TOP", 40, -7)
-		arenaName:SetFont(fontGeneral, 12, 'THINOUTLINE')
-		self:Tag(arenaName, "[unit:name]")		
+		arenaName:SetPoint("RIGHT", arenaHpCur, "LEFT", -5, 0)
+		arenaName:SetFont(fontGeneral, 10, 'THINOUTLINE')
+		self:Tag(arenaName, "[unit:name]")
+
+		local t = CreateFrame('Frame', nil, self)
+		t:SetSize(32, 32)
+		t:SetPoint('TOPRIGHT', self, 'LEFT', -5, 11)
+		t.framebd = framebd(t, t)
+		self.Trinket = t		
+		local at = CreateFrame('Frame', nil, self)
+		at:SetAllPoints(t)
+		at:SetFrameStrata('HIGH')
+		at.icon = at:CreateTexture(nil, 'ARTWORK')
+		at.icon:SetAllPoints(at)
+		at.icon:SetTexCoord(0.07,0.93,0.07,0.93)  
+		self.AuraTracker = at
 	end
 
 	-- Status Icons
@@ -190,7 +216,7 @@ oUF:RegisterStyle("Style", StyleTemplate)
 oUF:Factory(function(self)
 	self:SetActiveStyle("Style")
 	local player = oUF:Spawn("player")
-	player:SetPoint("CENTER", UIParent, cfg.playerFramePotion_X, cfg.playerFramePotion_Y)
+	player:SetPoint("CENTER", UIParent, cfg.playerFramePosition_X, cfg.playerFramePosition_Y)
 	local pet = oUF:Spawn("pet")
 	pet:SetPoint("CENTER", player, "TOP", -1, -2)
 	local target = oUF:Spawn("target")
@@ -198,31 +224,189 @@ oUF:Factory(function(self)
 	local targettarget = oUF:Spawn("targettarget")
 	targettarget:SetPoint("CENTER", target, "BOTTOMRIGHT", 40, 13)
 	local focus = oUF:Spawn("focus")
-	focus:SetPoint("CENTER", UIParent, cfg.focusFramePotion_X, cfg.focusFramePotion_Y)
+	focus:SetPoint("CENTER", UIParent, cfg.focusFramePosition_X, cfg.focusFramePosition_Y)
 	local focustarget = oUF:Spawn("focustarget")
 	focustarget:SetPoint("CENTER", focus, "RIGHT", 25, 2)
-	local party = self:SpawnHeader(nil, nil, 'raid,party', -- raid,party,solo for debug
+
+	local party = self:SpawnHeader(nil, nil, 'raid,party,solo', -- raid,party,solo for debug
 		'showParty', true,
-		-- 'showPlayer', true, 'showSolo', true, -- debug
-		'yOffset', -15
+		'showPlayer', true, 'showSolo', true, -- debug
+		'yOffset', -30
 	)
-	party:SetPoint("TOP", UIParent, "CENTER", cfg.PartyFramePotion_X, cfg.PartyFramePotion_Y)
-	local pets = oUF:SpawnHeader(nil, nil, 'raid,party', -- raid,party,solo for debug
+	party:SetPoint("TOP", UIParent, "CENTER", cfg.partyFramePosition_X, cfg.partyFramePosition_Y)
+	local pets = oUF:SpawnHeader(nil, nil, 'raid,party,solo', -- raid,party,solo for debug
 		'showParty', true,
-		-- 'showPlayer', true, 'showSolo', true, -- debug
-		'yOffset', -15,
+		'showPlayer', true, 'showSolo', true, -- debug
+		'yOffset', -30,
 		'oUF-initialConfigFunction', ([[
 			self:SetAttribute('unitsuffix', 'pet')
 		]])
 	)
-	pets:SetPoint("CENTER", party, "LEFT", -18, 1)
-	local partytargets = oUF:SpawnHeader(nil, nil, 'raid,party', -- raid,party,solo for debug
+	pets:SetPoint("BOTTOM", party, "BOTTOM", 0, -24)
+	local partytargets = oUF:SpawnHeader(nil, nil, 'raid,party,solo', -- raid,party,solo for debug
 		'showParty', true,
-		-- 'showPlayer', true, 'showSolo', true, -- debug
-		'yOffset', -15,
+		'showPlayer', true, 'showSolo', true, -- debug
+		'yOffset', -30,
 		'oUF-initialConfigFunction', ([[
 			self:SetAttribute('unitsuffix', 'target')
 		]])
 	)
 	partytargets:SetPoint("CENTER", party, "RIGHT", 25, 2)
+
+	local arena = {}
+	for i = 1, 5 do
+		arena[i] = oUF:Spawn("arena"..i, "oUF_Arena"..i)
+		if i == 1 then
+			arena[i]:SetPoint("CENTER", UIParent, cfg.arenaFramePosition_X, cfg.arenaFramePosition_Y)
+		else
+			arena[i]:SetPoint("TOP", arena[i-1], "BOTTOM", 0, -30)
+		end
+	end
+	
+	local arenatarget = {}
+	for i = 1, 5 do
+		arenatarget[i] = oUF:Spawn("arenatarget"..i, "oUF_Arena"..i.."target")
+		if i == 1 then
+			arenatarget[i]:SetPoint('TOPLEFT', arena[i], 'TOPRIGHT', 5, 0)
+		else
+			arenatarget[i]:SetPoint('TOP', arenatarget[i-1], 'BOTTOM', 0, -27)
+		end
+	end
+
+
+--[[
+	local arenaprep = {}
+	for i = 1, 5 do
+		arenaprep[i] = CreateFrame('Frame', 'oUF_ArenaPrep'..i, UIParent)
+		arenaprep[i]:SetAllPoints(_G['oUF_Arena'..i])
+		arenaprep[i]:SetFrameStrata('BACKGROUND')
+		arenaprep[i].framebd = framebd(arenaprep[i], arenaprep[i])
+
+		arenaprep[i].Health = CreateFrame('StatusBar', nil, arenaprep[i])
+		arenaprep[i].Health:SetAllPoints()
+		arenaprep[i].Health:SetStatusBarTexture(cfg.texture)
+
+		arenaprep[i].Spec = fs(arenaprep[i].Health, 'OVERLAY', cfg.font, cfg.fontsize, cfg.fontflag, 1, 1, 1)
+		arenaprep[i].Spec:SetPoint('CENTER')
+		arenaprep[i].Spec:SetJustifyH'CENTER'
+
+		arenaprep[i]:Hide()
+	end	
+	local arenaprepupdate = CreateFrame('Frame')
+	arenaprepupdate:RegisterEvent('PLAYER_LOGIN')
+	arenaprepupdate:RegisterEvent('PLAYER_ENTERING_WORLD')
+	arenaprepupdate:RegisterEvent('ARENA_OPPONENT_UPDATE')
+	arenaprepupdate:RegisterEvent('ARENA_PREP_OPPONENT_SPECIALIZATIONS')
+	arenaprepupdate:SetScript('OnEvent', function(self, event)
+		if event == 'PLAYER_LOGIN' then
+			for i = 1, 5 do
+				arenaprep[i]:SetAllPoints(_G['oUF_Arena'..i])
+			end
+		elseif event == 'ARENA_OPPONENT_UPDATE' then
+			for i = 1, 5 do
+				arenaprep[i]:Hide()
+			end
+		else
+			local numOpps = GetNumArenaOpponentSpecs()
+			if numOpps > 0 then
+				for i = 1, 5 do
+					local f = arenaprep[i]
+					if i <= numOpps then
+						local s = GetArenaOpponentSpec(i)
+						local _, spec, class = nil, 'UNKNOWN', 'UNKNOWN'
+	
+						if s and s > 0 then
+							_, spec, _, _, _, _, class = GetSpecializationInfoByID(s)
+						end
+	
+						if class and spec then
+							if cfg.class_colorbars then
+								f.Health:SetStatusBarColor(class_color.r, class_color.g, class_color.b)
+							else
+								f.Health:SetStatusBarColor(cfg.Color.Health.r, cfg.Color.Health.g, cfg.Color.Health.b)
+							end
+							f.Spec:SetText(spec..'  -  '..LOCALIZED_CLASS_NAMES_MALE[class])
+							f:Show()
+						end
+					else
+						f:Hide()
+					end
+				end
+			else
+				for i = 1, 5 do
+					arenaprep[i]:Hide()
+				end
+			end
+		end
+	end)
+--]]--
 end)
+
+
+
+----------------------------------------------------------------------------------------
+--	Test UnitFrames(by community)
+----------------------------------------------------------------------------------------
+SlashCmdList.TEST_UF = function(msg)
+	if msg == "hide" then
+		for _, frames in pairs({"oUF_Target", "oUF_TargetTarget", "oUF_Pet", "oUF_Focus", "oUF_FocusTarget"}) do
+			_G[frames].Hide = nil
+		end
+		
+			for i = 1, 5 do
+				_G["oUF_Arena"..i].Hide = nil
+				_G["oUF_Arena"..i.."Target"].Hide = nil
+			end
+		
+			for i = 1, MAX_BOSS_FRAMES do
+				_G["oUF_Boss"..i].Hide = nil
+			end		
+	else
+			for i = 1, 5 do
+				_G["oUF_Arena"..i].Hide = function() end
+				_G["oUF_Arena"..i].unit = "player"
+				_G["oUF_Arena"..i]:Show()
+				_G["oUF_Arena"..i]:UpdateAllElements()
+				_G["oUF_Arena"..i].Trinket.Icon:SetTexture("Interface\\Icons\\INV_Jewelry_Necklace_37")
+
+				_G["oUF_Arena"..i.."target"].Hide = function() end
+				_G["oUF_Arena"..i.."target"].unit = "player"
+				_G["oUF_Arena"..i.."target"]:Show()
+				_G["oUF_Arena"..i.."target"]:UpdateAllElements()			
+				_G["oUF_Arena"..i].Talents:SetText(TALENTS)
+							
+			end
+		
+			for i = 1, MAX_BOSS_FRAMES do
+				_G["oUF_Boss"..i].Hide = function() end
+				_G["oUF_Boss"..i].unit = "player"
+				_G["oUF_Boss"..i]:Show()
+				_G["oUF_Boss"..i]:UpdateAllElements()
+			end		
+	end
+end
+SLASH_TEST_UF1 = "/qwer"
+SLASH_TEST_UF2 = "/kbjui"
+
+
+-- For testing /run oUFAbu.TestArena()
+function TAA()
+	oUF_Arena1:Show(); oUF_Arena1.Hide = function() end oUF_Arena1.unit = "target"
+	oUF_Arena2:Show(); oUF_Arena2.Hide = function() end oUF_Arena2.unit = "target"
+	oUF_Arena3:Show(); oUF_Arena3.Hide = function() end oUF_Arena3.unit = "target"
+	oUF_Arena4:Show(); oUF_Arena4.Hide = function() end oUF_Arena4.unit = "target"
+	oUF_Arena5:Show(); oUF_Arena5.Hide = function() end oUF_Arena5.unit = "target"
+	local time = 0
+	local f = CreateFrame("Frame")
+	f:SetScript("OnUpdate", function(self, elapsed)
+		time = time + elapsed
+		if time > 5 then
+			oUF_Arena1:UpdateAllElements("ForceUpdate")
+			oUF_Arena2:UpdateAllElements("ForceUpdate")
+			oUF_Arena3:UpdateAllElements("ForceUpdate")
+			oUF_Arena4:UpdateAllElements("ForceUpdate")
+			oUF_Arena5:UpdateAllElements("ForceUpdate")
+			time = 0
+		end
+	end)
+end

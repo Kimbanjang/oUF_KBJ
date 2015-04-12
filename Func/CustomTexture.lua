@@ -10,12 +10,25 @@ local cfg = ns.cfg
 local FONT = [[Interface\AddOns\oUF_KBJ\Media\semplice.ttf]]
 local TEXTURE = [[Interface\ChatFrame\ChatFrameBackground]]
 local BACKDROP = { bgFile = TEXTURE, insets = {top = -1, bottom = -1, left = -1, right = -1} }
-local GLOW = { edgeFile = [[Interface\AddOns\oUF_KBJ\Media\glow]], edgeSize = 3 }
 
 
 --------------------------------------
 -- Functions
 --------------------------------------
+
+framebd = function(parent, anchor) 
+    local frame = CreateFrame('Frame', nil, parent)
+    frame:SetFrameStrata('BACKGROUND')
+    frame:SetPoint('TOPLEFT', anchor, 'TOPLEFT', -3, 3)
+    frame:SetPoint('BOTTOMRIGHT', anchor, 'BOTTOMRIGHT', 3, -3)
+    frame:SetBackdrop({
+    edgeFile = "Interface\\AddOns\\oUF_KBJ\\Media\\glowTex", edgeSize = 3,
+    bgFile = [=[Interface\ChatFrame\ChatFrameBackground]=],
+    insets = {left = 3, right = 3, top = 3, bottom = 3}})
+    frame:SetBackdropColor(0, 0, 0)
+    frame:SetBackdropBorderColor(0, 0, 0)
+    return frame
+end
 
 local function UpdateAura(self, elapsed)
 	if(self.expiration) then

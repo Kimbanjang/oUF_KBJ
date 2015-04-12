@@ -211,16 +211,6 @@ oUF.Tags.Methods["unit:level"] = function(unit)
 end
 oUF.Tags.Events["unit:level"] = "UNIT_NAME_UPDATE UNIT_CONNECTION"
 
--- Å×½ºÆ®
--- Unit Specialization Tag
-oUF.Tags.Methods["unit:spec"] = function(unit)
-	local spec = GetSpecialization()
-	local specclass = GetSpecializationInfoByID(s)
-
-	return specclass
-end
-oUF.Tags.Events["unit:spec"] = "UNIT_NAME_UPDATE UNIT_CONNECTION"
-
 -- Unit Health Tag 
 oUF.Tags.Methods["unit:health"] = function(unit)
 	local perhp = oUF.Tags.Methods["perhp"](unit)
@@ -254,6 +244,32 @@ oUF.Tags.Methods["unit:shorthp"] = function(unit)
 	local color = "|cffff00ff"
 end
 oUF.Tags.Events["unit:shorthp"] = "UNIT_HEALTH"
+
+-- Arena Health Tag
+oUF.Tags.Methods["unit:arenahealth"] = function(unit)
+	local perhp = oUF.Tags.Methods["perhp"](unit)
+	local color = GetUnitColor(unit)
+	if color then
+		return "|cff"..GetHexColor(color)..perhp.."|r"
+	else
+		return "|cffff00ff"..perhp.."|r"
+	end
+end
+oUF.Tags.Events["unit:arenahealth"] = "UNIT_HEALTH"
+
+-- Arena HP Tag
+oUF.Tags.Methods["unit:arenahp"] = function(unit)
+	if not UnitIsDeadOrGhost(unit) then	
+		local hp = UnitHealth(unit)
+		local color = GetHealthColor(unit)
+		if color then
+			return "|cff"..GetHexColor(color)..AbbreviateLargeNumbers(hp).."|r"
+		else
+			return "|cffff00ff"..AbbreviateLargeNumbers(hp).."|r"
+		end
+	end
+end
+oUF.Tags.Events["unit:arenahp"] = "UNIT_HEALTH"
 
 -- ComboPoints Tag
 oUF.Tags.Methods["unit:cpoints"] = function(unit)

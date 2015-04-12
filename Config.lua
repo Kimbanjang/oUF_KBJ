@@ -13,45 +13,51 @@ local cfg = {}
 ns.cfg = {
 
 -- Player/Pet/Target/TargetTarget Frame
-playerFramePotion_X = 130,
-playerFramePotion_Y = -10,
+playerFramePosition_X = 130,
+playerFramePosition_Y = -10,
 
 -- Target's Debuff
 onlyShowMyDebuff = true,	-- true/false
 dontUsedCCTimer = false,	-- ture : dont used tullaCC, OmniCC / false : used tullaCC, OmniCC
 
 -- Focus Frame
-focusFramePotion_X = 367,
-focusFramePotion_Y = 100,
+focusFramePosition_X = 367,
+focusFramePosition_Y = 100,
 
 -- Party/PartyPet/PartyTarget Frame
-PartyFramePotion_X = 280,
-PartyFramePotion_Y = -75,
+partyFramePosition_X = 280,
+partyFramePosition_Y = -75,
+
+-- Arena Frame
+arenaFramePosition_X = -225,
+arenaFramePosition_Y = -85,
 
 --[[ not ready
--- Arena Frame
+-- Party's Debuff
 -- Raid Frame
 
 -- Player Castbar
 playerCastbar = true,		-- true/false
-playerCastbarPotion_X = 130,
-playerCastbarPotion_Y = 130,
-playerCastbarPotion_Width,
-playerCastbarPotion_Height,
+playerCastbarPosition_X = 130,
+playerCastbarPosition_Y = 130,
+playerCastbarPosition_Width,
+playerCastbarPosition_Height,
 
 -- Target Castbar
 targetCastbar = true,		-- true/false
-targetCastbarPotion_X = 130,
-targetCastbarPotion_Y = 130,
-targetCastbarPotion_Width,
-targetCastbarPotion_Height,
+targetCastbarPosition_X = 130,
+targetCastbarPosition_Y = 130,
+targetCastbarPosition_Width,
+targetCastbarPosition_Height,
 
 -- Focus Castbar
 targetCastbar = true,		-- true/false
-focusCastbarPotion_X = 130,
-focusCastbarPotion_Y = 130,
-focusCastbarPotion_Width,
-focusCastbarPotion_Height,
+focusCastbarPosition_X = 130,
+focusCastbarPosition_Y = 130,
+focusCastbarPosition_Width,
+focusCastbarPosition_Height,
+
+arenaCasrbar = true,
 ]]
 
 }
