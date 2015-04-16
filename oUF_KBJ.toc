@@ -7,9 +7,10 @@
 Func\CustomTag.lua
 Func\CustomTexture.lua
 
-Plugin\oUF_Trinkets.lua
 Plugin\oUF_AuraTracker.lua
 Plugin\oUF_AuraWatch.lua
+Plugin\oUF_GCD.lua
+Plugin\oUF_Trinkets.lua
 
 Config.lua
 StyleTemplate.lua
