@@ -64,51 +64,6 @@ fs = function(parent, layer, font, fontsiz, outline, r, g, b, justify)
     return string
 end
 
-local hider = CreateFrame("Frame", "Hider", UIParent)
-hider:Hide()
-
-local PostUpdateHealth = function(health, unit)
-	if(UnitIsDead(unit)) then
-		health:SetValue(0)
-	elseif(UnitIsGhost(unit)) then
-		health:SetValue(0)
-	elseif not (UnitIsConnected(unit)) then
-	    health:SetValue(0)
-	end
-end
-
-local Health = function(self) 
-	local h = createStatusbar(self, "Interface\\AddOns\\oUF_KBJ\\Media\\texture", nil, nil, nil, 1, 1, 1, 1)
-    h:SetPoint'TOP'
-	h:SetPoint'LEFT'
-	h:SetPoint'RIGHT'
-	
-	local hbg = h:CreateTexture(nil, 'BACKGROUND')
-    hbg:SetAllPoints(h)
-    hbg:SetTexture("Interface\\AddOns\\oUF_KBJ\\Media\\texture")
-	local class_colorbars = false
-	if class_colorbars then
-        h.colorClass = true
-        h.colorReaction = true
-		hbg.multiplier = .4
-	else
-	    h:SetStatusBarColor(0.33, 0.33, 0.33)
-		local colorClass_bg = false
-		if colorClass_bg then
-			h.colorClass_bg = true
-			hbg.multiplier = 1
-		else
-			hbg:SetVertexColor(0.33, 0.33, 0.33, 0.5)
-		end
-    end
-
-	h.frequentUpdates = false
-		
-	h.bg = hbg
-	self.Health	= h 
-	self.Health.PostUpdate = PostUpdateHealth
-end
-
 
 --------------------------------------
 -- Function
@@ -241,8 +196,8 @@ local PostCastStart = function(self, unit)
 		end
 	end
 	if unit ~= 'player' and self.interrupt and UnitCanAttack('player', unit) then
-        self:SetStatusBarColor(1, .9, .4)
-    end
+		self:SetStatusBarColor(0, 0, 0)
+	end
 end
 
 local PostCastStop = function(self, unit)
@@ -255,6 +210,15 @@ local PostCastStop = function(self, unit)
 end
 
 local PostCastFailed = function(self, event, unit)
+	self:SetStatusBarColor(unpack(self.FailColor))
+	self:SetValue(self.max)
+	if not self.fadeOut then
+		self.fadeOut = true
+	end
+	self:Show()
+end
+
+local PostCastInterruptible = function(self, event, unit)
 	self:SetStatusBarColor(unpack(self.FailColor))
 	self:SetValue(self.max)
 	if not self.fadeOut then
@@ -277,7 +241,7 @@ local castbar = function(self, unit)
 	cb.CastingColor = {1, 0.7, 0}
 	cb.CompleteColor = {0.12, 0.86, 0.15}
 	cb.FailColor = {1.0, 0.09, 0}
-	cb.ChannelingColor = {0.32, 0.3, 1}
+	cb.ChannelingColor = {0.65, 0.4, 0}
 	cb.Icon = cb:CreateTexture(nil, 'ARTWORK')
 	cb.Icon:SetPoint('TOPRIGHT', cb, 'TOPLEFT', -1, 0)
 	cb.Icon:SetTexCoord(.1, .9, .1, .9)
@@ -307,8 +271,6 @@ local castbar = function(self, unit)
 		cb.Icon:SetSize(cfg.focusCastbarPosition_Height, cfg.focusCastbarPosition_Height)
 	elseif self.unit == 'arena' then
 		cb:SetPoint("RIGHT", self, "LEFT",cfg.arenaCastbarPosition_X, cfg.arenaCastbarPosition_Y)
-		--local arena_cb = {'BOTTOMRIGHT', 0, -19}
-		--cb:SetPoint(unpack(arena_cb))
 		cb:SetSize(cfg.arenaCastbarPosition_Width, cfg.arenaCastbarPosition_Height)
 		cb.Icon:SetSize(cfg.arenaCastbarPosition_Height, cfg.arenaCastbarPosition_Height)
 	end
@@ -327,6 +289,7 @@ local castbar = function(self, unit)
 	cb.PostChannelStop = PostCastStop
 	cb.PostCastFailed = PostCastFailed
 	cb.PostCastInterrupted = PostCastFailed
+
 	cb.bg = cbbg
 	cb.Backdrop = framebd(cb, cb)
 	cb.IBackdrop = framebd(cb, cb.Icon)
@@ -375,6 +338,27 @@ local UnitSpecific = {
 		self.Combat:SetSize(15, 15)
 		self.Combat:SetPoint("LEFT", self, "LEFT", -3, 1)
 
+		-- Class Resource
+		-- Combo Point
+		if (playerClass == "ROGUE" or playerClass == "DRUID") then
+			local comboPoints = self:CreateFontString(nil, "OVERLAY")
+			comboPoints:SetFont(fontNumber, 18, 'THINOUTLINE')
+			comboPoints:SetPoint("CENTER", self, "BOTTOM", 0, -13)
+			self:Tag(comboPoints, "[unit:cpoints]")
+		-- Warlock Resource
+		elseif (playerClass == "WARLOCK") then
+			local warlockResource = self:CreateFontString(nil, "OVERLAY")
+			warlockResource:SetFont(fontNumber, 14, 'THINOUTLINE')
+			warlockResource:SetPoint("CENTER", self, "BOTTOM", 0, -12)
+			self:Tag(warlockResource, "[unit:warlockresource]")
+		-- Monk Chi
+		elseif (playerClass == "MONK") then
+			local monkChi = self:CreateFontString(nil, "OVERLAY")
+			monkChi:SetFont(fontNumber, 18, 'THINOUTLINE')
+			monkChi:SetPoint("CENTER", self, "BOTTOM", 0, -13)
+			self:Tag(monkChi, "[unit:monkchi]")
+		end
+
 		local gcd = createStatusbar(self, "Interface\\AddOns\\oUF_KBJ\\Media\\texture", nil, cfg.playerCastbarPosition_Height/6, cfg.playerCastbarPosition_Width, 0.5, 0.5, 0.5, 1)
 		gcd:SetPoint("CENTER", UIParent, cfg.playerCastbarPosition_X, cfg.playerCastbarPosition_Y-cfg.playerCastbarPosition_Height/1.2)
 		gcd.bg = gcd:CreateTexture(nil, 'BORDER')
@@ -387,9 +371,10 @@ local UnitSpecific = {
 
 	target = function(self, ...)
 		Shared(self, ...)
-		if cfg.targetCastbar then castbar(self) end
 		self.unit = 'target'
 		self:SetSize(64,32)
+		
+		if cfg.targetCastbar then castbar(self) end
 
 		local targetHpPer = self:CreateFontString(nil, "OVERLAY")
 		targetHpPer:SetPoint("CENTER", self, "CENTER", 0, 0)
@@ -422,7 +407,7 @@ local UnitSpecific = {
 		-- Debuffs.filter : custom filter list for debuffs to display
 		Debuffs.initialAnchor = 'BOTTOMLEFT'
 		Debuffs.num = 5
-		Debuffs.onlyShowPlayer = cfg.onlyShowMyDebuff
+		Debuffs.onlyShowPlayer = false --cfg.onlyShowMyDebuff
 		Debuffs.size = 26
 		Debuffs.spacing = 4
 		-- Debuffs['growth-x'] : horizontal growth direction (default is 'RIGHT')
@@ -433,17 +418,18 @@ local UnitSpecific = {
 	end,
 
 	focus = function(self, ...)
-		Shared(self, ...)
-		if cfg.focusCastbar then castbar(self) end
+		Shared(self, ...)		
 		self.unit = 'focus'
 		self:SetSize(64,32)
+
+		if cfg.focusCastbar then castbar(self) end
 
 		local focusHpPer = self:CreateFontString(nil, "OVERLAY")
 		focusHpPer:SetPoint("CENTER", self, "CENTER", 0, 0)
 		focusHpPer:SetFont(fontNumber, 18, 'THINOUTLINE')
 		self:Tag(focusHpPer, "[unit:health]")
 		local focusName = self:CreateFontString(nil, "OVERLAY")
-		focusName:SetPoint("CENTER", focusHpPer, "TOP", 0, 6)
+		focusName:SetPoint("CENTER", focusHpPer, "TOP", 0, 7)
 		focusName:SetFont(fontGeneral, 10, 'THINOUTLINE')
 		self:Tag(focusName, "[unit:name]")
 	end,
@@ -506,7 +492,7 @@ local UnitSpecific = {
 		Debuffs:SetSize(160, 30)
 		Debuffs.PostCreateIcon = ns.PostCreateAura
 		Debuffs.PostUpdateIcon = ns.PostUpdateDebuff		
-		Debuffs:SetPoint('TOPLEFT', self, 'RIGHT', 34, 14)
+		Debuffs:SetPoint('TOPLEFT', self, 'RIGHT', -2, 4)
 		-- Debuffs.disableCooldown : Do not display the cooldown spiral
 		-- Debuffs.filter : custom filter list for debuffs to display
 		Debuffs.initialAnchor = 'BOTTOMLEFT'
@@ -519,19 +505,6 @@ local UnitSpecific = {
 		-- Debuffs['spacing-x'] : horizontal space between each debuff button (takes priority over Debuffs.spacing)
 		-- Debuffs['spacing-y'] : vertical space between each debuff button (takes priority over Debuffs.spacing)
 		self.Debuffs = Debuffs
-
-		local t = CreateFrame('Frame', nil, self)
-		t:SetSize(32, 32)
-		t:SetPoint('TOPLEFT', self, 'RIGHT', -5, 17)
-		t.framebd = framebd(t, t)
-		self.Trinket = t		
-		local at = CreateFrame('Frame', nil, self)
-		at:SetAllPoints(t)
-		at:SetFrameStrata('HIGH')
-		at.icon = at:CreateTexture(nil, 'ARTWORK')
-		at.icon:SetAllPoints(at)
-		at.icon:SetTexCoord(0.07,0.93,0.07,0.93)  
-		self.AuraTracker = at
 	end,
 
 	arena = function(self, ...)
@@ -540,54 +513,6 @@ local UnitSpecific = {
 		self:SetSize(64,32)
 
 		if cfg.arenaCastbar then castbar(self) end
-		
-		local arenaHpPer = self:CreateFontString(nil, "OVERLAY")
-		arenaHpPer:SetPoint("CENTER", self, "CENTER", 0, 0)
-		arenaHpPer:SetFont(fontNumber, 28, 'THINOUTLINE')
-		self:Tag(arenaHpPer, "[unit:arenahealth]")
-		local arenaHpCur = self:CreateFontString(nil, "OVERLAY")
-		arenaHpCur:SetPoint("CENTER", arenaHpPer, "TOP", 0, 6)
-		arenaHpCur:SetFont(fontGeneral, 10, 'THINOUTLINE')
-		self:Tag(arenaHpCur, "[unit:arenahp]")
-		local arenaPpPer = self:CreateFontString(nil, "OVERLAY")
-		arenaPpPer:SetPoint("CENTER", arenaHpPer, "BOTTOM", 1, -4)
-		arenaPpPer:SetFont(fontNumber, 16, 'THINOUTLINE')
-		self:Tag(arenaPpPer, "[unit:power]")
-		local arenaName = self:CreateFontString(nil, "BACKGROUND")
-		arenaName:SetPoint("CENTER", arenaHpCur, "LEFT", -27, 0)
-		arenaName:SetFont(fontGeneral, 10, 'THINOUTLINE')
-		self:Tag(arenaName, "[unit:name]")
-
-		local t = CreateFrame('Frame', nil, self)
-		t:SetSize(32, 32)
-		t:SetPoint('TOPRIGHT', self, 'LEFT', -5, 11)
-		t.framebd = framebd(t, t)
-		self.Trinket = t		
-		local at = CreateFrame('Frame', nil, self)
-		at:SetAllPoints(t)
-		at:SetFrameStrata('HIGH')
-		at.icon = at:CreateTexture(nil, 'ARTWORK')
-		at.icon:SetAllPoints(at)
-		at.icon:SetTexCoord(0.07,0.93,0.07,0.93)  
-		self.AuraTracker = at
-
-		local Debuffs = CreateFrame('Frame', nil, self)
-		Debuffs:SetSize(165, 30)
-		Debuffs.PostCreateIcon = ns.PostCreateAura
-		Debuffs.PostUpdateIcon = ns.PostUpdateDebuff		
-		Debuffs:SetPoint('TOPLEFT', self, 'RIGHT', 7, 10)
-		-- Debuffs.disableCooldown : Do not display the cooldown spiral
-		-- Debuffs.filter : custom filter list for debuffs to display
-		Debuffs.initialAnchor = 'BOTTOMLEFT'
-		Debuffs.num = 5
-		Debuffs.onlyShowPlayer = cfg.onlyShowMyDebuff
-		Debuffs.size = 29
-		Debuffs.spacing = 4
-		-- Debuffs['growth-x'] : horizontal growth direction (default is 'RIGHT')
-		Debuffs['growth-y'] = 'DOWN'
-		-- Debuffs['spacing-x'] : horizontal space between each debuff button (takes priority over Debuffs.spacing)
-		-- Debuffs['spacing-y'] : vertical space between each debuff button (takes priority over Debuffs.spacing)
-		self.Debuffs = Debuffs		
 	end,
 }
 
@@ -623,35 +548,35 @@ oUF:Factory(function(self)
 	spawnHelper(self, 'focus', "CENTER", UIParent, cfg.focusFramePosition_X, cfg.focusFramePosition_Y)
 	spawnHelper(self, 'pet', "CENTER", oUF_KBJPlayer, "TOP", -1, -2)
 	spawnHelper(self, 'targettarget', "CENTER", oUF_KBJTarget, "BOTTOMRIGHT", 40, 13)
-	spawnHelper(self, 'focustarget', "CENTER", oUF_KBJFocus, "RIGHT", 25, 2)
+	spawnHelper(self, 'focustarget', "CENTER", oUF_KBJFocus, "RIGHT", 26, 1)
 
 	self:SetActiveStyle'KBJ - Party'
-	local party = self:SpawnHeader(nil, nil, 'raid,party,solo', -- raid,party,solo for debug
+	local party = self:SpawnHeader(nil, nil, 'raid,party', -- raid,party,solo for debug
 		'showParty', true,
-		'showPlayer', true, 'showSolo', true, -- debug
-		'yOffset', -30
+		--'showPlayer', true, 'showSolo', true, -- debug
+		'yOffset', -15
 	)
 	party:SetPoint("TOP", UIParent, "CENTER", cfg.partyFramePosition_X, cfg.partyFramePosition_Y)
 	self:SetActiveStyle'KBJ - Pet'
-	local pets = self:SpawnHeader(nil, nil, 'raid,party,solo', -- raid,party,solo for debug
+	local pets = self:SpawnHeader(nil, nil, 'raid,party', -- raid,party,solo for debug
 		'showParty', true,
-		'showPlayer', true, 'showSolo', true, -- debug
-		'yOffset', -30,
+		--'showPlayer', true, 'showSolo', true, -- debug
+		'yOffset', -15,
 		'oUF-initialConfigFunction', ([[
 			self:SetAttribute('unitsuffix', 'pet')
 		]])
 	)
 	pets:SetPoint("CENTER", party, "LEFT", -18, 1)
 	self:SetActiveStyle'KBJ - Targettarget'
-	local partytargets = self:SpawnHeader(nil, nil, 'raid,party,solo', -- raid,party,solo for debug
+	local partytargets = self:SpawnHeader(nil, nil, 'raid,party', -- raid,party,solo for debug
 		'showParty', true,
-		'showPlayer', true, 'showSolo', true, -- debug
-		'yOffset', -30,
+		--'showPlayer', true, 'showSolo', true, -- debug
+		'yOffset', -15,
 		'oUF-initialConfigFunction', ([[
 			self:SetAttribute('unitsuffix', 'target')
 		]])
 	)
-	partytargets:SetPoint("CENTER", party, "RIGHT", 62, 12)
+	partytargets:SetPoint("LEFT", party, "RIGHT", -5, 2)
 
 	local arena = {}
 	self:SetActiveStyle'KBJ - Arena'
@@ -660,86 +585,10 @@ oUF:Factory(function(self)
 		if i == 1 then
 			arena[i]:SetPoint("CENTER", UIParent, cfg.arenaFramePosition_X, cfg.arenaFramePosition_Y)
 		else
-			arena[i]:SetPoint("TOP", arena[i-1], "BOTTOM", 0, -30)
+			arena[i]:SetPoint("TOP", arena[i-1], "TOP", 0, 85)
 		end
 		-- spawnHelper(self, 'arena' .. i, 'CENTER', UIParent, cfg.arenaFramePosition_X, cfg.arenaFramePosition_Y + 51 - (51*i))
 	end
-	local arenatarget = {}
-	self:SetActiveStyle'KBJ - Targettarget'
-	for i = 1, 5 do
-		arenatarget[i] = self:Spawn("arena"..i.."target", "oUF_Arena"..i.."target")
-		if i == 1 then
-			arenatarget[i]:SetPoint("LEFT", arena[i], "RIGHT", 5, 20)
-		else
-			arenatarget[i]:SetPoint("TOP", arenatarget[i-1], "BOTTOM", 0, -30)
-		end
-	end
-	local arenaprep = {}
-	for i = 1, 5 do
-		arenaprep[i] = CreateFrame('Frame', 'oUF_ArenaPrep'..i, UIParent)
-		arenaprep[i]:SetAllPoints(_G['oUF_Arena'..i])
-		arenaprep[i]:SetFrameStrata('BACKGROUND')
-		arenaprep[i].framebd = framebd(arenaprep[i], arenaprep[i])
-
-		arenaprep[i].Health = CreateFrame('StatusBar', nil, arenaprep[i])
-		arenaprep[i].Health:SetAllPoints()
-		arenaprep[i].Health:SetStatusBarTexture("Interface\\AddOns\\oUF_KBJ\\Media\\texture")
-
-		arenaprep[i].Spec = fs(arenaprep[i].Health, 'OVERLAY', fontGeneral, 12, "THINOUTLINE", 0.5, 0.5, 0.5)
-		arenaprep[i].Spec:SetPoint('CENTER')
-		arenaprep[i].Spec:SetJustifyH'CENTER'
-
-		arenaprep[i]:Hide()
-	end
-	local arenaprepupdate = CreateFrame('Frame')
-	arenaprepupdate:RegisterEvent('PLAYER_LOGIN')
-	arenaprepupdate:RegisterEvent('PLAYER_ENTERING_WORLD')
-	arenaprepupdate:RegisterEvent('ARENA_OPPONENT_UPDATE')
-	arenaprepupdate:RegisterEvent('ARENA_PREP_OPPONENT_SPECIALIZATIONS')
-	arenaprepupdate:SetScript('OnEvent', function(self, event)
-		if event == 'PLAYER_LOGIN' then
-			for i = 1, 5 do
-				arenaprep[i]:SetAllPoints(_G['oUF_Arena'..i])
-			end
-		elseif event == 'ARENA_OPPONENT_UPDATE' then
-			for i = 1, 5 do
-				arenaprep[i]:Hide()
-			end
-		else
-			local numOpps = GetNumArenaOpponentSpecs()
-			if numOpps > 0 then
-				for i = 1, 5 do
-					local f = arenaprep[i]
-					if i <= numOpps then
-						local s = GetArenaOpponentSpec(i)
-						local _, spec, class = nil, 'UNKNOWN', 'UNKNOWN'
-	
-						if s and s > 0 then
-							_, spec, _, _, _, _, class = GetSpecializationInfoByID(s)
-						end
-	
-						if class and spec then
-							local class_colorbars = false
-							if class_colorbars then
-								f.Health:SetStatusBarColor(class_color.r, class_color.g, class_color.b)
-							else
-								f.Health:SetStatusBarColor(0.33, 0.33, 0.33)
-							end
-							f.Spec:SetText(spec..'  -  '..LOCALIZED_CLASS_NAMES_MALE[class])
-							f:Show()
-						end
-					else
-						f:Hide()
-					end
-				end
-			else
-				for i = 1, 5 do
-					arenaprep[i]:Hide()
-				end
-			end
-		end
-	end)
-
 end)
 
 
@@ -754,13 +603,6 @@ function TUF()
 	oUF_Arena3:Show(); oUF_Arena3.Hide = function() end oUF_Arena3.unit = "target"
 	oUF_Arena4:Show(); oUF_Arena4.Hide = function() end oUF_Arena4.unit = "target"
 	oUF_Arena5:Show(); oUF_Arena5.Hide = function() end oUF_Arena5.unit = "target"
-	oUF_Arena1target:Show(); oUF_Arena1target.Hide = function() end oUF_Arena1target.unit = "target"
-	oUF_Arena2target:Show(); oUF_Arena2target.Hide = function() end oUF_Arena2target.unit = "target"
-	oUF_Arena3target:Show(); oUF_Arena3target.Hide = function() end oUF_Arena3target.unit = "target"
-	oUF_Arena4target:Show(); oUF_Arena4target.Hide = function() end oUF_Arena4target.unit = "target"
-	oUF_Arena5target:Show(); oUF_Arena5target.Hide = function() end oUF_Arena5target.unit = "target"
-	oUF_ArenaPrep1:Show(); oUF_ArenaPrep1.Hide = function() end oUF_ArenaPrep1.unit = "target"
-	oUF_ArenaPrep2:Show(); oUF_ArenaPrep2.Hide = function() end oUF_ArenaPrep2.unit = "target"
 	local time = 0
 	local f = CreateFrame("Frame")
 	f:SetScript("OnUpdate", function(self, elapsed)
