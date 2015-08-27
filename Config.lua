@@ -38,26 +38,26 @@ playerCastbarPosition_Height = 20,
 -- Target Castbar
 targetCastbar = true,		-- true/false
 targetCastbarPosition_X = 15,
-targetCastbarPosition_Y = 100,
+targetCastbarPosition_Y = 120,
 targetCastbarPosition_Width = 300,
 targetCastbarPosition_Height = 30,
 
 -- Focus Castbar
 focusCastbar = true,		-- true/false
 focusCastbarPosition_X = 15,
-focusCastbarPosition_Y = 128,
+focusCastbarPosition_Y = 148,
 focusCastbarPosition_Width = 300,
 focusCastbarPosition_Height = 16,
 
 -- Arena Castbar
 arenaFramePosition_X = 368,
-arenaFramePosition_Y = 173,
+arenaFramePosition_Y = 165,
 
 arenaCastbar = true,		-- true/false
-arenaCastbarPosition_X = -5,
-arenaCastbarPosition_Y = 20,
-arenaCastbarPosition_Width = 327,
-arenaCastbarPosition_Height = 6,
+arenaCastbarPosition_X = -161,
+arenaCastbarPosition_Y = 34,
+arenaCastbarPosition_Width = 159,
+arenaCastbarPosition_Height = 30,
 
 --[[ not ready
 -- Raid Frame

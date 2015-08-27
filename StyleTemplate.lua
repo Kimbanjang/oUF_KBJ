@@ -551,14 +551,14 @@ oUF:Factory(function(self)
 	spawnHelper(self, 'focustarget', "CENTER", oUF_KBJFocus, "RIGHT", 26, 1)
 
 	self:SetActiveStyle'KBJ - Party'
-	local party = self:SpawnHeader(nil, nil, 'raid,party', -- raid,party,solo for debug
+	local party = self:SpawnHeader(nil, nil, 'party', -- raid,party,solo for debug
 		'showParty', true,
 		--'showPlayer', true, 'showSolo', true, -- debug
 		'yOffset', -15
 	)
 	party:SetPoint("TOP", UIParent, "CENTER", cfg.partyFramePosition_X, cfg.partyFramePosition_Y)
 	self:SetActiveStyle'KBJ - Pet'
-	local pets = self:SpawnHeader(nil, nil, 'raid,party', -- raid,party,solo for debug
+	local pets = self:SpawnHeader(nil, nil, 'party', -- raid,party,solo for debug
 		'showParty', true,
 		--'showPlayer', true, 'showSolo', true, -- debug
 		'yOffset', -15,
@@ -568,7 +568,7 @@ oUF:Factory(function(self)
 	)
 	pets:SetPoint("CENTER", party, "LEFT", -18, 1)
 	self:SetActiveStyle'KBJ - Targettarget'
-	local partytargets = self:SpawnHeader(nil, nil, 'raid,party', -- raid,party,solo for debug
+	local partytargets = self:SpawnHeader(nil, nil, 'party', -- raid,party,solo for debug
 		'showParty', true,
 		--'showPlayer', true, 'showSolo', true, -- debug
 		'yOffset', -15,
@@ -585,7 +585,7 @@ oUF:Factory(function(self)
 		if i == 1 then
 			arena[i]:SetPoint("CENTER", UIParent, cfg.arenaFramePosition_X, cfg.arenaFramePosition_Y)
 		else
-			arena[i]:SetPoint("TOP", arena[i-1], "TOP", 0, 85)
+			arena[i]:SetPoint("TOP", arena[i-1], "TOP", 0, 80)
 		end
 		-- spawnHelper(self, 'arena' .. i, 'CENTER', UIParent, cfg.arenaFramePosition_X, cfg.arenaFramePosition_Y + 51 - (51*i))
 	end
