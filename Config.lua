@@ -38,16 +38,16 @@ playerCastbarPosition_Height = 20,
 -- Target Castbar
 targetCastbar = true,		-- true/false
 targetCastbarPosition_X = 15,
-targetCastbarPosition_Y = 120,
-targetCastbarPosition_Width = 300,
+targetCastbarPosition_Y = 117,
+targetCastbarPosition_Width = 275,
 targetCastbarPosition_Height = 30,
 
 -- Focus Castbar
 focusCastbar = true,		-- true/false
 focusCastbarPosition_X = 15,
-focusCastbarPosition_Y = 148,
-focusCastbarPosition_Width = 300,
-focusCastbarPosition_Height = 16,
+focusCastbarPosition_Y = 149,
+focusCastbarPosition_Width = 275,
+focusCastbarPosition_Height = 20,
 
 -- Arena Castbar
 arenaFramePosition_X = 368,

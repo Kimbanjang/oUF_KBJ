@@ -459,12 +459,13 @@ local UnitSpecific = {
 	party = function(self, ...)
 		Shared(self, ...)
 		self.unit = 'party'
-		self:SetSize(64,32)
+		self:SetSize(64,32)		
+		self.Range = {insideAlpha = 1, outsideAlpha = 0.4,}
 
 		local partyHpPer = self:CreateFontString(nil, "OVERLAY")
 		partyHpPer:SetPoint("CENTER", self, "CENTER", 0, 0)
 		partyHpPer:SetFont(fontNumber, 18, 'THINOUTLINE')
-		self:Tag(partyHpPer, "[unit:health]")
+		self:Tag(partyHpPer, "[unit:classcolorhealth]")
 		local partyPpPer = self:CreateFontString(nil, "OVERLAY")
 		partyPpPer:SetPoint("CENTER", partyHpPer, "BOTTOM", 0, -4)
 		partyPpPer:SetFont(fontNumber, 10, 'THINOUTLINE')
@@ -485,8 +486,11 @@ local UnitSpecific = {
 		self.RaidIcon:SetSize(20, 20)
 		self.RaidIcon:SetPoint("CENTER", self, "TOP", 0, 0)
 		self.LFDRole = self:CreateTexture(nil, "OVERLAY")
-		self.LFDRole:SetPoint("CENTER", self, "LEFT", 1, 0)
 		self.LFDRole:SetSize(14, 14)
+		self.LFDRole:SetPoint("CENTER", self, "LEFT", 1, 0)
+		self.ReadyCheck = self:CreateTexture(nil, 'OVERLAY')
+		self.ReadyCheck:SetSize(16, 16)
+		self.ReadyCheck:SetPoint('CENTER', self, 'CENTER', 0, 0)
 
 		local Debuffs = CreateFrame('Frame', nil, self)
 		Debuffs:SetSize(160, 30)
@@ -496,7 +500,7 @@ local UnitSpecific = {
 		-- Debuffs.disableCooldown : Do not display the cooldown spiral
 		-- Debuffs.filter : custom filter list for debuffs to display
 		Debuffs.initialAnchor = 'BOTTOMLEFT'
-		Debuffs.num = 10
+		Debuffs.num = 7
 		Debuffs.onlyShowPlayer = false
 		Debuffs.size = 19
 		Debuffs.spacing = 4
@@ -505,7 +509,7 @@ local UnitSpecific = {
 		-- Debuffs['spacing-x'] : horizontal space between each debuff button (takes priority over Debuffs.spacing)
 		-- Debuffs['spacing-y'] : vertical space between each debuff button (takes priority over Debuffs.spacing)
 		self.Debuffs = Debuffs
-	end,
+	end,	
 
 	arena = function(self, ...)
 		Shared(self, ...)		
@@ -552,15 +556,13 @@ oUF:Factory(function(self)
 
 	self:SetActiveStyle'KBJ - Party'
 	local party = self:SpawnHeader(nil, nil, 'party', -- raid,party,solo for debug
-		'showParty', true,
-		--'showPlayer', true, 'showSolo', true, -- debug
+		'showParty', true, --'showPlayer', true, 'showSolo', true, -- debug		
 		'yOffset', -15
 	)
 	party:SetPoint("TOP", UIParent, "CENTER", cfg.partyFramePosition_X, cfg.partyFramePosition_Y)
 	self:SetActiveStyle'KBJ - Pet'
 	local pets = self:SpawnHeader(nil, nil, 'party', -- raid,party,solo for debug
-		'showParty', true,
-		--'showPlayer', true, 'showSolo', true, -- debug
+		'showParty', true, --'showPlayer', true, 'showSolo', true, -- debug		
 		'yOffset', -15,
 		'oUF-initialConfigFunction', ([[
 			self:SetAttribute('unitsuffix', 'pet')
@@ -569,8 +571,7 @@ oUF:Factory(function(self)
 	pets:SetPoint("CENTER", party, "LEFT", -18, 1)
 	self:SetActiveStyle'KBJ - Targettarget'
 	local partytargets = self:SpawnHeader(nil, nil, 'party', -- raid,party,solo for debug
-		'showParty', true,
-		--'showPlayer', true, 'showSolo', true, -- debug
+		'showParty', true, --'showPlayer', true, 'showSolo', true, -- debug		
 		'yOffset', -15,
 		'oUF-initialConfigFunction', ([[
 			self:SetAttribute('unitsuffix', 'target')
@@ -590,8 +591,6 @@ oUF:Factory(function(self)
 		-- spawnHelper(self, 'arena' .. i, 'CENTER', UIParent, cfg.arenaFramePosition_X, cfg.arenaFramePosition_Y + 51 - (51*i))
 	end
 end)
-
-
 
 ----------------------------------------------------------------------------------------
 --	Test UnitFrames(by community)

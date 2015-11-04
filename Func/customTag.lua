@@ -13,7 +13,7 @@ local abs, floor, format = abs, floor, format
 
 
 --------------------------------------
--- Color Lib
+-- Lib
 --------------------------------------
 
 -- Gradient Color Lib
@@ -101,8 +101,8 @@ local function GetUnitColor(unit)
 	return color
 end
 
-local redColor = GetHSVColor({r=1,g=0,b=0})
-local greenColor = GetHSVColor({r=0,g=1,b=0})
+local redColor = GetHSVColor({r=0.9,g=0,b=0})
+local greenColor = GetHSVColor({r=0,g=0.9,b=0})
 local whiteColor = GetHSVColor({r=1,g=1,b=1})
 local comboPointColor = GetHSVColor({r=1,g=0.3,b=0.3})
 local warlockSpecColor = GetHSVColor({r=0.9,g=0.37,b=0.37})
@@ -116,6 +116,17 @@ local function GetHealthColor(unit)
 	if hmax > 0 then hper = hcur/hmax end
 	--you may need to swap red and green color
 	return GetRGBColor(GetSmudgeHSVColor(redColor,greenColor,hper))
+end
+
+-- GetClassHealthColor func
+local function GetClassHealthColor(unit)
+	if not unit then return end
+	local classColor = GetHSVColor(GetUnitColor(unit))
+	local hcur, hmax = UnitHealth(unit), UnitHealthMax(unit)
+	local hper = 0
+	if hmax > 0 then hper = hcur/hmax end
+	--you may need to swap red and green color
+	return GetRGBColor(GetSmudgeHSVColor(redColor,classColor,hper))
 end
 
 -- GetCPointColor func
@@ -170,6 +181,41 @@ local function GetMonkChiColor(unit)
 	return GetRGBColor(GetSmudgeHSVColor(whiteColor,chiColor,chiper))
 end
 
+-- Short Name Changer
+local function utf8sub(string, index)
+	local bytes = string:len()
+	if (bytes <= index) then
+		return string
+	else
+		local length, currentIndex = 0, 1
+
+		while currentIndex <= bytes do
+			length = length + 1
+			local char = string:byte(currentIndex)
+
+			if (char > 240) then
+				currentIndex = currentIndex + 4
+			elseif (char > 225) then
+				currentIndex = currentIndex + 3
+			elseif (char > 192) then
+				currentIndex = currentIndex + 2
+			else
+				currentIndex = currentIndex + 1
+			end
+
+			if (length == index) then
+				break
+			end
+		end
+
+		if (length == index and currentIndex <= bytes) then
+			return string:sub(1, currentIndex - 1).."*"
+		else
+			return string
+		end
+	end
+end
+
 --------------------------------------
 -- Custom Tag
 --------------------------------------
@@ -185,6 +231,18 @@ oUF.Tags.Methods["unit:name"] = function(unit)
 	end
 end
 oUF.Tags.Events["unit:name"] = "UNIT_NAME_UPDATE UNIT_CONNECTION"
+
+-- Unit Short Name Tag
+oUF.Tags.Methods["unit:shortname"] = function(unit)
+	local name = oUF.Tags.Methods["name"](unit)
+	local color = GetUnitColor(unit)
+	if color then
+		return "|cff"..GetHexColor(color)..utf8sub(name, 8).."|r"
+	else
+		return "|cffff00ff"..utf8sub(name, 8).."|r"
+	end
+end
+oUF.Tags.Events["unit:shortname"] = "UNIT_NAME_UPDATE UNIT_CONNECTION"
 
 -- Unit Level Tag
 oUF.Tags.Methods["unit:level"] = function(unit)
@@ -245,20 +303,20 @@ oUF.Tags.Methods["unit:shorthp"] = function(unit)
 end
 oUF.Tags.Events["unit:shorthp"] = "UNIT_HEALTH"
 
--- Arena Health Tag
-oUF.Tags.Methods["unit:arenahealth"] = function(unit)
+-- Class Color Health Tag
+oUF.Tags.Methods["unit:classcolorhealth"] = function(unit)
 	local perhp = oUF.Tags.Methods["perhp"](unit)
-	local color = GetUnitColor(unit)
+	local color = GetClassHealthColor(unit)
 	if color then
 		return "|cff"..GetHexColor(color)..perhp.."|r"
 	else
 		return "|cffff00ff"..perhp.."|r"
 	end
 end
-oUF.Tags.Events["unit:arenahealth"] = "UNIT_HEALTH"
+oUF.Tags.Events["unit:classcolorhealth"] = "UNIT_HEALTH_FREQUENT UNIT_MAXHEALTH"
 
--- Arena HP Tag
-oUF.Tags.Methods["unit:arenahp"] = function(unit)
+-- Class Color HP Tag
+oUF.Tags.Methods["unit:classcolorhp"] = function(unit)
 	if not UnitIsDeadOrGhost(unit) then	
 		local hp = UnitHealth(unit)
 		local color = GetHealthColor(unit)
@@ -269,7 +327,7 @@ oUF.Tags.Methods["unit:arenahp"] = function(unit)
 		end
 	end
 end
-oUF.Tags.Events["unit:arenahp"] = "UNIT_HEALTH"
+oUF.Tags.Events["unit:classcolorhp"] = "UNIT_HEALTH"
 
 -- ComboPoints Tag
 oUF.Tags.Methods["unit:cpoints"] = function(unit)
