@@ -4,13 +4,16 @@
 ## Notes: oUF layout for Large Screen
 ## Dependencies: oUF
 
+Config.lua
+
+Func\CustomAuraFilter.lua
 Func\CustomTag.lua
 Func\CustomTexture.lua
 
 Plugin\oUF_AuraTracker.lua
-Plugin\oUF_AuraWatch.lua
 Plugin\oUF_GCD.lua
+Plugin\oUF_PartySpecIcons.lua
+Plugin\oUF_PVPSpecIcons.lua
 Plugin\oUF_Trinkets.lua
 
-Config.lua
 StyleTemplate.lua

@@ -1,6 +1,6 @@
 local _, ns = ...
+local cfg = ns.cfg
 local oUF = ns.oUF or oUF
-assert(oUF, 'oUF not loaded')
 
 local trinketSpells = {
 	[59752] = 120,
@@ -17,6 +17,14 @@ local GetTrinketIcon = function(unit)
 end
 
 local Update = function(self, event, ...)
+	local _, instanceType = IsInInstance();
+	if instanceType ~= 'arena' then
+		self.Trinket:Show(); 
+		return;
+	else
+		self.Trinket:Show(); 
+	end
+	
 	if(self.Trinket.PreUpdate) then self.Trinket:PreUpdate(event) end
 	
 	if event == "COMBAT_LOG_EVENT_UNFILTERED" then
