@@ -559,7 +559,7 @@ local UnitSpecific = {
 		Shared(self, ...)		
 		self.unit = 'arena'
 		self:SetSize(64,32)
-		self.Range = {insideAlpha = 1, outsideAlpha = 0.4,}
+		-- self.Range = {insideAlpha = 1, outsideAlpha = 0.4,}
 
 		if cfg.arenaCastbar then castbar(self) end
 
@@ -705,6 +705,7 @@ oUF:Factory(function(self)
 		arenaprep[i]:SetSize(31,31)
 		arenaprep[i]:SetPoint("TOPRIGHT", arena[i], "LEFT", -3, 10)
 		]]--
+		arenaprep[i]:SetAllPoints(_G['oUF_Arena'..i])
 		arenaprep[i]:SetFrameStrata('BACKGROUND')
 		arenaprep[i].framebd = framebd(arenaprep[i], arenaprep[i])
 
@@ -740,10 +741,10 @@ oUF:Factory(function(self)
 					local f = arenaprep[i]
 					if i <= numOpps then
 						local s = GetArenaOpponentSpec(i)
-						local _, spec, texture, class
+						local _, spec, class = nil, 'UNKNOWN', 'UNKNOWN'
 	
 						if s and s > 0 then
-							_, spec, _, texture, _, _, class = GetSpecializationInfoByID(s)
+							_, spec, _, _, _, _, class = GetSpecializationInfoByID(s)
 						end
 	
 						if class and spec then
@@ -755,6 +756,7 @@ oUF:Factory(function(self)
 							end
 							f.Spec:SetText(spec..'  -  '..LOCALIZED_CLASS_NAMES_MALE[class])
 							f:Show()
+						end
 					else
 						f:Hide()
 					end
