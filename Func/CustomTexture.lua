@@ -7,9 +7,8 @@
 local _, ns = ...
 local cfg = ns.cfg
 
-local FONT = [[Interface\AddOns\oUF_KBJ\Media\semplice.ttf]]
-local TEXTURE = [[Interface\ChatFrame\ChatFrameBackground]]
-local BACKDROP = { bgFile = TEXTURE, insets = {top = -1, bottom = -1, left = -1, right = -1} }
+local fontAura = [[Interface\AddOns\oUF_KBJ\Media\semplice.ttf]]
+local BACKDROP = { bgFile = [[Interface\ChatFrame\ChatFrameBackground]], insets = {top = -1, bottom = -1, left = -1, right = -1} }
 
 
 --------------------------------------
@@ -61,12 +60,12 @@ ns.PostCreateAura = function(element, button)
 	button.count:SetParent(StringParent)
 	button.count:ClearAllPoints()
 	button.count:SetPoint('BOTTOMRIGHT', button, 2, 1)
-	button.count:SetFont(FONT, 8, 'OUTLINEMONOCHROME')
+	button.count:SetFont(fontAura, 8, 'OUTLINEMONOCHROME')
 
 	if (cfg.dontUsedCCTimer) then 
 		local Duration = StringParent:CreateFontString(nil, 'OVERLAY')
 		Duration:SetPoint('TOPLEFT', button, 1, -1)
-		Duration:SetFont(FONT, 8, 'OUTLINEMONOCHROME')
+		Duration:SetFont(fontAura, 8, 'OUTLINEMONOCHROME')
 		button.Duration = Duration
 		button:HookScript('OnUpdate', UpdateAura)
 	end

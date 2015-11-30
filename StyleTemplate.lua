@@ -5,14 +5,9 @@
 local _, ns = ...
 local cfg = ns.cfg
 
-local fontNumber = "Interface\\AddOns\\oUF_KBJ\\Media\\DAMAGE.ttf"
 local fontGeneral = STANDARD_TEXT_FONT
-local playerClass = select(2, UnitClass("player"))
-local class = UnitClass('player')
-local class_color = RAID_CLASS_COLORS[class]
-local FONT = [[Interface\AddOns\oUF_KBJ\Media\semplice.ttf]]
-local TEXTURE = [[Interface\ChatFrame\ChatFrameBackground]]
-local BACKDROP = { bgFile = TEXTURE, insets = {top = -1, bottom = -1, left = -1, right = -1} }
+local fontNumber = [[Interface\AddOns\oUF_KBJ\Media\DAMAGE.ttf]]
+local playerClass = select(2, UnitClass('player'))
 
 local Loader = CreateFrame('Frame')
 Loader:RegisterEvent('ADDON_LOADED')
@@ -25,60 +20,55 @@ end)
 
 
 --------------------------------------
--- Library
---------------------------------------
-
-framebd = function(parent, anchor) 
-    local frame = CreateFrame('Frame', nil, parent)
-    frame:SetFrameStrata('BACKGROUND')
-    frame:SetPoint('TOPLEFT', anchor, 'TOPLEFT', -3, 3)
-    frame:SetPoint('BOTTOMRIGHT', anchor, 'BOTTOMRIGHT', 3, -3)
-    frame:SetBackdrop({
-    edgeFile = "Interface\\AddOns\\oUF_KBJ\\Media\\glowTex", edgeSize = 3,
-    bgFile = [=[Interface\ChatFrame\ChatFrameBackground]=],
-    insets = {left = 3, right = 3, top = 3, bottom = 3}})
-    frame:SetBackdropColor(0, 0, 0)
-    frame:SetBackdropBorderColor(0, 0, 0)
-    return frame
-end
-
-local fixStatusbar = function(bar)
-    bar:GetStatusBarTexture():SetHorizTile(false)
-    bar:GetStatusBarTexture():SetVertTile(false)
-end
-
-createStatusbar = function(parent, tex, layer, height, width, r, g, b, alpha)
-    local bar = CreateFrame'StatusBar'
-    bar:SetParent(parent)
-    if height then
-        bar:SetHeight(height)
-    end
-    if width then
-        bar:SetWidth(width)
-    end
-    bar:SetStatusBarTexture(tex, layer)
-    bar:SetStatusBarColor(r, g, b, alpha)
-    fixStatusbar(bar)
-    return bar
-end
-
-fs = function(parent, layer, font, fontsiz, outline, r, g, b, justify)
-    local string = parent:CreateFontString(nil, layer)
-    string:SetFont(font, fontsiz, outline)
-    string:SetShadowOffset(0, 0)
-    string:SetTextColor(r, g, b)
-    if justify then
-        string:SetJustifyH(justify)
-    end
-    return string
-end
-
-
---------------------------------------
 -- Function
 --------------------------------------
 
 -- Castbar
+framebd = function(parent, anchor) 
+	local frame = CreateFrame('Frame', nil, parent)
+	frame:SetFrameStrata('BACKGROUND')
+	frame:SetPoint("TOPLEFT", anchor, "TOPLEFT", -3, 3)
+	frame:SetPoint("BOTTOMRIGHT", anchor, "BOTTOMRIGHT", 3, -3)
+	frame:SetBackdrop({
+	edgeFile = "Interface\\AddOns\\oUF_KBJ\\Media\\glowTex", edgeSize = 3,
+	bgFile = [=[Interface\ChatFrame\ChatFrameBackground]=],
+	insets = {left = 3, right = 3, top = 3, bottom = 3}
+	})
+	frame:SetBackdropColor(0, 0, 0)
+	frame:SetBackdropBorderColor(0, 0, 0)
+	return frame
+end
+
+local fixStatusbar = function(bar)
+	bar:GetStatusBarTexture():SetHorizTile(false)
+	bar:GetStatusBarTexture():SetVertTile(false)
+end
+createStatusbar = function(parent, tex, layer, height, width, r, g, b, alpha)
+	local bar = CreateFrame'StatusBar'
+	bar:SetParent(parent)
+	if height then
+		bar:SetHeight(height)
+	end
+	if width then
+		bar:SetWidth(width)
+	end
+	bar:SetStatusBarTexture(tex, layer)
+	bar:SetStatusBarColor(r, g, b, alpha)
+	fixStatusbar(bar)
+	return bar
+end
+
+fs = function(parent, layer, font, fontsiz, outline, r, g, b, justify)
+	local string = parent:CreateFontString(nil, layer)
+	string:SetFont(font, fontsiz, outline)
+	string:SetShadowOffset(0, 0)
+	string:SetTextColor(r, g, b)
+	if justify then
+		string:SetJustifyH(justify)
+	end
+	return string
+end
+
 local channelingTicks = {
 	-- Druid
 	[GetSpellInfo(740)] = 4,	-- Tranquility
@@ -270,6 +260,15 @@ local castbar = function(self, unit)
 				self.Castbar.SafeZone.sendTime = GetTime()
 			end
 		end, true)
+
+		local gcd = createStatusbar(self, "Interface\\AddOns\\oUF_KBJ\\Media\\texture", nil, cfg.playerCastbarPosition_Height/6, cfg.playerCastbarPosition_Width, 0.5, 0.5, 0.5, 1)
+		gcd:SetPoint("CENTER", UIParent, cfg.playerCastbarPosition_X, cfg.playerCastbarPosition_Y-cfg.playerCastbarPosition_Height/1.2)
+		gcd.bg = gcd:CreateTexture(nil, 'BORDER')
+		gcd.bg:SetAllPoints(gcd)
+		gcd.bg:SetTexture("Interface\\AddOns\\oUF_KBJ\\Media\\texture")
+		gcd.bg:SetVertexColor(0.5, 0.5, 0.5, 0.4)
+		gcd.bd = framebd(gcd, gcd)	
+		self.GCD = gcd
 	elseif self.unit == 'target' then
 		cb:SetPoint("CENTER", UIParent, cfg.targetCastbarPosition_X, cfg.targetCastbarPosition_Y)
 		cb:SetSize(cfg.targetCastbarPosition_Width, cfg.targetCastbarPosition_Height)
@@ -367,15 +366,6 @@ local UnitSpecific = {
 			monkChi:SetPoint("CENTER", self, "BOTTOM", 0, -13)
 			self:Tag(monkChi, "[unit:monkchi]")
 		end
-
-		local gcd = createStatusbar(self, "Interface\\AddOns\\oUF_KBJ\\Media\\texture", nil, cfg.playerCastbarPosition_Height/6, cfg.playerCastbarPosition_Width, 0.5, 0.5, 0.5, 1)
-		gcd:SetPoint("CENTER", UIParent, cfg.playerCastbarPosition_X, cfg.playerCastbarPosition_Y-cfg.playerCastbarPosition_Height/1.2)
-		gcd.bg = gcd:CreateTexture(nil, 'BORDER')
-		gcd.bg:SetAllPoints(gcd)
-		gcd.bg:SetTexture("Interface\\AddOns\\oUF_KBJ\\Media\\texture")
-		gcd.bg:SetVertexColor(0.5, 0.5, 0.5, 0.4)
-		gcd.bd = framebd(gcd, gcd)	
-		self.GCD = gcd
 	end,
 
 	target = function(self, ...)
@@ -583,18 +573,19 @@ local UnitSpecific = {
 		local Trinket = CreateFrame("Frame", nil, self)
 		Trinket:SetSize(31,31)
 		Trinket:SetPoint("TOPRIGHT", self, "LEFT", -3, 10)
-		Trinket.framebd = framebd(Trinket, Trinket)
 		self.Trinket = Trinket
-
+--[[
 		local SpecIcon = CreateFrame("Frame", nil, self)
 		SpecIcon:SetSize(31,31)
 		SpecIcon:SetPoint("TOPRIGHT", self, "LEFT", -41, 10)
 		SpecIcon:SetFrameStrata("LOW")
 		SpecIcon.framebd = framebd(SpecIcon, SpecIcon)
 		self.PVPSpecIcon = SpecIcon
-
+]]--
 		local TrackingArenaCC = CreateFrame('Frame', nil, self)
-		TrackingArenaCC:SetAllPoints(SpecIcon)
+		TrackingArenaCC:SetSize(31,31)
+		TrackingArenaCC:SetPoint("TOPRIGHT", self, "LEFT", -41, 10)
+		--TrackingArenaCC:SetAllPoints(SpecIcon)
 		TrackingArenaCC:SetFrameStrata("MEDIUM")
 		TrackingArenaCC.icon = TrackingArenaCC:CreateTexture(nil, 'ARTWORK')
 		TrackingArenaCC.icon:SetAllPoints(TrackingArenaCC)
@@ -699,13 +690,11 @@ oUF:Factory(function(self)
 		arenatarget[i]:SetPoint("LEFT", arena[i], "RIGHT", 0, 18)
 	end
 	local arenaprep = {}
+	local arenaprepspec = {}
 	for i = 1, 5 do
-		arenaprep[i] = CreateFrame('Frame', 'oUF_ArenaPrep'..i, UIParent)
-		--[[
+		arenaprep[i] = CreateFrame('Frame', 'oUF_ArenaPrep'..i, UIParent)		
 		arenaprep[i]:SetSize(31,31)
 		arenaprep[i]:SetPoint("TOPRIGHT", arena[i], "LEFT", -3, 10)
-		]]--
-		arenaprep[i]:SetAllPoints(_G['oUF_Arena'..i])
 		arenaprep[i]:SetFrameStrata('BACKGROUND')
 		arenaprep[i].framebd = framebd(arenaprep[i], arenaprep[i])
 
@@ -713,9 +702,9 @@ oUF:Factory(function(self)
 		arenaprep[i].Health:SetAllPoints()
 		arenaprep[i].Health:SetStatusBarTexture("Interface\\AddOns\\oUF_KBJ\\Media\\texture")
 
-		arenaprep[i].Spec = fs(arenaprep[i].Health, 'OVERLAY', fontGeneral, 12, "THINOUTLINE", 0.5, 0.5, 0.5)
-		arenaprep[i].Spec:SetPoint('CENTER')
-		arenaprep[i].Spec:SetJustifyH'CENTER'
+		arenaprep[i].SpecIcon = arenaprep[i]:CreateTexture(nil, 'LOW')
+		arenaprep[i].SpecIcon:SetSize(35, 35)
+		arenaprep[i].SpecIcon:SetPoint("TOPRIGHT", arena[i], "LEFT", -39, 12)		
 
 		arenaprep[i]:Hide()
 	end
@@ -730,10 +719,12 @@ oUF:Factory(function(self)
 			for i = 1, 5 do
 				arenaprep[i]:SetAllPoints(_G['oUF_Arena'..i])
 			end
+--[[ Used Trick
 		elseif event == 'ARENA_OPPONENT_UPDATE' then
 			for i = 1, 5 do
 				arenaprep[i]:Hide()
 			end
+]]--
 		else
 			local numOpps = GetNumArenaOpponentSpecs()
 			if numOpps > 0 then
@@ -741,20 +732,16 @@ oUF:Factory(function(self)
 					local f = arenaprep[i]
 					if i <= numOpps then
 						local s = GetArenaOpponentSpec(i)
-						local _, spec, class = nil, 'UNKNOWN', 'UNKNOWN'
+						local _, spec, texture, class
 	
 						if s and s > 0 then
-							_, spec, _, _, _, _, class = GetSpecializationInfoByID(s)
+							_, spec, _, texture, _, _, class = GetSpecializationInfoByID(s)
 						end
 	
 						if class and spec then
-							local class_colorbars = false
-							if class_colorbars then
-								f.Health:SetStatusBarColor(class_color.r, class_color.g, class_color.b)
-							else
-								f.Health:SetStatusBarColor(0.33, 0.33, 0.33)
-							end
-							f.Spec:SetText(spec..'  -  '..LOCALIZED_CLASS_NAMES_MALE[class])
+							local class_color = RAID_CLASS_COLORS[class]
+							f.Health:SetStatusBarColor(class_color.r, class_color.g, class_color.b)
+							f.SpecIcon:SetTexture(texture or [[INTERFACE\ICONS\INV_MISC_QUESTIONMARK]])
 							f:Show()
 						end
 					else

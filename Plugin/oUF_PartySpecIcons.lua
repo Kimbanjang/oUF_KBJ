@@ -1,13 +1,11 @@
 local _, ns = ...
 local cfg = ns.cfg
 local oUF = ns.oUF or oUF
---local pclassIcons = {}
 
 local Update = function(self, event)
 	if event == 'PARTY_MEMBERS_CHANGED' and unit ~= self.unit then return; end
 	local pclassIcon = self.PartyClassIcon	
 	local _, class = UnitClass(self.unit)
-	--local coords = pclassIcons[class]
 
 	if class and UnitIsPlayer(self.unit) then
 		pclassIcon.Icon:SetTexture("Interface\\AddOns\\oUF_KBJ\\Media\\"..class..".tga")

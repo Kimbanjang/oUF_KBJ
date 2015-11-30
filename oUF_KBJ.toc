@@ -6,6 +6,7 @@
 
 Config.lua
 
+Library.lua
 Func\CustomAuraFilter.lua
 Func\CustomTag.lua
 Func\CustomTexture.lua
