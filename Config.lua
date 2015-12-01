@@ -76,11 +76,11 @@ focusCastbarPosition_Height = 20,
 arenaFramePosition_X = 268,
 arenaFramePosition_Y = -71,
 
-arenaCastbar = false,		-- true/false
-arenaCastbarPosition_X = -161,
-arenaCastbarPosition_Y = 34,
-arenaCastbarPosition_Width = 159,
-arenaCastbarPosition_Height = 30,
+arenaCastbar = true,		-- true/false
+arenaCastbarPosition_X = -79,
+arenaCastbarPosition_Y = 1,
+arenaCastbarPosition_Width = 146,
+arenaCastbarPosition_Height = 18,
 
 --[[ not ready
 -- Raid Frame

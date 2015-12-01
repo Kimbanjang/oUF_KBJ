@@ -371,7 +371,8 @@ local UnitSpecific = {
 	target = function(self, ...)
 		Shared(self, ...)
 		self.unit = 'target'
-		self:SetSize(64,32)
+		self:SetSize(64,32)		
+		self:SetAttribute("type3", "focus")
 		
 		if cfg.targetCastbar then castbar(self) end
 
@@ -391,6 +392,7 @@ local UnitSpecific = {
 		targetName:SetPoint("LEFT", targetHpPer, "TOP", 40, -7)
 		targetName:SetFont(fontGeneral, 12, 'THINOUTLINE')
 		self:Tag(targetName, "[unit:level] [unit:name]")
+
 
 		self.RaidIcon = self:CreateTexture(nil, 'OVERLAY')
 		self.RaidIcon:SetAlpha(0.6)
@@ -459,6 +461,7 @@ local UnitSpecific = {
 		Shared(self, ...)
 		self.unit = 'party'
 		self:SetSize(64,32)
+		self:SetAttribute("type3", "focus")
 		self.Range = {insideAlpha = 1, outsideAlpha = 0.4,}
 
 		local partyHpPer = self:CreateFontString(nil, "OVERLAY")
@@ -473,7 +476,7 @@ local UnitSpecific = {
 		partyName:SetPoint("CENTER", partyHpPer, "TOP", 0, 6)
 		partyName:SetFont(fontGeneral, 10, 'THINOUTLINE')
 		self:Tag(partyName, "[unit:name]")
-
+		
 		self.Leader = self:CreateTexture(nil, "OVERLAY")
 		self.Leader:SetSize(12, 12)
 		self.Leader:SetPoint("CENTER", self, "TOPLEFT", -30, 1)
@@ -493,14 +496,14 @@ local UnitSpecific = {
 
 		local PartyClassIcon = CreateFrame("Frame", nil, self)
 		PartyClassIcon:SetSize(31,31)
-		PartyClassIcon:SetPoint("TOPRIGHT", self, "LEFT", -3, 10)		
+		PartyClassIcon:SetPoint("TOPRIGHT", self, "LEFT", -3, 10)
 		PartyClassIcon:SetFrameStrata("LOW")
 		PartyClassIcon.framebd = framebd(PartyClassIcon, PartyClassIcon)
 		self.PartyClassIcon = PartyClassIcon
 		
 		local TrackingPartyCC = CreateFrame('Frame', nil, self)
 		TrackingPartyCC:SetAllPoints(PartyClassIcon)
-		TrackingPartyCC:SetFrameStrata("MEDIUM")
+		--TrackingPartyCC:SetFrameStrata("LOW")
 		TrackingPartyCC.icon = TrackingPartyCC:CreateTexture(nil, 'ARTWORK')
 		TrackingPartyCC.icon:SetAllPoints(TrackingPartyCC)
 		TrackingPartyCC.icon:SetTexCoord(0.07,0.93,0.07,0.93)  
@@ -549,7 +552,8 @@ local UnitSpecific = {
 		Shared(self, ...)		
 		self.unit = 'arena'
 		self:SetSize(64,32)
-		-- self.Range = {insideAlpha = 1, outsideAlpha = 0.4,}
+		self:SetAttribute("type2", "focus")
+		self.Range = {insideAlpha = 1, outsideAlpha = 0.4,}
 
 		if cfg.arenaCastbar then castbar(self) end
 
@@ -558,34 +562,28 @@ local UnitSpecific = {
 		arenaHpPer:SetFont(fontNumber, 24, 'THINOUTLINE')
 		self:Tag(arenaHpPer, "[unit:classcolorhealth]")
 		local arenaHpCur = self:CreateFontString(nil, "OVERLAY")
-		arenaHpCur:SetPoint("CENTER", arenaHpPer, "TOP", -49, 6)
+		arenaHpCur:SetPoint("CENTER", arenaHpPer, "TOP", 0, 6)
 		arenaHpCur:SetFont(fontGeneral, 10, 'THINOUTLINE')
 		self:Tag(arenaHpCur, "[unit:classcolorhp]")
 		local arenaPpPer = self:CreateFontString(nil, "OVERLAY")
 		arenaPpPer:SetPoint("CENTER", arenaHpPer, "BOTTOM", 1, -4)
 		arenaPpPer:SetFont(fontNumber, 14, 'THINOUTLINE')
 		self:Tag(arenaPpPer, "[unit:power]")
+		--[[
 		local arenaName = self:CreateFontString(nil, "OVERLAY")
 		arenaName:SetPoint("CENTER", arenaHpPer, "TOP", 0, 6)
 		arenaName:SetFont(fontGeneral, 10, 'THINOUTLINE')
 		self:Tag(arenaName, "[unit:name]")
+		]]--
 
 		local Trinket = CreateFrame("Frame", nil, self)
 		Trinket:SetSize(31,31)
 		Trinket:SetPoint("TOPRIGHT", self, "LEFT", -3, 10)
 		self.Trinket = Trinket
---[[
-		local SpecIcon = CreateFrame("Frame", nil, self)
-		SpecIcon:SetSize(31,31)
-		SpecIcon:SetPoint("TOPRIGHT", self, "LEFT", -41, 10)
-		SpecIcon:SetFrameStrata("LOW")
-		SpecIcon.framebd = framebd(SpecIcon, SpecIcon)
-		self.PVPSpecIcon = SpecIcon
-]]--
+
 		local TrackingArenaCC = CreateFrame('Frame', nil, self)
 		TrackingArenaCC:SetSize(31,31)
 		TrackingArenaCC:SetPoint("TOPRIGHT", self, "LEFT", -41, 10)
-		--TrackingArenaCC:SetAllPoints(SpecIcon)
 		TrackingArenaCC:SetFrameStrata("MEDIUM")
 		TrackingArenaCC.icon = TrackingArenaCC:CreateTexture(nil, 'ARTWORK')
 		TrackingArenaCC.icon:SetAllPoints(TrackingArenaCC)
@@ -669,7 +667,7 @@ oUF:Factory(function(self)
 			self:SetAttribute('unitsuffix', 'target')
 		]])
 	)
-	partytargets:SetPoint("LEFT", party, "RIGHT", 0, 18)
+	partytargets:SetPoint("LEFT", party, "RIGHT", 0, 19)
 
 	local arena = {}
 	self:SetActiveStyle'KBJ - Arena'
@@ -681,7 +679,7 @@ oUF:Factory(function(self)
 	self:SetActiveStyle'KBJ - Pet'
 	for i = 1, 5 do
 		arenapet[i] = self:Spawn("arena"..i.."pet", "oUF_Arena"..i.."pet")
-		arenapet[i]:SetPoint("CENTER", arena[i], "LEFT", -55, 18)
+		arenapet[i]:SetPoint("CENTER", arena[i], "LEFT", -9, 18)
 	end
 	local arenatarget = {}
 	self:SetActiveStyle'KBJ - Targettarget'
@@ -695,16 +693,20 @@ oUF:Factory(function(self)
 		arenaprep[i] = CreateFrame('Frame', 'oUF_ArenaPrep'..i, UIParent)		
 		arenaprep[i]:SetSize(31,31)
 		arenaprep[i]:SetPoint("TOPRIGHT", arena[i], "LEFT", -3, 10)
-		arenaprep[i]:SetFrameStrata('BACKGROUND')
 		arenaprep[i].framebd = framebd(arenaprep[i], arenaprep[i])
 
 		arenaprep[i].Health = CreateFrame('StatusBar', nil, arenaprep[i])
 		arenaprep[i].Health:SetAllPoints()
 		arenaprep[i].Health:SetStatusBarTexture("Interface\\AddOns\\oUF_KBJ\\Media\\texture")
 
-		arenaprep[i].SpecIcon = arenaprep[i]:CreateTexture(nil, 'LOW')
-		arenaprep[i].SpecIcon:SetSize(35, 35)
-		arenaprep[i].SpecIcon:SetPoint("TOPRIGHT", arena[i], "LEFT", -39, 12)		
+		arenaprep[i].SpecIcon = arenaprep[i]:CreateTexture(nil, 'OVERLAY')
+		arenaprep[i].SpecIcon.BG = CreateFrame('Frame', nil, arenaprep[i])
+		arenaprep[i].SpecIcon.BG:SetSize(31,31)
+		arenaprep[i].SpecIcon.BG:SetPoint("TOPRIGHT", arena[i], "LEFT", -41, 10)
+		arenaprep[i].SpecIcon.BG.framebd = framebd(arenaprep[i].SpecIcon.BG, arenaprep[i].SpecIcon.BG)
+		arenaprep[i].SpecIcon:SetSize(33, 33)
+		arenaprep[i].SpecIcon:SetPoint("TOPRIGHT", arena[i], "LEFT", -40, 11)		
+		arenaprep[i].SpecIcon:SetTexture([[INTERFACE\AddOns\oUF_KBJ\Media\Mage.tga]]) -- debug
 
 		arenaprep[i]:Hide()
 	end
