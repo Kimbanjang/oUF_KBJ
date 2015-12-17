@@ -31,21 +31,21 @@ partyFramePosition_Y = -55,
 -- Player Castbar
 playerCastbar = true,		-- true/false
 playerCastbarPosition_X = 10,
-playerCastbarPosition_Y = 145,
-playerCastbarPosition_Width = 190,
+playerCastbarPosition_Y = 43,
+playerCastbarPosition_Width = 180,
 playerCastbarPosition_Height = 20,
 
 -- Target Castbar
 targetCastbar = true,		-- true/false
 targetCastbarPosition_X = 15,
-targetCastbarPosition_Y = 200,
+targetCastbarPosition_Y = 130,
 targetCastbarPosition_Width = 210,
 targetCastbarPosition_Height = 30,
 
 -- Focus Castbar
 focusCastbar = true,		-- true/false
 focusCastbarPosition_X = 15,
-focusCastbarPosition_Y = 235,
+focusCastbarPosition_Y = 163,
 focusCastbarPosition_Width = 210,
 focusCastbarPosition_Height = 20,
 

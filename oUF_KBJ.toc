@@ -11,7 +11,8 @@ Func\CustomAuraFilter.lua
 Func\CustomTag.lua
 Func\CustomTexture.lua
 
-Plugin\oUF_AuraTracker.lua
+Plugin\oUF_AuraTrackerCC.lua
+Plugin\oUF_AuraTrackerDEF.lua
 Plugin\oUF_GCD.lua
 Plugin\oUF_PartySpecIcons.lua
 Plugin\oUF_PVPSpecIcons.lua

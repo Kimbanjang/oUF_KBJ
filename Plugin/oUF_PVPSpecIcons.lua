@@ -1,5 +1,4 @@
 local _, ns = ...
-local cfg = ns.cfg
 local oUF = ns.oUF or oUF
 
 local Update = function(self, event, unit)

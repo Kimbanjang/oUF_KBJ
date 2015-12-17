@@ -121,12 +121,7 @@ end
 -- GetClassHealthColor func
 local function GetClassHealthColor(unit)
 	if not unit then return end
-	local classColor = GetHSVColor(GetUnitColor(unit))
-	local hcur, hmax = UnitHealth(unit), UnitHealthMax(unit)
-	local hper = 0
-	if hmax > 0 then hper = hcur/hmax end
-	--you may need to swap red and green color
-	return GetRGBColor(GetSmudgeHSVColor(redColor,classColor,hper))
+	return GetRGBColor(GetHSVColor(GetUnitColor(unit)))
 end
 
 -- GetCPointColor func
@@ -237,9 +232,9 @@ oUF.Tags.Methods["unit:shortname"] = function(unit)
 	local name = oUF.Tags.Methods["name"](unit)
 	local color = GetUnitColor(unit)
 	if color then
-		return "|cff"..GetHexColor(color)..utf8sub(name, 8).."|r"
+		return "|cff"..GetHexColor(color)..utf8sub(name, 9).."|r"
 	else
-		return "|cffff00ff"..utf8sub(name, 8).."|r"
+		return "|cffff00ff"..utf8sub(name, 9).."|r"
 	end
 end
 oUF.Tags.Events["unit:shortname"] = "UNIT_NAME_UPDATE UNIT_CONNECTION"
