@@ -84,6 +84,9 @@ local function GetAurasCC()
 		[GetSpellInfo(63685)] = 3,	-- Freeze (Frozen Power)
 		[GetSpellInfo(64695)] = 3,	-- Earthgrab
 		[GetSpellInfo(107566)] = 3,	-- Staggering Shout		
+
+		
+		[GetSpellInfo(77769)] = 1,	-- Staggering Shout
 	}
 end
 

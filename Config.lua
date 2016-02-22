@@ -25,8 +25,12 @@ focusFramePosition_X = 265,
 focusFramePosition_Y = 95,
 
 -- Party/PartyPet/PartyTarget Frame
-partyFramePosition_X = -79,
-partyFramePosition_Y = -55,
+partyFramePosition_X = -89,
+partyFramePosition_Y = -53,
+
+-- Raid Frame
+raidFramePosition_X = -150,
+raidFramePosition_Y = -53,
 
 -- Player Castbar
 playerCastbar = true,		-- true/false
@@ -83,7 +87,7 @@ arenaCastbarPosition_Width = 146,
 arenaCastbarPosition_Height = 18,
 
 --[[ not ready
--- Raid Frame
+-- 
 ]]
 
 }

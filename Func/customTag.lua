@@ -215,8 +215,22 @@ end
 -- Custom Tag
 --------------------------------------
 
--- Unit Name Tag
-oUF.Tags.Methods["unit:name"] = function(unit)
+-- Raid Name Tag
+oUF.Tags.Methods["unit:raidname"] = function(unit)
+	local name = oUF.Tags.Methods["name"](unit)
+	return utf8sub(name, 5)
+end
+oUF.Tags.Events["unit:raidname"] = "UNIT_NAME_UPDATE UNIT_CONNECTION"
+
+-- Party Name Tag
+oUF.Tags.Methods["unit:partyname"] = function(unit)
+	local name = oUF.Tags.Methods["name"](unit)
+	return utf8sub(name, 9)
+end
+oUF.Tags.Events["unit:partyname"] = "UNIT_NAME_UPDATE UNIT_CONNECTION"
+
+-- Unit Color Name Tag
+oUF.Tags.Methods["unit:colorname"] = function(unit)
 	local name = oUF.Tags.Methods["name"](unit)
 	local color = GetUnitColor(unit)
 	if color then
@@ -225,19 +239,19 @@ oUF.Tags.Methods["unit:name"] = function(unit)
 		return "|cffff00ff"..name.."|r"
 	end
 end
-oUF.Tags.Events["unit:name"] = "UNIT_NAME_UPDATE UNIT_CONNECTION"
+oUF.Tags.Events["unit:colorname"] = "UNIT_NAME_UPDATE UNIT_CONNECTION"
 
--- Unit Short Name Tag
-oUF.Tags.Methods["unit:shortname"] = function(unit)
+-- Unit Color Short Name Tag
+oUF.Tags.Methods["unit:colorshortname"] = function(unit)
 	local name = oUF.Tags.Methods["name"](unit)
 	local color = GetUnitColor(unit)
 	if color then
-		return "|cff"..GetHexColor(color)..utf8sub(name, 9).."|r"
+		return "|cff"..GetHexColor(color)..utf8sub(name, 8).."|r"
 	else
-		return "|cffff00ff"..utf8sub(name, 9).."|r"
+		return "|cffff00ff"..utf8sub(name, 8).."|r"
 	end
 end
-oUF.Tags.Events["unit:shortname"] = "UNIT_NAME_UPDATE UNIT_CONNECTION"
+oUF.Tags.Events["unit:colorshortname"] = "UNIT_NAME_UPDATE UNIT_CONNECTION"
 
 -- Unit Level Tag
 oUF.Tags.Methods["unit:level"] = function(unit)
@@ -288,7 +302,7 @@ oUF.Tags.Methods["unit:power"] = function(unit)
 end
 oUF.Tags.Events["unit:power"] = "UNIT_DISPLAYPOWER UNIT_POWER_FREQUENT UNIT_MAXPOWER"
 
--- Short HP Tag
+-- Unit Short HP Tag
 oUF.Tags.Methods["unit:shorthp"] = function(unit)
 	if not UnitIsDeadOrGhost(unit) then
 		local hp = UnitHealth(unit)
@@ -299,7 +313,7 @@ end
 oUF.Tags.Events["unit:shorthp"] = "UNIT_HEALTH"
 
 -- Class Color Health Tag
-oUF.Tags.Methods["unit:classcolorhealth"] = function(unit)
+oUF.Tags.Methods["unit:colorhealth"] = function(unit)
 	local perhp = oUF.Tags.Methods["perhp"](unit)
 	local color = GetClassHealthColor(unit)
 	if color then
@@ -308,10 +322,10 @@ oUF.Tags.Methods["unit:classcolorhealth"] = function(unit)
 		return "|cffff00ff"..perhp.."|r"
 	end
 end
-oUF.Tags.Events["unit:classcolorhealth"] = "UNIT_HEALTH_FREQUENT UNIT_MAXHEALTH"
+oUF.Tags.Events["unit:colorhealth"] = "UNIT_HEALTH_FREQUENT UNIT_MAXHEALTH"
 
 -- Class Color HP Tag
-oUF.Tags.Methods["unit:classcolorhp"] = function(unit)
+oUF.Tags.Methods["unit:colorhp"] = function(unit)
 	if not UnitIsDeadOrGhost(unit) then	
 		local hp = UnitHealth(unit)
 		local color = GetHealthColor(unit)
@@ -322,7 +336,7 @@ oUF.Tags.Methods["unit:classcolorhp"] = function(unit)
 		end
 	end
 end
-oUF.Tags.Events["unit:classcolorhp"] = "UNIT_HEALTH"
+oUF.Tags.Events["unit:colorhp"] = "UNIT_HEALTH"
 
 -- ComboPoints Tag
 oUF.Tags.Methods["unit:cpoints"] = function(unit)

@@ -4,7 +4,6 @@ local oUF = ns.oUF or oUF
 local function GetAuras()
 	return {
 		-- Spell Name			Priority (higher = more priority)
-		-- Crowd Controls
 		-- Death Knight
 		[GetSpellInfo(91800)] = 4,	-- Gnaw (Ghoul)
 		[GetSpellInfo(91797)] = 4,	-- Monstrous Blow (Mutated Ghoul)
@@ -84,14 +83,17 @@ local function GetAuras()
 		[GetSpellInfo(114404)] = 3,	-- Void Tendril's Grasp
 		[GetSpellInfo(63685)] = 3,	-- Freeze (Frozen Power)
 		[GetSpellInfo(64695)] = 3,	-- Earthgrab
-		[GetSpellInfo(107566)] = 3,	-- Staggering Shout
-	
+		[GetSpellInfo(107566)] = 3,	-- Staggering Shout		
+
 		-- Immunities
 		[GetSpellInfo(19263)] = 2,	-- Deterrence
 		[GetSpellInfo(45438)] = 2,	-- Ice Block
 		[GetSpellInfo(642)] = 2,	-- Divine Shield
 		[GetSpellInfo(46924)] = 2,	-- Bladestorm
 		[GetSpellInfo(118038)] = 2,	-- Die by the Sword
+		[GetSpellInfo(116849)] = 2,	-- Die by the Sword
+		
+		--[GetSpellInfo(115921)] = 1,	-- Die by the Sword
 	
 		-- Buffs
 		[GetSpellInfo(1022)] = 1,	-- Hand of Protection
@@ -106,7 +108,6 @@ local function GetAuras()
 		[GetSpellInfo(48792)] = 1,	-- Icebound Fortitude
 		[GetSpellInfo(31224)] = 1,	-- Cloak of Shadows
 		[GetSpellInfo(871)] = 1,	-- Shield Wall
-		
 	}
 end
 
@@ -153,9 +154,11 @@ local function Update(object, event, unit)
 	if auraName then -- If an aura is found, display it and set the time left!
 		object.AuraTracker.icon:SetTexture(auraIcon)
 		object.AuraTracker.cooldownFrame:SetCooldown(auraExpTime - GetTime(), GetTime())
+		object.AuraTracker.dropFrame:Show()
 	elseif not auraName then -- No aura found and one is shown? Kill it since it's no longer active!
 		object.AuraTracker.icon:SetTexture("")
-		object.AuraTracker.cooldownFrame:Hide()
+		object.AuraTracker.cooldownFrame:Hide()		
+		object.AuraTracker.dropFrame:Hide()
 	end
 end
 
@@ -166,6 +169,15 @@ local function Enable(object)
 	if not object.AuraTracker.cooldownFrame then
 		object.AuraTracker.cooldownFrame = CreateFrame("Cooldown", nil, object.AuraTracker)
 		object.AuraTracker.cooldownFrame:SetAllPoints(object.AuraTracker)
+		object.AuraTracker.dropFrame =  CreateFrame('Frame', nil, object.AuraTracker)
+		object.AuraTracker.dropFrame:SetAllPoints(object.AuraTracker)
+		object.AuraTracker.dropFrame:SetFrameStrata('MEDIUM')
+		object.AuraTracker.dropFrame:SetBackdrop({
+			edgeFile = "Interface\\AddOns\\oUF_KBJ\\Media\\borderTarget", edgeSize = 16,
+			bgFile = nil,
+			insets = {left = -1, right = -1, top = -1, bottom = -1}
+		})
+		object.AuraTracker.dropFrame:SetBackdropBorderColor(1, 0, 0)
 	end
 
 	-- Make sure aura scanning is active for this object

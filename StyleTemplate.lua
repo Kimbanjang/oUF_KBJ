@@ -6,6 +6,9 @@ local _, ns = ...
 local cfg = ns.cfg
 
 local fontGeneral = STANDARD_TEXT_FONT
+local fontTestA = [[Interface\AddOns\oUF_KBJ\Media\fontSmall.ttf]]
+local fontTestB = [[Interface\AddOns\oUF_KBJ\Media\fontThick.ttf]]
+local fontTestC = [[Interface\AddOns\oUF_KBJ\Media\fontVisitor.ttf]]
 local fontNumber = [[Interface\AddOns\oUF_KBJ\Media\DAMAGE.ttf]]
 local playerClass = UnitClass('player')
 
@@ -322,7 +325,7 @@ local UnitSpecific = {
 		--Shared(self, ...)
 		if cfg.playerCastbar then castbar(self) end
 		self.unit = 'player'
-		self:SetSize(64,32)
+		self:SetSize(46,20)
 
 		local playerHpPer = self:CreateFontString(nil, "OVERLAY")
 		playerHpPer:SetPoint("CENTER", self, "CENTER", 0, 0)
@@ -332,13 +335,7 @@ local UnitSpecific = {
 		playerPpPer:SetPoint("CENTER", playerHpPer, "BOTTOM", 0, -4)
 		playerPpPer:SetFont(fontNumber, 10, 'THINOUTLINE')
 		self:Tag(playerPpPer, "[unit:power]")
-
-		self.Leader = self:CreateTexture(nil, "OVERLAY")
-		self.Leader:SetSize(12, 12)
-		self.Leader:SetPoint("LEFT", self, "LEFT", 8, 14)
-		self.Assistant = self:CreateTexture(nil, "OVERLAY")
-		self.Assistant:SetSize(12, 12)
-		self.Assistant:SetPoint("LEFT", self, "LEFT", 8, 14)		
+	
 		self.Resting = self:CreateTexture(nil, "OVERLAY")
 		self.Resting:SetSize(20, 18)
 		self.Resting:SetPoint("LEFT", self, "TOPLEFT", -5, -1)		
@@ -391,7 +388,7 @@ local UnitSpecific = {
 		local targetName = self:CreateFontString(nil, "OVERLAY")
 		targetName:SetPoint("LEFT", targetHpPer, "TOP", 40, -7)
 		targetName:SetFont(fontGeneral, 12, 'THINOUTLINE')
-		self:Tag(targetName, "[unit:level] [unit:name]")
+		self:Tag(targetName, "[unit:level] [unit:colorname]")
 
 		self.RaidIcon = self:CreateTexture(nil, 'OVERLAY')
 		self.RaidIcon:SetAlpha(0.6)
@@ -431,19 +428,30 @@ local UnitSpecific = {
 		local focusName = self:CreateFontString(nil, "OVERLAY")
 		focusName:SetPoint("CENTER", focusHpPer, "TOP", 0, 7)
 		focusName:SetFont(fontGeneral, 10, 'THINOUTLINE')
-		self:Tag(focusName, "[unit:name]")
+		self:Tag(focusName, "[unit:colorshortname]")
 	end,
 
 	pet = function(self, ...)
 		Shared(self, ...)
-		self.unit = 'pet'
-		self:SetSize(64,32)
+		self.unit = 'partypet'
+		self:SetSize(3,12)
 		self.Range = {insideAlpha = 1, outsideAlpha = 0.4,}
 
-		local petHpPer = self:CreateFontString(nil, "OVERLAY")
-		petHpPer:SetPoint("CENTER", self, "CENTER", 0, 0)
-		petHpPer:SetFont(fontGeneral, 10, 'THINOUTLINE')
-		self:Tag(petHpPer, "[unit:health]")
+		local petFrame = CreateFrame('Frame', nil, self)
+		petFrame:SetSize(3,12)
+		petFrame:SetPoint("CENTER", self, "CENTER", 0, 0)
+		petFrame.framebd = framebd(petFrame, petFrame)
+		self.Health = CreateFrame('StatusBar', nil, petFrame)
+		self.Health:SetOrientation("VERTICAL")
+		self.Health:SetSize(3,12)
+		self.Health:SetPoint("TOP", petFrame, "TOP", 0, 0)
+		self.Health:SetStatusBarTexture("Interface\\AddOns\\oUF_KBJ\\Media\\texture")
+		self.Health.colorHealth = true
+		self.Health.colorSmooth = true
+		self.Health.Smooth = true
+		self.HealthBG = self.Health:CreateTexture(nil, 'BORDER')
+		self.HealthBG:SetAllPoints()
+		self.HealthBG:SetTexture(0.2, 0.2, 0.2)
 	end,
 
 	targettarget = function(self, ...)
@@ -453,28 +461,113 @@ local UnitSpecific = {
 		local targettargetStat = self:CreateFontString(nil, "OVERLAY")
 		targettargetStat:SetPoint("LEFT", self, "LEFT", 0, 0)
 		targettargetStat:SetFont(fontGeneral, 12, 'THINOUTLINE')
-		self:Tag(targettargetStat, "[unit:health] [unit:name]")
+		self:Tag(targettargetStat, "[unit:health] [unit:colorname]")
 	end,
 
 	party = function(self, ...)
 		Shared(self, ...)
 		self.unit = 'party'
-		self:SetSize(64,32)
+		self:SetSize(72,45)
 		self:SetAttribute("type3", "focus")
 		self.Range = {insideAlpha = 1, outsideAlpha = 0.4,}
 
-		local partyHpPer = self:CreateFontString(nil, "OVERLAY")
-		partyHpPer:SetPoint("CENTER", self, "CENTER", 0, 0)
-		partyHpPer:SetFont(fontNumber, 24, 'THINOUTLINE')
-		self:Tag(partyHpPer, "[unit:classcolorhealth]")
-		local partyPpPer = self:CreateFontString(nil, "OVERLAY")
-		partyPpPer:SetPoint("CENTER", partyHpPer, "BOTTOM", 1, -4)
-		partyPpPer:SetFont(fontNumber, 14, 'THINOUTLINE')
-		self:Tag(partyPpPer, "[unit:power]")
-		local partyName = self:CreateFontString(nil, "OVERLAY")
-		partyName:SetPoint("CENTER", partyHpPer, "TOP", 0, 6)
-		partyName:SetFont(fontGeneral, 10, 'THINOUTLINE')
-		self:Tag(partyName, "[unit:shortname]")
+		local partyFrame = CreateFrame('Frame', nil, self)
+		partyFrame:SetSize(72,45)
+		partyFrame:SetPoint("CENTER", self, "CENTER", 0, 0)
+		partyFrame.framebd = framebd(partyFrame, partyFrame)
+		self.Health = CreateFrame('StatusBar', nil, partyFrame)
+		self.Health:SetSize(72,42)
+		self.Health:SetPoint("TOP", partyFrame, "TOP", 0, 0)
+		self.Health:SetStatusBarTexture("Interface\\AddOns\\oUF_KBJ\\Media\\texture")
+		self.Health.colorClass = true
+		self.Health.colorDisconnected = true
+		self.Health.Smooth = true
+		self.HealthBG = self.Health:CreateTexture(nil, 'BORDER')
+		self.HealthBG:SetAllPoints()
+		self.HealthBG:SetTexture(0.2, 0.2, 0.2)
+		self.Power = CreateFrame('StatusBar', nil, partyFrame)
+		self.Power:SetSize(72,2)
+		self.Power:SetPoint("TOP", self.Health, "BOTTOM", 0, -1)
+		self.Power:SetStatusBarTexture("Interface\\AddOns\\oUF_KBJ\\Media\\texture")
+		self.Power.colorPower = true
+		self.Power.colorDisconnected = true
+		self.Power.Smooth = true
+		self.PowerBG = self.Power:CreateTexture(nil, 'BORDER')
+		self.PowerBG:SetAllPoints()
+		self.PowerBG:SetTexture(0.1, 0.1, 0.1)
+
+		local partyHpPer = self.Health:CreateFontString(nil, "OVERLAY")
+		partyHpPer:SetPoint("RIGHT", self.Health, "BOTTOMRIGHT", 1, 7)
+		partyHpPer:SetFont(fontTestB, 10, 'THINOUTLINE')
+		self:Tag(partyHpPer, "[unit:health]")
+		local partyName = self.Health:CreateFontString(nil, "OVERLAY")
+		partyName:SetPoint("LEFT", self.Health, "TOPLEFT", 2, -5)
+		partyName:SetFont(fontTestB, 10)
+		partyName:SetShadowOffset(1, -1)
+		partyName:SetTextColor(1, 1, 1)
+		self:Tag(partyName, "[unit:partyname]")
+
+		self.Leader = self.Health:CreateTexture(nil, "OVERLAY")
+		self.Leader:SetSize(11, 11)
+		self.Leader:SetPoint("CENTER", self, "TOPLEFT", 4, 5)
+		self.Assistant = self.Health:CreateTexture(nil, "OVERLAY")
+		self.Assistant:SetSize(11, 11)
+		self.Assistant:SetPoint("CENTER", self, "TOPLEFT", 4, 5)
+		self.RaidIcon = self.Health:CreateTexture(nil, "OVERLAY")
+		self.RaidIcon:SetSize(16, 16)
+		self.RaidIcon:SetPoint("CENTER", self, "LEFT", 0, 2)
+		self.LFDRole = self.Health:CreateTexture(nil, "OVERLAY")
+		self.LFDRole:SetSize(10, 10)
+		self.LFDRole:SetPoint("CENTER", self, "TOPRIGHT", -6, -6)
+		self.ReadyCheck = self.Health:CreateTexture(nil, "OVERLAY")
+		self.ReadyCheck:SetSize(32, 32)
+		self.ReadyCheck:SetPoint("CENTER", self, "CENTER", 0, 0)
+
+		local AuraTrackParty = CreateFrame('Frame', nil, self)
+		AuraTrackParty:SetAlpha(0.9)
+		AuraTrackParty:SetSize(34,34)
+		AuraTrackParty:SetPoint("CENTER", self.Health, "CENTER", 0, 0)		
+		AuraTrackParty:SetFrameStrata('HIGH')
+		AuraTrackParty.icon = AuraTrackParty:CreateTexture(nil, 'ARTWORK')
+		AuraTrackParty.icon:SetAllPoints(AuraTrackParty)
+		self.AuraTracker = AuraTrackParty
+
+		local Debuffs = CreateFrame('Frame', nil, self)
+		Debuffs:SetSize(100, 30)
+		Debuffs.PostCreateIcon = ns.PostCreateAura
+		Debuffs.PostUpdateIcon = ns.PostUpdateDebuff		
+		Debuffs:SetPoint('TOPLEFT', self, 'RIGHT', 4, 7)
+		-- Debuffs.disableCooldown : Do not display the cooldown spiral
+		-- Debuffs.CustomFilter = CustomAuraFilters.party
+		Debuffs.initialAnchor = 'BOTTOMLEFT'
+		Debuffs.num = 3
+		Debuffs.onlyShowPlayer = false
+		Debuffs.size = 30
+		Debuffs.spacing = 4
+		-- Debuffs['growth-x'] : horizontal growth direction (default is 'RIGHT')
+		Debuffs['growth-y'] = 'DOWN'
+		-- Debuffs['spacing-x'] : horizontal space between each debuff button (takes priority over Debuffs.spacing)
+		-- Debuffs['spacing-y'] : vertical space between each debuff button (takes priority over Debuffs.spacing)
+		self.Debuffs = Debuffs
+--[[ debug
+		local Buffs = CreateFrame('Frame', nil, self)
+		Buffs:SetSize(100, 30)
+		Buffs.PostCreateIcon = ns.PostCreateAura
+		Buffs.PostUpdateIcon = ns.PostUpdateBuff
+		Buffs:SetPoint('TOPLEFT', self, 'RIGHT', 4, 7)
+		-- Buffs.disableCooldown : Do not display the cooldown spiral		
+		-- Buffs.CustomFilter = CustomAuraFilters.party
+		Buffs.initialAnchor = 'BOTTOMLEFT'
+		Buffs.num = 3
+		Buffs.onlyShowPlayer = ture
+		Buffs.size = 30
+		Buffs.spacing = 4
+		-- Buffs['growth-x'] : horizontal growth direction (default is 'RIGHT')
+		Buffs['growth-y'] = 'DOWN'
+		-- Buffs['spacing-x'] : horizontal space between each debuff button (takes priority over Buffs.spacing)
+		-- Buffs['spacing-y'] : vertical space between each debuff button (takes priority over Buffs.spacing)
+		self.Buffs = Buffs
+]]--
 
 --[[ Test
 		self.TargetBorder = self:CreateTexture(nil, 'OVERLAY', self)
@@ -493,137 +586,63 @@ local UnitSpecific = {
 	            end
 	        end)
 ]]--
-		
-		self.Leader = self:CreateTexture(nil, "OVERLAY")
-		self.Leader:SetSize(12, 12)
-		self.Leader:SetPoint("CENTER", self, "TOPLEFT", -30, 1)
-		self.Assistant = self:CreateTexture(nil, "OVERLAY")
-		self.Assistant:SetSize(12, 12)
-		self.Assistant:SetPoint("CENTER", self, "TOPLEFT", -30, 1)
-		self.RaidIcon = self:CreateTexture(nil, 'OVERLAY')
-		self.RaidIcon:SetAlpha(0.7)
-		self.RaidIcon:SetSize(22, 22)
-		self.RaidIcon:SetPoint("CENTER", self, "TOP", 0, 4)
-		self.LFDRole = self:CreateTexture(nil, "OVERLAY")
-		self.LFDRole:SetSize(14, 14)
-		self.LFDRole:SetPoint("CENTER", self, "LEFT", -5, -19)
-		self.ReadyCheck = self:CreateTexture(nil, "OVERLAY")
-		self.ReadyCheck:SetSize(32, 32)
-		self.ReadyCheck:SetPoint("CENTER", self, "LEFT", -19, -5)
-
-		local PartyClassIcon = CreateFrame("Frame", nil, self)
-		PartyClassIcon:SetSize(31,31)
-		PartyClassIcon:SetPoint("TOPRIGHT", self, "LEFT", -3, 10)
-		PartyClassIcon:SetFrameStrata("LOW")
-		PartyClassIcon.framebd = framebd(PartyClassIcon, PartyClassIcon)
-		self.PartyClassIcon = PartyClassIcon
-
-		local TrackingPartyCC = CreateFrame('Frame', nil, self)
-		TrackingPartyCC:SetSize(39,39)
-		TrackingPartyCC:SetPoint("TOPRIGHT", self, "LEFT", 1, 14)
-		TrackingPartyCC.icon = TrackingPartyCC:CreateTexture(nil, 'ARTWORK')
-		TrackingPartyCC.icon:SetAllPoints(TrackingPartyCC)
-		self.AuraTrackerCC = TrackingPartyCC
-
-		local TrackingPartyDEF = CreateFrame('Frame', nil, self)
-		TrackingPartyDEF:SetSize(27,27)
-		TrackingPartyDEF:SetPoint("CENTER", self, "CENTER", 0, -6)
-		TrackingPartyDEF.icon = TrackingPartyDEF:CreateTexture(nil, 'ARTWORK')
-		TrackingPartyDEF.icon:SetAllPoints(TrackingPartyDEF)
-		self.AuraTrackerDEF = TrackingPartyDEF
-
-		local Buffs = CreateFrame('Frame', nil, self)
-		Buffs:SetSize(140, 30)
-		Buffs.PostCreateIcon = ns.PostCreateAura
-		Buffs.PostUpdateIcon = ns.PostUpdateBuff
-		Buffs:SetPoint('TOPLEFT', self, 'RIGHT', 1, 10)
-		-- Buffs.disableCooldown : Do not display the cooldown spiral		
-		Buffs.CustomFilter = CustomAuraFilters.party
-		Buffs.initialAnchor = 'BOTTOMLEFT'
-		Buffs.num = 4
-		Buffs.onlyShowPlayer = ture
-		Buffs.size = 28
-		Buffs.spacing = 4
-		-- Buffs['growth-x'] : horizontal growth direction (default is 'RIGHT')
-		Buffs['growth-y'] = 'DOWN'
-		-- Buffs['spacing-x'] : horizontal space between each debuff button (takes priority over Buffs.spacing)
-		-- Buffs['spacing-y'] : vertical space between each debuff button (takes priority over Buffs.spacing)
-		self.Buffs = Buffs
-
-		--[[
-		local Debuffs = CreateFrame('Frame', nil, self)
-		Debuffs:SetSize(160, 30)
-		Debuffs.PostCreateIcon = ns.PostCreateAura
-		Debuffs.PostUpdateIcon = ns.PostUpdateDebuff		
-		Debuffs:SetPoint('TOPLEFT', self, 'RIGHT', -2, 4)
-		-- Debuffs.disableCooldown : Do not display the cooldown spiral
-		-- Debuffs.filter : custom filter list for debuffs to display
-		Debuffs.initialAnchor = 'BOTTOMLEFT'
-		Debuffs.num = 7
-		Debuffs.onlyShowPlayer = false
-		Debuffs.size = 19
-		Debuffs.spacing = 4
-		-- Debuffs['growth-x'] : horizontal growth direction (default is 'RIGHT')
-		Debuffs['growth-y'] = 'DOWN'
-		-- Debuffs['spacing-x'] : horizontal space between each debuff button (takes priority over Debuffs.spacing)
-		-- Debuffs['spacing-y'] : vertical space between each debuff button (takes priority over Debuffs.spacing)
-		self.Debuffs = Debuffs
-		]]--
 	end,
 
 	raid  = function(self, ...)
 		Shared(self, ...)		
 		self.unit = 'raid'
-		self:SetSize(64,32)
+		self:SetSize(50,45)
 		self:SetAttribute("type2", "focus")
 		self.Range = {insideAlpha = 1, outsideAlpha = 0.4,}
 
 		local raidFrame = CreateFrame('Frame', nil, self)
-		raidFrame:SetSize(64,39)
+		raidFrame:SetSize(50,45)
 		raidFrame:SetPoint("CENTER", self, "CENTER", 0, 0)
 		raidFrame.framebd = framebd(raidFrame, raidFrame)
 		self.Health = CreateFrame('StatusBar', nil, raidFrame)
-		self.Health:SetSize(64,35)
+		self.Health:SetSize(50,42)
 		self.Health:SetPoint("TOP", raidFrame, "TOP", 0, 0)
 		self.Health:SetStatusBarTexture("Interface\\AddOns\\oUF_KBJ\\Media\\texture")
 		self.Health.colorClass = true
-		self.Health.colorSmooth = true
 		self.Health.colorDisconnected = true
+		self.Health.Smooth = true
 		self.HealthBG = self.Health:CreateTexture(nil, 'BORDER')
 		self.HealthBG:SetAllPoints()
 		self.HealthBG:SetTexture(0.2, 0.2, 0.2)
 		self.Power = CreateFrame('StatusBar', nil, raidFrame)
-		self.Power:SetSize(64,3)
+		self.Power:SetSize(50,2)
 		self.Power:SetPoint("TOP", self.Health, "BOTTOM", 0, -1)
 		self.Power:SetStatusBarTexture("Interface\\AddOns\\oUF_KBJ\\Media\\texture")
 		self.Power.colorPower = true
-		self.Power.colorSmooth = true
 		self.Power.colorDisconnected = true
+		self.Power.Smooth = true
 		self.PowerBG = self.Power:CreateTexture(nil, 'BORDER')
 		self.PowerBG:SetAllPoints()
 		self.PowerBG:SetTexture(0.1, 0.1, 0.1)
 
 		local raidHpPer = self.Health:CreateFontString(nil, "OVERLAY")
 		raidHpPer:SetPoint("RIGHT", self.Health, "BOTTOMRIGHT", 1, 7)
-		raidHpPer:SetFont(fontGeneral, 10, 'THINOUTLINE')
+		raidHpPer:SetFont(fontTestB, 10, 'THINOUTLINE')
 		self:Tag(raidHpPer, "[unit:health]")
 		local raidName = self.Health:CreateFontString(nil, "OVERLAY")
-		raidName:SetPoint("LEFT", self.Health, "TOPLEFT", 1, 2)
-		raidName:SetFont(fontGeneral, 10, 'THINOUTLINE')
-		self:Tag(raidName, "[unit:shortname]")
+		raidName:SetPoint("LEFT", self.Health, "TOPLEFT", 2, -5)
+		raidName:SetFont(fontTestB, 10)
+		raidName:SetShadowOffset(1, -1)
+		raidName:SetTextColor(1, 1, 1)
+		self:Tag(raidName, "[unit:raidname]")
 
 		self.Leader = self.Health:CreateTexture(nil, "OVERLAY")
-		self.Leader:SetSize(12, 12)
-		self.Leader:SetPoint("CENTER", self, "TOPRIGHT", -5, 9)
+		self.Leader:SetSize(11, 11)
+		self.Leader:SetPoint("CENTER", self, "TOPLEFT", 4, 5)
 		self.Assistant = self.Health:CreateTexture(nil, "OVERLAY")
-		self.Assistant:SetSize(12, 12)
-		self.Assistant:SetPoint("CENTER", self, "TOPRIGHT", -5, 9)
+		self.Assistant:SetSize(11, 11)
+		self.Assistant:SetPoint("CENTER", self, "TOPLEFT", 4, 5)
 		self.RaidIcon = self.Health:CreateTexture(nil, "OVERLAY")
 		self.RaidIcon:SetSize(16, 16)
-		self.RaidIcon:SetPoint("CENTER", self, "LEFT", 0, 3)
+		self.RaidIcon:SetPoint("CENTER", self, "LEFT", 2, 3)
 		self.LFDRole = self.Health:CreateTexture(nil, "OVERLAY")
-		self.LFDRole:SetSize(14, 14)
-		self.LFDRole:SetPoint("CENTER", self, "BOTTOMLEFT", 2, -2)
+		self.LFDRole:SetSize(10, 10)
+		self.LFDRole:SetPoint("CENTER", self, "TOPRIGHT", -6, -6)
 		self.ReadyCheck = self.Health:CreateTexture(nil, "OVERLAY")
 		self.ReadyCheck:SetSize(32, 32)
 		self.ReadyCheck:SetPoint("CENTER", self, "CENTER", 0, 0)
@@ -641,11 +660,11 @@ local UnitSpecific = {
 		local arenaHpPer = self:CreateFontString(nil, "OVERLAY")
 		arenaHpPer:SetPoint("CENTER", self, "CENTER", 0, 0)
 		arenaHpPer:SetFont(fontNumber, 24, 'THINOUTLINE')
-		self:Tag(arenaHpPer, "[unit:classcolorhealth]")
+		self:Tag(arenaHpPer, "[unit:colorhealth]")
 		local arenaHpCur = self:CreateFontString(nil, "OVERLAY")
 		arenaHpCur:SetPoint("CENTER", arenaHpPer, "TOP", 0, 6)
 		arenaHpCur:SetFont(fontGeneral, 10, 'THINOUTLINE')
-		self:Tag(arenaHpCur, "[unit:classcolorhp]")
+		self:Tag(arenaHpCur, "[unit:colorhp]")
 		local arenaPpPer = self:CreateFontString(nil, "OVERLAY")
 		arenaPpPer:SetPoint("CENTER", arenaHpPer, "BOTTOM", 1, -4)
 		arenaPpPer:SetFont(fontNumber, 14, 'THINOUTLINE')
@@ -654,7 +673,7 @@ local UnitSpecific = {
 		local arenaName = self:CreateFontString(nil, "OVERLAY")
 		arenaName:SetPoint("CENTER", arenaHpPer, "TOP", 0, 6)
 		arenaName:SetFont(fontGeneral, 10, 'THINOUTLINE')
-		self:Tag(arenaName, "[unit:name]")
+		self:Tag(arenaName, "[unit:colorname]")
 		]]--
 
 		local Trinket = CreateFrame("Frame", nil, self)
@@ -662,12 +681,12 @@ local UnitSpecific = {
 		Trinket:SetPoint("TOPRIGHT", self, "LEFT", -3, 10)
 		self.Trinket = Trinket
 
-		local TrackingArenaCC = CreateFrame('Frame', nil, self)
-		TrackingArenaCC:SetSize(39,39)
-		TrackingArenaCC:SetPoint("TOPRIGHT", self, "LEFT", -37, 14)
-		TrackingArenaCC.icon = TrackingArenaCC:CreateTexture(nil, 'ARTWORK')
-		TrackingArenaCC.icon:SetAllPoints(TrackingArenaCC) 
-		self.AuraTrackerCC = TrackingArenaCC
+		local AuraTrackArena = CreateFrame('Frame', nil, self)
+		AuraTrackArena:SetSize(39,39)
+		AuraTrackArena:SetPoint("TOPRIGHT", self, "LEFT", -37, 14)
+		AuraTrackArena.icon = AuraTrackArena:CreateTexture(nil, 'ARTWORK')
+		AuraTrackArena.icon:SetAllPoints(AuraTrackArena) 
+		self.AuraTracker = AuraTrackArena
 
 		local Buffs = CreateFrame('Frame', nil, self)
 		Buffs:SetSize(140, 30)
@@ -717,58 +736,58 @@ end
 
 oUF:Factory(function(self)
 	spawnHelper(self, 'player', "CENTER", UIParent, cfg.playerFramePosition_X, cfg.playerFramePosition_Y)
-	spawnHelper(self, 'target', "CENTER", oUF_KBJPlayer, "BOTTOMRIGHT", 36, 10)
+	spawnHelper(self, 'target', "CENTER", oUF_KBJPlayer, "BOTTOMRIGHT", 45, 2)
 	spawnHelper(self, 'focus', "CENTER", UIParent, cfg.focusFramePosition_X, cfg.focusFramePosition_Y)
-	spawnHelper(self, 'pet', "CENTER", oUF_KBJPlayer, "TOP", -1, -2)
+	spawnHelper(self, 'pet', "CENTER", oUF_KBJPlayer, "LEFT", -3, 0)
 	spawnHelper(self, 'targettarget', "CENTER", oUF_KBJTarget, "BOTTOMRIGHT", 40, 13)
 	spawnHelper(self, 'focustarget', "CENTER", oUF_KBJFocus, "RIGHT", 26, 1)
 
 	self:SetActiveStyle'KBJ - Party'
-	local party = self:SpawnHeader(nil, nil, 'raid,party,solo', -- raid,party,solo for debug
-		'showParty', true, 'showPlayer', true, 'showSolo', true, -- debug		
-		'yOffset', -24
+	local party = self:SpawnHeader(nil, nil, 'raid,party', -- raid,party,solo for debug
+		'showParty', true, 'showPlayer', true, 'showSolo', false, -- debug		
+		'yOffset', -12
 	)
 	party:SetPoint("TOP", UIParent, "CENTER", cfg.partyFramePosition_X, cfg.partyFramePosition_Y)
 	self:SetActiveStyle'KBJ - Pet'
-	local pets = self:SpawnHeader(nil, nil, 'raid,party,solo', -- raid,party,solo for debug
-		'showParty', true, 'showPlayer', true, 'showSolo', true, -- debug		
-		'yOffset', -24,
+	local pets = self:SpawnHeader(nil, nil, 'raid,party', -- raid,party,solo for debug
+		'showParty', true, 'showPlayer', true, 'showSolo', false, -- debug	
+		'yOffset', -45,
 		'oUF-initialConfigFunction', ([[
 			self:SetAttribute('unitsuffix', 'pet')
 		]])
 	)
-	pets:SetPoint("CENTER", party, "LEFT", -9, 18)
+	pets:SetPoint("TOP", party, "TOPLEFT", -4, 0)
 	self:SetActiveStyle'KBJ - Targettarget'
-	local partytargets = self:SpawnHeader(nil, nil, 'raid,party,solo', -- raid,party,solo for debug
-		'showParty', true, 'showPlayer', true, 'showSolo', true, -- debug		
-		'yOffset', -24,
+	local partytargets = self:SpawnHeader(nil, nil, 'raid,party', -- raid,party,solo for debug
+		'showParty', true, 'showPlayer', true, 'showSolo', false, -- debug		
+		'yOffset', -25,
 		'oUF-initialConfigFunction', ([[
 			self:SetAttribute('unitsuffix', 'target')
 		]])
 	)
-	partytargets:SetPoint("LEFT", party, "RIGHT", 0, 19)
+	partytargets:SetPoint("TOP", party, "TOPRIGHT", 35, 12)
 
 	self:SetActiveStyle'KBJ - Raid'
 	local raid = self:SpawnHeader(nil, nil, 'raid,party,solo', -- raid,party,solo for debug
 		'showParty', true, 'showPlayer', true, 'showSolo', true, 'showRaid', true,-- debug
 		'xOffset', 5,
-		'yOffset', -24,
+		'yOffset', -12,
 		'columnSpacing', 5,
 		'sortMethod', 'INDEX',
 		'point', 'TOP',
-        'groupFilter', '1,2,3,4,5,6,7,8',
-        'groupingOrder', '1,2,3,4,5,6,7,8',
-        'groupBy', 'GROUP',
-        'maxColumns', 8,
-        'unitsPerColumn', 5,
-        'columnSpacing', 5,
-        'columnAnchorPoint', 'right',
+	        'groupBy', 'GROUP',
+	        'groupFilter', '1,2,3,4,5,6,7,8',
+	        'groupingOrder', '1,2,3,4,5,6,7,8',
+	        'maxColumns', 8,
+	        'unitsPerColumn', 5,
+	        'columnSpacing', 5,
+	        'columnAnchorPoint', 'right',
 		'oUF-initialConfigFunction', ([[
 			self:SetHeight(%d)
 			self:SetWidth(%d)
 		]]):format(52, 100)
 	)
-	raid:SetPoint("RIGHT", party, "LEFT", -200, 0)
+	raid:SetPoint("TOPRIGHT", UIParent, "CENTER", cfg.raidFramePosition_X, cfg.raidFramePosition_Y)
 
 	local arena = {}
 	self:SetActiveStyle'KBJ - Arena'
