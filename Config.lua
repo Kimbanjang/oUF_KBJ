@@ -12,17 +12,33 @@ local cfg = {}
 
 ns.cfg = {
 
--- Player/Pet/Target/TargetTarget Frame
+-- Player/Pet/Target/TargetTarget Frame/Focus Frame/FocusTarget Frame
 playerFramePosition_X = 130,
 playerFramePosition_Y = 10,
+	-- Target's Debuff
+	onlyShowMyDebuff = true,	-- true/false
+	dontUsedCCTimer = false,	-- false : you used tullaCC or OmniCC / ture : you dont used tullaCC or OmniCC
 
--- Target's Debuff
-onlyShowMyDebuff = true,	-- true/false
-dontUsedCCTimer = false,	-- ture : dont used tullaCC, OmniCC / false : used tullaCC, OmniCC
+	-- Player Castbar
+	playerCastbar = true,		-- true/false
+	playerCastbarPosition_Width = 180,
+	playerCastbarPosition_Height = 20,
+	playerCastbarPosition_X = 10,
+	playerCastbarPosition_Y = 43,
 
--- Focus Frame
-focusFramePosition_X = 265,
-focusFramePosition_Y = 95,
+	-- Target Castbar
+	targetCastbar = true,		-- true/false
+	targetCastbarPosition_Width = 210,
+	targetCastbarPosition_Height = 30,
+	targetCastbarPosition_X = 15,
+	targetCastbarPosition_Y = 130,
+
+	-- Focus Castbar
+	focusCastbar = true,		-- true/false
+	focusCastbarPosition_Width = 210,
+	focusCastbarPosition_Height = 20,
+	focusCastbarPosition_X = 15,
+	focusCastbarPosition_Y = 163,
 
 -- Party/PartyPet/PartyTarget Frame
 partyFramePosition_X = -89,
@@ -31,50 +47,6 @@ partyFramePosition_Y = -53,
 -- Raid Frame
 raidFramePosition_X = -150,
 raidFramePosition_Y = -53,
-
--- Player Castbar
-playerCastbar = true,		-- true/false
-playerCastbarPosition_X = 10,
-playerCastbarPosition_Y = 43,
-playerCastbarPosition_Width = 180,
-playerCastbarPosition_Height = 20,
-
--- Target Castbar
-targetCastbar = true,		-- true/false
-targetCastbarPosition_X = 15,
-targetCastbarPosition_Y = 130,
-targetCastbarPosition_Width = 210,
-targetCastbarPosition_Height = 30,
-
--- Focus Castbar
-focusCastbar = true,		-- true/false
-focusCastbarPosition_X = 15,
-focusCastbarPosition_Y = 163,
-focusCastbarPosition_Width = 210,
-focusCastbarPosition_Height = 20,
-
---[[
--- Player Castbar
-playerCastbar = true,		-- true/false
-playerCastbarPosition_X = 10,
-playerCastbarPosition_Y = -140,
-playerCastbarPosition_Width = 200,
-playerCastbarPosition_Height = 20,
-
--- Target Castbar
-targetCastbar = true,		-- true/false
-targetCastbarPosition_X = 15,
-targetCastbarPosition_Y = 117,
-targetCastbarPosition_Width = 275,
-targetCastbarPosition_Height = 30,
-
--- Focus Castbar
-focusCastbar = true,		-- true/false
-focusCastbarPosition_X = 15,
-focusCastbarPosition_Y = 149,
-focusCastbarPosition_Width = 275,
-focusCastbarPosition_Height = 20,
-]]--
 
 -- Arena Castbar
 arenaFramePosition_X = 268,

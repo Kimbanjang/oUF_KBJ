@@ -17,7 +17,7 @@ Loader:RegisterEvent('ADDON_LOADED')
 Loader:SetScript('OnEvent', function(self, event, addon)
 	if addon ~= 'oUF_KBJ' then return end
 
-	oUFLanAura = oUFKBJAura or {}
+	oUFKBJAura = oUFKBJAura or {}
 	UpdateAuraList()
 end)
 
@@ -322,10 +322,11 @@ end
 
 local UnitSpecific = {
 	player = function(self, ...)
-		--Shared(self, ...)
-		if cfg.playerCastbar then castbar(self) end
+		Shared(self, ...)
 		self.unit = 'player'
 		self:SetSize(46,20)
+
+		if cfg.playerCastbar then castbar(self) end
 
 		local playerHpPer = self:CreateFontString(nil, "OVERLAY")
 		playerHpPer:SetPoint("CENTER", self, "CENTER", 0, 0)
@@ -337,11 +338,11 @@ local UnitSpecific = {
 		self:Tag(playerPpPer, "[unit:power]")
 	
 		self.Resting = self:CreateTexture(nil, "OVERLAY")
-		self.Resting:SetSize(20, 18)
-		self.Resting:SetPoint("LEFT", self, "TOPLEFT", -5, -1)		
+		self.Resting:SetSize(16, 15)
+		self.Resting:SetPoint("CENTER", self, "TOPLEFT", -1, 6)		
 		self.Combat = self:CreateTexture(nil, "OVERLAY")
-		self.Combat:SetSize(15, 15)
-		self.Combat:SetPoint("LEFT", self, "LEFT", -3, 1)
+		self.Combat:SetSize(16, 16)
+		self.Combat:SetPoint("CENTER", self, "TOP", -1, 4)
 
 		-- Class Resource
 		---- Combo Point
@@ -380,7 +381,7 @@ local UnitSpecific = {
 		local targetHpCur = self:CreateFontString(nil, "OVERLAY")
 		targetHpCur:SetPoint("CENTER", targetHpPer, "TOP", 0, 5)
 		targetHpCur:SetFont(fontGeneral, 10, 'THINOUTLINE')
-		self:Tag(targetHpCur, "[unit:shorthp]")
+		self:Tag(targetHpCur, "[unit:shorthealth]")
 		local targetPpPer = self:CreateFontString(nil, "OVERLAY")
 		targetPpPer:SetPoint("CENTER", targetHpPer, "BOTTOM", 1, -5)
 		targetPpPer:SetFont(fontNumber, 20, 'THINOUTLINE')
@@ -388,7 +389,7 @@ local UnitSpecific = {
 		local targetName = self:CreateFontString(nil, "OVERLAY")
 		targetName:SetPoint("LEFT", targetHpPer, "TOP", 40, -7)
 		targetName:SetFont(fontGeneral, 12, 'THINOUTLINE')
-		self:Tag(targetName, "[unit:level] [unit:colorname]")
+		self:Tag(targetName, "[unit:level] [unit:colorname]")		
 
 		self.RaidIcon = self:CreateTexture(nil, 'OVERLAY')
 		self.RaidIcon:SetAlpha(0.6)
@@ -417,7 +418,7 @@ local UnitSpecific = {
 	focus = function(self, ...)
 		Shared(self, ...)		
 		self.unit = 'focus'
-		self:SetSize(64,32)
+		self:SetSize(46,20)
 
 		if cfg.focusCastbar then castbar(self) end
 
@@ -426,9 +427,9 @@ local UnitSpecific = {
 		focusHpPer:SetFont(fontNumber, 18, 'THINOUTLINE')
 		self:Tag(focusHpPer, "[unit:health]")
 		local focusName = self:CreateFontString(nil, "OVERLAY")
-		focusName:SetPoint("CENTER", focusHpPer, "TOP", 0, 7)
+		focusName:SetPoint("CENTER", focusHpPer, "TOP", 0, 5)
 		focusName:SetFont(fontGeneral, 10, 'THINOUTLINE')
-		self:Tag(focusName, "[unit:colorshortname]")
+		self:Tag(focusName, "[unit:focusname]")
 	end,
 
 	pet = function(self, ...)
@@ -461,7 +462,7 @@ local UnitSpecific = {
 		local targettargetStat = self:CreateFontString(nil, "OVERLAY")
 		targettargetStat:SetPoint("LEFT", self, "LEFT", 0, 0)
 		targettargetStat:SetFont(fontGeneral, 12, 'THINOUTLINE')
-		self:Tag(targettargetStat, "[unit:health] [unit:colorname]")
+		self:Tag(targettargetStat, "[unit:health] [unit:colorshortname]")
 	end,
 
 	party = function(self, ...)
@@ -736,21 +737,21 @@ end
 
 oUF:Factory(function(self)
 	spawnHelper(self, 'player', "CENTER", UIParent, cfg.playerFramePosition_X, cfg.playerFramePosition_Y)
-	spawnHelper(self, 'target', "CENTER", oUF_KBJPlayer, "BOTTOMRIGHT", 45, 2)
-	spawnHelper(self, 'focus', "CENTER", UIParent, cfg.focusFramePosition_X, cfg.focusFramePosition_Y)
+	spawnHelper(self, 'target', "CENTER", oUF_KBJPlayer, "BOTTOMRIGHT", 40, 2)
+	spawnHelper(self, 'focus', "CENTER", oUF_KBJPlayer, "TOP", 0, 25)
 	spawnHelper(self, 'pet', "CENTER", oUF_KBJPlayer, "LEFT", -3, 0)
 	spawnHelper(self, 'targettarget', "CENTER", oUF_KBJTarget, "BOTTOMRIGHT", 40, 13)
-	spawnHelper(self, 'focustarget', "CENTER", oUF_KBJFocus, "RIGHT", 26, 1)
+	spawnHelper(self, 'focustarget', "CENTER", oUF_KBJFocus, "RIGHT", 34, 1)
 
 	self:SetActiveStyle'KBJ - Party'
-	local party = self:SpawnHeader(nil, nil, 'raid,party', -- raid,party,solo for debug
-		'showParty', true, 'showPlayer', true, 'showSolo', false, -- debug		
+	local party = self:SpawnHeader(nil, nil, 'raid,party,solo', -- raid,party,solo for debug
+		'showParty', true, 'showPlayer', true, 'showSolo', true, -- debug		
 		'yOffset', -12
 	)
 	party:SetPoint("TOP", UIParent, "CENTER", cfg.partyFramePosition_X, cfg.partyFramePosition_Y)
 	self:SetActiveStyle'KBJ - Pet'
-	local pets = self:SpawnHeader(nil, nil, 'raid,party', -- raid,party,solo for debug
-		'showParty', true, 'showPlayer', true, 'showSolo', false, -- debug	
+	local pets = self:SpawnHeader(nil, nil, 'raid,party,solo', -- raid,party,solo for debug
+		'showParty', true, 'showPlayer', true, 'showSolo', true, -- debug	
 		'yOffset', -45,
 		'oUF-initialConfigFunction', ([[
 			self:SetAttribute('unitsuffix', 'pet')
@@ -758,30 +759,29 @@ oUF:Factory(function(self)
 	)
 	pets:SetPoint("TOP", party, "TOPLEFT", -4, 0)
 	self:SetActiveStyle'KBJ - Targettarget'
-	local partytargets = self:SpawnHeader(nil, nil, 'raid,party', -- raid,party,solo for debug
-		'showParty', true, 'showPlayer', true, 'showSolo', false, -- debug		
+	local partytargets = self:SpawnHeader(nil, nil, 'raid,party,solo', -- raid,party,solo for debug
+		'showParty', true, 'showPlayer', true, 'showSolo', true, -- debug		
 		'yOffset', -25,
 		'oUF-initialConfigFunction', ([[
 			self:SetAttribute('unitsuffix', 'target')
 		]])
 	)
-	partytargets:SetPoint("TOP", party, "TOPRIGHT", 35, 12)
+	partytargets:SetPoint("TOP", party, "TOPRIGHT", 35, 11)
 
 	self:SetActiveStyle'KBJ - Raid'
 	local raid = self:SpawnHeader(nil, nil, 'raid,party,solo', -- raid,party,solo for debug
 		'showParty', true, 'showPlayer', true, 'showSolo', true, 'showRaid', true,-- debug
 		'xOffset', 5,
 		'yOffset', -12,
-		'columnSpacing', 5,
-		'sortMethod', 'INDEX',
-		'point', 'TOP',
-	        'groupBy', 'GROUP',
-	        'groupFilter', '1,2,3,4,5,6,7,8',
-	        'groupingOrder', '1,2,3,4,5,6,7,8',
-	        'maxColumns', 8,
-	        'unitsPerColumn', 5,
-	        'columnSpacing', 5,
 	        'columnAnchorPoint', 'right',
+		'columnSpacing', 5,
+		'point', 'TOP',
+		'groupFilter', '1,2,3,4,5,6,7,8',	
+		'groupBy', 'GROUP',	        
+	        'groupingOrder', '1,2,3,4,5,6,7,8',
+		'sortMethod', 'INDEX',
+	        'unitsPerColumn', 5,
+		'maxColumns', 8,
 		'oUF-initialConfigFunction', ([[
 			self:SetHeight(%d)
 			self:SetWidth(%d)
