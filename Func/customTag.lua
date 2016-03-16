@@ -6,9 +6,9 @@
 
 local _, ns = ...
 
-local PowerBarColor = PowerBarColor
-local RAID_CLASS_COLORS = RAID_CLASS_COLORS
-local FACTION_BAR_COLORS = FACTION_BAR_COLORS
+-- local PowerBarColor = PowerBarColor
+-- local RAID_CLASS_COLORS = RAID_CLASS_COLORS
+-- local FACTION_BAR_COLORS = FACTION_BAR_COLORS
 local abs, floor, format = abs, floor, format
 
 
@@ -215,6 +215,13 @@ end
 -- Custom Tag
 --------------------------------------
 
+--! Party Name Tag
+oUF.Tags.Methods["unit:partyname"] = function(unit)
+	local name = oUF.Tags.Methods["name"](unit)
+	return utf8sub(name, 10)
+end
+oUF.Tags.Events["unit:partyname"] = "UNIT_NAME_UPDATE UNIT_HEALTH UNIT_MAXHEALTH UNIT_CONNECTION"
+
 --! Raid Name Tag
 oUF.Tags.Methods["unit:raidname"] = function(unit)
 	local name = oUF.Tags.Methods["name"](unit)
@@ -222,22 +229,19 @@ oUF.Tags.Methods["unit:raidname"] = function(unit)
 end
 oUF.Tags.Events["unit:raidname"] = "UNIT_NAME_UPDATE UNIT_HEALTH UNIT_MAXHEALTH UNIT_CONNECTION"
 
---! Party Name Tag
-oUF.Tags.Methods["unit:partyname"] = function(unit)
-	local name = oUF.Tags.Methods["name"](unit)
-	return utf8sub(name, 9)
-end
-oUF.Tags.Events["unit:partyname"] = "UNIT_NAME_UPDATE UNIT_HEALTH UNIT_MAXHEALTH UNIT_CONNECTION"
-
 --! Focus Name Tag
 oUF.Tags.Methods["unit:focusname"] = function(unit)
 	local name = oUF.Tags.Methods["name"](unit)
+	return utf8sub(name, 8)
+--[[
+	local name = oUF.Tags.Methods["name"](unit)
 	local color = GetUnitColor(unit)
 	if color then
-		return "|cff"..GetHexColor(color)..utf8sub(name, 6).."|r"
+		return "|cff"..GetHexColor(color)..utf8sub(name, 7).."|r"
 	else
-		return "|cffff00ff"..utf8sub(name, 6).."|r"
+		return "|cffff00ff"..utf8sub(name, 7).."|r"
 	end
+]]--
 end
 oUF.Tags.Events["unit:focusname"] = "UNIT_NAME_UPDATE UNIT_HEALTH UNIT_MAXHEALTH UNIT_CONNECTION"
 
@@ -252,18 +256,6 @@ oUF.Tags.Methods["unit:colorname"] = function(unit)
 	end
 end
 oUF.Tags.Events["unit:colorname"] = "UNIT_NAME_UPDATE UNIT_HEALTH UNIT_MAXHEALTH UNIT_CONNECTION"
-
---! Unit Color Short Name Tag
-oUF.Tags.Methods["unit:colorshortname"] = function(unit)
-	local name = oUF.Tags.Methods["name"](unit)
-	local color = GetUnitColor(unit)
-	if color then
-		return "|cff"..GetHexColor(color)..utf8sub(name, 12).."|r"
-	else
-		return "|cffff00ff"..utf8sub(name, 12).."|r"
-	end
-end
-oUF.Tags.Events["unit:colorshortname"] = "UNIT_NAME_UPDATE UNIT_HEALTH UNIT_MAXHEALTH UNIT_CONNECTION"
 
 -- Unit Level Tag
 oUF.Tags.Methods["unit:level"] = function(unit)
@@ -290,19 +282,28 @@ oUF.Tags.Methods["unit:level"] = function(unit)
 end
 oUF.Tags.Events["unit:level"] = "UNIT_NAME_UPDATE UNIT_CONNECTION"
 
---! Unit Health Tag 
-oUF.Tags.Methods["unit:health"] = function(unit)
-	local perhp = oUF.Tags.Methods["perhp"](unit)
+-- Unit Per HP Tag 
+oUF.Tags.Methods["unit:perhp"] = function(unit)
+	local perhp
 	local color = GetHealthColor(unit)
+
+	if UnitIsDeadOrGhost(unit) then
+		perhp = "Dead"
+	elseif not UnitIsConnected(unit) then
+		perhp = "Off"
+	else
+		perhp = oUF.Tags.Methods["perhp"](unit)
+	end
+
 	if color then
 		return "|cff"..GetHexColor(color)..perhp.."|r"
 	else
 		return "|cffff00ff"..perhp.."|r"
 	end
 end
-oUF.Tags.Events["unit:health"] = "UNIT_HEALTH UNIT_MAXHEALTH UNIT_CONNECTION"
+oUF.Tags.Events["unit:perhp"] = "UNIT_HEALTH UNIT_MAXHEALTH UNIT_CONNECTION"
 
---! Unit Short HP Tag
+-- Unit Short HP Tag
 oUF.Tags.Methods["unit:shorthealth"] = function(unit)
 	if not UnitIsDeadOrGhost(unit) then
 		local hp = UnitHealth(unit)
@@ -400,7 +401,7 @@ oUF.Tags.Events["unit:warlockresource"] = "UNIT_POWER SPELLS_CHANGED"
 -- Monk Chi Tag
 oUF.Tags.Methods["unit:monkchi"] = function(unit)
 	local mChi = oUF.Tags.Methods["chi"](unit)
-	if mChi == null then mChi = "" end
+	if mChi == null then mChi = "0" end
 	local mChiColor = GetMonkChiColor(unit)
 	if mChiColor then
 		return "|cff"..GetHexColor(mChiColor)..mChi.."|r"
