@@ -1,20 +1,24 @@
 ## Interface: 60200
-## Title: oUF_KBJ Second Edition
+## Title: oUF_KBJ
 ## Author: Kimbanjang
-## Notes: oUF layout for Large Screen
-## Dependencies: oUF
+## Notes: oUF layout
+## OptionalDeps: oUF
+## SavedVariablesPerCharacter: SavedOptionsPerChar
+## X-SlashCmdList: /omf
 
 Config.lua
 
-Func\CustomAuraFilter.lua
-Func\CustomTag.lua
-Func\CustomTexture.lua
+Plugins\oUF_AuraWatch.lua
+Plugins\oUF_DebuffHighlight.lua
+Plugins\oUF_GCD.lua
+Plugins\oUF_Portraittimers.lua
+Plugins\oUF_PVPSpecIcons.lua
+Plugins\oUF_RaidDebuffs.lua
+Plugins\oUF_Smooth.lua
+Plugins\oUF_ThreatBar.lua
+Plugins\oUF_Trinkets.lua
 
-Plugin\oUF_AuraTracker.lua
-Plugin\oUF_GCD.lua
-Plugin\oUF_PartySpecIcons.lua
-Plugin\oUF_PVPSpecIcons.lua
-Plugin\oUF_Smooth.lua
-Plugin\oUF_Trinkets.lua
-
-StyleTemplate.lua
+RaidDebuffs.lua
+CustomFunctions.lua
+CustomTags.lua
+Layout.lua

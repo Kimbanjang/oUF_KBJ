@@ -2,6 +2,8 @@ local _, ns = ...
 local cfg = ns.cfg
 local oUF = ns.oUF or oUF
 
+if not cfg.uf.arena then return end
+
 local trinketSpells = {
 	[59752] = 120,
 	[42292] = 120,

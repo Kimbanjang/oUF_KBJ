@@ -2,6 +2,8 @@ local _, ns = ...
 local cfg = ns.cfg
 local oUF = ns.oUF or oUF
 
+if not cfg.gcd.enable then return end
+
 local referenceSpells = {
 	48266,			-- Death Knight
 	3044,			-- Hunter
