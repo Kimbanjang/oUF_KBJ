@@ -194,24 +194,18 @@ local PostUpdateHealth = function(health, unit)
 	end
 end
 
+--[[
 local PostUpdatePower = function(Power, unit, min, max)
 	local h = Power:GetParent().Health
-	if max == 0 and cfg.options.hidepower then
+	if max == 0 then
 		Power:Hide()
-		if unit == 'boss' then
-		    h:SetHeight(cfg.party.health+cfg.party.power+1)
-		else
-		    h:SetHeight(cfg.player.health+cfg.player.power+1)
-		end
+		h:SetHeight(cfg.player.health+cfg.player.power+1)
 	else
 	    Power:Show()
-	    if unit == 'boss' then
-		    h:SetHeight(cfg.party.health)
-		else
-		    h:SetHeight(cfg.player.health)
-		end
+		h:SetHeight(cfg.player.health)
 	end
 end
+]]
 
 local AWIcon = function(AWatch, icon, spellID, name, self)			
 	local count = fs(icon, 'OVERLAY', cfg.aura.font, cfg.aura.fontsize, cfg.aura.fontflag, 1, 1, 1)
@@ -608,7 +602,8 @@ local UnitSpecific = {
 		
 		Power(self)
 
-		self.framebd = framebd(self, self)
+		self.framebd = framebd(self, self)		
+		self.DebuffHighlight = cfg.dh.player
 
 	    if cfg.player_cb.enable then
             castbar(self)
@@ -616,7 +611,6 @@ local UnitSpecific = {
 	        PetCastingBarFrame.Show = function() end
 	        PetCastingBarFrame:Hide()
         end
-
 		if cfg.options.healcomm then Healcomm(self) end
 
 		self:SetSize(cfg.player.width, cfg.player.health+cfg.player.power+1)	
@@ -625,7 +619,8 @@ local UnitSpecific = {
 	    self.Power:SetHeight(cfg.player.power)
 
         local htext = fs(self.Health, 'OVERLAY', cfg.font, 15, cfg.fontflag, 1, 1, 1)
-        htext:SetPoint('TOP', self.Health, 'TOP', 1.5, -1)
+        htext:SetPoint('TOP', self.Health, 'TOP', 1.5, -1)        
+        htext:SetJustifyH('CENTER')
         self:Tag(htext, '[unit:perhp]')
 			
 		self.Combat = self.Health:CreateTexture(nil, 'OVERLAY')
@@ -634,17 +629,6 @@ local UnitSpecific = {
 		self.Resting = self:CreateTexture(nil, 'OVERLAY')
 		self.Resting:SetSize(18, 18)
 		self.Resting:SetPoint('BOTTOMRIGHT', self, 'TOPLEFT', 3, 0)
-				
-		if cfg.gcd.enable then
-		    local gcd = createStatusbar(self, cfg.texture, nil, cfg.player_cb.height/6, cfg.player_cb.width, class_color.r, class_color.g, class_color.b, 1)
-		    gcd:SetPoint(unpack(cfg.gcd.pos))
-			gcd.bg = gcd:CreateTexture(nil, 'BORDER')
-            gcd.bg:SetAllPoints(gcd)
-            gcd.bg:SetTexture(cfg.texture)
-            gcd.bg:SetVertexColor(class_color.r, class_color.g, class_color.b, 0.4)
-			gcd.bd = framebd(gcd, gcd)	
-			self.GCD = gcd
-		end
 
 		-- Class Resource
 		local classResource = fs(self, 'OVERLAY', cfg.font, 40, cfg.fontflag)
@@ -667,6 +651,17 @@ local UnitSpecific = {
 			--'SHAMAN' and cfg.options.Maelstrom
 			--'DEATHKNIGHT'
 		end
+				
+		if cfg.gcd.enable then
+		    local gcd = createStatusbar(self, cfg.texture, nil, cfg.player_cb.height/6, cfg.player_cb.width, class_color.r, class_color.g, class_color.b, 1)
+		    gcd:SetPoint(unpack(cfg.gcd.pos))
+			gcd.bg = gcd:CreateTexture(nil, 'BORDER')
+            gcd.bg:SetAllPoints(gcd)
+            gcd.bg:SetTexture(cfg.texture)
+            gcd.bg:SetVertexColor(class_color.r, class_color.g, class_color.b, 0.4)
+			gcd.bd = framebd(gcd, gcd)	
+			self.GCD = gcd
+		end		
         
 	    if cfg.treat.enable then
 		    local treat = createStatusbar(UIParent, cfg.texture, nil, cfg.treat.height, cfg.treat.width, 1, 1, 1, 1)
@@ -697,31 +692,29 @@ local UnitSpecific = {
 		
 		Power(self)
 		AuraTracker(self)
-		ph(self) 
+		ph(self)
 
 		self.framebd = framebd(self, self)
-
 		self.DebuffHighlight = cfg.dh.target
 
 		if cfg.target_cb.enable then castbar(self) end
 		if cfg.options.healcomm then Healcomm(self) end
 
-		self:SetSize(cfg.target.width, cfg.target.health+cfg.target.power+1)	
+		self:SetSize(cfg.target.width, cfg.target.health+cfg.target.power+1)
 		self.Health:SetHeight(cfg.target.health)
 	    self.Power:SetHeight(cfg.target.power)
 
 	    local name = fs(self.Health, 'OVERLAY', cfg.font, 11, cfg.fontflag, 1, 1, 1)
-        name:SetPoint('TOPLEFT', self.Health, 'TOPRIGHT', 4, 0)
+        name:SetPoint('TOPLEFT', self.Health, 'TOPRIGHT', 4, 0)        
+        name:SetJustifyH('LEFT')
 		self:Tag(name, '[unit:lv] [color][name]')
-
         local htext = fs(self.Health, 'OVERLAY', cfg.font, 15, cfg.fontflag, 1, 1, 1)
         htext:SetPoint('TOPLEFT', 1, -1)
-        htext:SetJustifyH'LEFT'
+        htext:SetJustifyH('LEFT')
         self:Tag(htext, '[unit:perhp]')
-
         local htextsub = fs(self.Health, 'OVERLAY', cfg.font, cfg.fontsize, cfg.fontflag, 1, 1, 1)
         htextsub:SetPoint('BOTTOMRIGHT', 1, 1)
-        htextsub:SetJustifyH'RIGHT'
+        htextsub:SetJustifyH('RIGHT')
         self:Tag(htextsub, '[unit:perhealth]')
 
         self.RaidIcon = self.Health:CreateTexture(nil, "OVERLAY")
@@ -764,27 +757,25 @@ local UnitSpecific = {
 		self.unit = 'focus'
 		
 		Power(self)
-		ph(self) 
+		ph(self)
 
 		self.framebd = framebd(self, self)
-
 		self.DebuffHighlight = cfg.dh.focus
 
 		if cfg.focus_cb.enable then castbar(self) end
 		if cfg.options.healcomm then Healcomm(self) end
 
-		self:SetSize(cfg.target.width, 21)	
-		self.Health:SetHeight(18)
-	    self.Power:SetHeight(2)
+		self:SetSize(cfg.focus.width, cfg.focus.health+cfg.focus.power+1)
+		self.Health:SetHeight(cfg.focus.health)
+		self.Power:SetHeight(cfg.focus.power)
 		
 		local name = fs(self.Health, 'OVERLAY', cfg.font, cfg.fontsize, cfg.fontflag, 1, 1, 1)
         name:SetPoint('TOPLEFT', -1, 12)
-        name:SetJustifyH'LEFT'
+        name:SetJustifyH('LEFT')
 		self:Tag(name, '[unit:name10]')
-
 		local htext = fs(self.Health, 'OVERLAY', cfg.font, 15, cfg.fontflag, 1, 1, 1)
         htext:SetPoint('LEFT', 1, 0)
-        htext:SetJustifyH'LEFT'
+        htext:SetJustifyH('LEFT')
         self:Tag(htext, '[unit:perhp]')
 
         self.RaidIcon = self.Health:CreateTexture(nil, "OVERLAY")
@@ -805,21 +796,21 @@ local UnitSpecific = {
     end,
 
 	targettarget = function(self, ...)
-	    Shared(self, ...)
-				 
-	    self:SetSize(cfg.ttarget.width, cfg.ttarget.height)
+	    Shared(self, ...)	    
 		
-		self.framebd = framebd(self, self)
-		
+		self.framebd = framebd(self, self)		
 		self.DebuffHighlight = cfg.dh.targettarget
+
+		self:SetSize(cfg.ttarget.width, cfg.ttarget.height)
 		
 		local name = fs(self.Health, 'OVERLAY', cfg.font, cfg.fontsize, 'none', 1, 1, 1)
         name:SetPoint('LEFT', 2, 0)
+        name:SetJustifyH('LEFT')
 		name:SetShadowOffset(1, -1)
 		self:Tag(name, '[unit:name8]')
-
 		local htext = fs(self.Health, 'OVERLAY', cfg.font, cfg.fontsize, cfg.fontflag, 1, 1, 1)
         htext:SetPoint('RIGHT', self.Health, 'RIGHT', 1, 0)
+        htext:SetJustifyH('RIGHT')
         self:Tag(htext, '[color][unit:perhp]')
     end,
 	
@@ -834,25 +825,24 @@ local UnitSpecific = {
 		createAuraWatch(self)
 		ph(self)
 		
-		self.framebd = framebd(self, self)
-	
+		self.framebd = framebd(self, self)	
 		self.DebuffHighlight = cfg.dh.party
 		
-		self.Health:SetHeight(cfg.party.health)
-		--self.Health:SetReverseFill(true)
-		self.Power:SetHeight(cfg.party.power)
-		
 		if cfg.options.healcomm then Healcomm(self) end
+
+		self:SetSize(cfg.target.width, cfg.target.health+cfg.target.power+1)
+		self.Health:SetHeight(cfg.target.health)
+		--self.Health:SetReverseFill(true)
+		self.Power:SetHeight(cfg.target.power)
 		
 		local name = fs(self.Health, 'OVERLAY', cfg.font, cfg.fontsize, 'none', 1, 1, 1)
 		name:SetPoint('TOPLEFT', 1, 0)
-	    name:SetJustifyH'LEFT'
+	    name:SetJustifyH('LEFT')
 	    name:SetShadowOffset(1, -1)
 		self:Tag(name, '[unit:name10]')
-
         local htext = fs(self.Health, 'OVERLAY', cfg.font, cfg.fontsize, cfg.fontflag, 1, 1, 1)
         htext:SetPoint('BOTTOMRIGHT', 2, 0)
-		htext:SetJustifyH'RIGHT'
+		htext:SetJustifyH('RIGHT')
         self:Tag(htext, '[unit:hp]')
 
         self.Leader = self.Health:CreateTexture(nil, "OVERLAY")
@@ -912,7 +902,7 @@ local UnitSpecific = {
     partypet = function(self, ...)
         Shared(self, ...)
 		
-		self:SetSize(3, cfg.party.health+cfg.party.power+1)
+		self:SetSize(3, cfg.target.health+cfg.target.power+1)
 		self.framebd = framebd(self, self)
 
 		self.Health:SetOrientation("VERTICAL")
@@ -928,12 +918,12 @@ local UnitSpecific = {
 		Power(self)
 		AuraTracker(self)
 		createAuraWatch(self)
-		AuraTracker(self)
+		ph(self)
 		
 		self.framebd = framebd(self, self)
-	
 		self.DebuffHighlight = cfg.dh.raid
-		
+
+		self:SetSize(cfg.raid.width, cfg.raid.health+cfg.raid.power+1)	
 		self.Health:SetHeight(cfg.raid.health)
 		self.Health:SetOrientation("VERTICAL")
 		self.Power:SetHeight(cfg.raid.power)
@@ -943,12 +933,11 @@ local UnitSpecific = {
 		local name = fs(self.Health, 'OVERLAY', cfg.font, cfg.fontsize, 'none', 1, 1, 1)
 		name:SetPoint('TOPLEFT', 1, 0)		
 		name:SetShadowOffset(1, -1)
-	    name:SetJustifyH'LEFT'
+	    name:SetJustifyH('LEFT')
 		self:Tag(name, '[unit:name4]')
-
         local htext = fs(self.Health, 'OVERLAY', cfg.font, cfg.fontsize, cfg.fontflag, 1, 1, 1)
         htext:SetPoint('BOTTOMRIGHT', 2, 0)
-		htext:SetJustifyH'RIGHT'
+		htext:SetJustifyH('RIGHT')
         self:Tag(htext, '[unit:perhp]')
 
         self.Leader = self.Health:CreateTexture(nil, "OVERLAY")
@@ -1031,47 +1020,41 @@ local UnitSpecific = {
 
 		self.framebd = framebd(self, self)
 
-		self.Health.frequentUpdates = true
-
 		if cfg.boss_cb.enable then castbar(self) end
 
-		self:SetSize(73, 21)
-		self.Health:SetHeight(18)
-	    self.Power:SetHeight(2)
-	    
-		self.Health:SetHeight(18)
-	    self.Power:SetHeight(2)
-	    self.Power.PostUpdate = PostUpdatePower
+		self:SetSize(cfg.focus.width, cfg.focus.health+cfg.focus.power+1)	
+		self.Health:SetHeight(cfg.focus.health)
+		self.Health.frequentUpdates = true
+	    self.Power:SetHeight(cfg.focus.power)
 		
 		local name = fs(self.Health, 'OVERLAY', cfg.font, cfg.fontsize, cfg.fontflag, 1, 1, 1)
         name:SetPoint('TOPLEFT', -1, 12)
-        name:SetJustifyH'LEFT'
+        name:SetJustifyH('LEFT')
 		self:Tag(name, '[color][unit:name10]')
-
 		local htext = fs(self.Health, 'OVERLAY', cfg.font, 15, cfg.fontflag, 1, 1, 1)
         htext:SetPoint('LEFT', 1, 0)
-        name:SetJustifyH'LEFT'
+        name:SetJustifyH('LEFT')
         self:Tag(htext, '[unit:hp]')
 
         self.RaidIcon = self.Health:CreateTexture(nil, "OVERLAY")
 		self.RaidIcon:SetSize(14, 14)
 		self.RaidIcon:SetPoint("CENTER", self, "LEFT", 0, 0)
 		
-		if cfg.AltPowerBar.boss.enable then
-	       local altp = createStatusbar(self, cfg.texture, nil, cfg.AltPowerBar.boss.height, cfg.AltPowerBar.boss.width, 1, 1, 1, 1)
-           altp:SetPoint(unpack(cfg.AltPowerBar.boss.pos))
-		   altp.bd = framebd(altp, altp) 
-           altp.bg = altp:CreateTexture(nil, 'BORDER')
-           altp.bg:SetAllPoints(altp)
-           altp.bg:SetTexture(cfg.texture)
-           altp.bg:SetVertexColor(1, 1, 1, 0.3)
-           altp.Text = fs(altp, 'OVERLAY', cfg.aura.font, cfg.aura.fontsize, cfg.aura.fontflag, 1, 1, 1)
-           altp.Text:SetPoint('CENTER')
-           self:Tag(altp.Text, '[altpower]') 
-		   altp:EnableMouse(true)
-		   altp.colorTexture = true
-           self.AltPowerBar = altp
-	    end
+	    --[[
+	    local altp = createStatusbar(self, cfg.texture, nil, cfg.AltPowerBar.boss.height, cfg.AltPowerBar.boss.width, 1, 1, 1, 1)
+        altp:SetPoint(unpack(cfg.AltPowerBar.boss.pos))
+		altp.bd = framebd(altp, altp) 
+        altp.bg = altp:CreateTexture(nil, 'BORDER')
+        altp.bg:SetAllPoints(altp)
+        altp.bg:SetTexture(cfg.texture)
+        altp.bg:SetVertexColor(1, 1, 1, 0.3)
+        altp.Text = fs(altp, 'OVERLAY', cfg.aura.font, cfg.aura.fontsize, cfg.aura.fontflag, 1, 1, 1)
+        altp.Text:SetPoint('CENTER')
+        self:Tag(altp.Text, '[altpower]') 
+		altp:EnableMouse(true)
+		altp.colorTexture = true
+        self.AltPowerBar = altp
+        ]]
 		
 		if cfg.aura.boss_buffs then 
             local b = CreateFrame('Frame', nil, self)
@@ -1112,26 +1095,24 @@ local UnitSpecific = {
 		AuraTracker(self)
 		ph(self)
 		
-		self.framebd = framebd(self, self)
-	
+		self.framebd = framebd(self, self)	
 		self.DebuffHighlight = cfg.dh.arena
 		
-		self:SetSize(cfg.party.width, cfg.party.health+cfg.party.power+1)
-		self.Health:SetHeight(cfg.party.health)
-		self.Power:SetHeight(cfg.party.power)
+		self:SetSize(cfg.target.width, cfg.target.health+cfg.target.power+1)
+		self.Health:SetHeight(cfg.target.health)
+		self.Power:SetHeight(cfg.target.power)
 
 		if cfg.arena_cb.enable then castbar(self) end		
 		if cfg.options.healcomm then Healcomm(self) end
 		
 		local name = fs(self.Health, 'OVERLAY', cfg.font, cfg.fontsize, 'none', 1, 1, 1)
 		name:SetPoint('TOPLEFT', 1, 0)
-	    name:SetJustifyH'LEFT'
+	    name:SetJustifyH('LEFT')
 	    name:SetShadowOffset(1, -1)
 		self:Tag(name, '[unit:name10]')
-
         local htext = fs(self.Health, 'OVERLAY', cfg.font, cfg.fontsize, cfg.fontflag, 1, 1, 1)
         htext:SetPoint('BOTTOMLEFT', -1, 0)
-		htext:SetJustifyH'LEFT'
+		htext:SetJustifyH('LEFT')
         self:Tag(htext, '[unit:hp]')
 
 		self.RaidIcon = self.Health:CreateTexture(nil, "OVERLAY")
@@ -1197,6 +1178,12 @@ oUF:Factory(function(self)
     spawnHelper(self, 'focustarget', 'TOPLEFT', 'oUF_KBJFocus','TOPRIGHT', 6, 0)
     spawnHelper(self, 'pet', 'BOTTOM', 'oUF_KBJPlayer', 'TOP', 0, 3)
 
+    if cfg.uf.boss then
+	    for i = 1, MAX_BOSS_FRAMES do
+            spawnHelper(self, 'boss' .. i, 'LEFT', cfg.unit_positions.Boss.a, 'RIGHT', cfg.unit_positions.Boss.x, cfg.unit_positions.Boss.y - (35 * i))
+        end
+    end
+
     if cfg.uf.party then
 		self:SetActiveStyle'KBJ - Party'
         local party = self:SpawnHeader('oUF_Party', nil, 'party,solo',
@@ -1205,7 +1192,7 @@ oUF:Factory(function(self)
 		'oUF-initialConfigFunction', ([[
 		self:SetHeight(%d)
 		self:SetWidth(%d)
-		]]):format(cfg.party.health+cfg.party.power+1,cfg.party.width)
+		]]):format(cfg.target.health+cfg.target.power+1,cfg.target.width)
 		)
         party:SetPoint('TOP', UIParent, 'CENTER', cfg.unit_positions.Party.x, cfg.unit_positions.Party.y)
 
@@ -1268,7 +1255,7 @@ oUF:Factory(function(self)
 		'oUF-initialConfigFunction', ([[
 			self:SetHeight(%d)
 			self:SetWidth(%d)
-		]]):format(cfg.party.health+cfg.party.power+1,cfg.party.width)
+		]]):format(cfg.target.health+cfg.target.power+1,cfg.target.width)
 		)
 	    maintank:SetPoint('RIGHT', cfg.unit_positions.Tank.a, 'LEFT', cfg.unit_positions.Tank.x, cfg.unit_positions.Tank.y)
 		
@@ -1284,13 +1271,7 @@ oUF:Factory(function(self)
 			)
 		    maintanktarget:SetPoint('TOPLEFT', 'oUF_MainTank', 'TOPRIGHT', 5, 0)	
         end		
-	end 
-	
-    if cfg.uf.boss then
-	    for i = 1, MAX_BOSS_FRAMES do
-            spawnHelper(self, 'boss' .. i, 'LEFT', cfg.unit_positions.Boss.a, 'RIGHT', cfg.unit_positions.Boss.x, cfg.unit_positions.Boss.y - (51 * i))
-        end
-    end
+	end    
 	
 	if cfg.uf.arena then
 		local arena = {}

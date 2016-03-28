@@ -4,36 +4,32 @@ local _, class = UnitClass('player')
 
 -----------------------------
 -- Media
------------------------------
-  
+-----------------------------  
 local mediaPath = 'Interface\\AddOns\\oUF_KBJ\\Media\\'
 cfg.texture = mediaPath..'texture'
 cfg.symbol = mediaPath..'symbol.ttf'
 cfg.glow = mediaPath..'glowTex'
 
 --Unit Frames Font
-
---Pixel
 cfg.font, cfg.fontsize, cfg.shadowoffsetX, cfg.shadowoffsetY, cfg.fontflag = mediaPath..'fontThick.ttf', 10, 0, 0,  'THINOUTLINE' -- '' for none THINOUTLINE Outlinemonochrome
+
 
 -----------------------------
 -- Unit Frames 
 -----------------------------
-
 cfg.uf = {
-        party = true,              -- Party         
+        party = true,              -- Party
 		party_target = true,       -- Party target
-        raid = true,               -- Raid 
-        boss = true,               -- Boss 
-        arena = true,              -- Arena 
-		tank = true,               -- Maintank 
+        raid = true,               -- Raid
+        boss = true,               -- Boss
+        arena = true,              -- Arena
+		tank = true,               -- Maintank
 		tank_target = true,        -- Maintank target
-}
+	}
 
-  -----------------------------
-  -- Unit Frames Size
-  -----------------------------
-
+-----------------------------
+-- Unit Frames Size
+-----------------------------
 cfg.player = { 
         width = 28 ,
         health = 41,
@@ -44,74 +40,53 @@ cfg.target = {
         width = 73 ,
         health = 41,
         power = 2,
-}
+} -- target, party, arena
 
---party, tank, arena, boss, focus
-cfg.party = { 
+cfg.focus = { 
         width = 73 ,
-        health = 41,
+        health = 18,
         power = 2,
-}
+} -- focus, boss, tank
 
--- raid
 cfg.raid = { 
         width = 44 ,
         health = 41,
         power = 2,
 }
 
---pet, targettarget, focustarget, arenatarget, partytarget, maintanktarget
 cfg.ttarget = { 
         width = 73 ,
         height = 13,
+} -- targettarget, focustarget, arenatarget, partytarget, maintanktarget
+
+-----------------------------
+-- Unit Frames Positions
+-----------------------------  
+cfg.unit_positions = { 				
+            Player = { a = UIParent,        x=  110, y=   21},  
+            Target = { a = 'oUF_KBJPlayer', x=  260, y=  350},  
+      Targettarget = { a = 'oUF_KBJTarget',	x=    0, y=  -64},  
+             Focus = { a = 'oUF_KBJPlayer', x= -105, y=  300},  
+       Focustarget = { a = 'oUF_KBJFocus',  x=   95, y=    0},  
+               Pet = { a = 'oUF_KBJPlayer', x=	  0, y=  -64},  
+              Boss = { a = 'oUF_KBJTarget', x= 	 73, y=  300},  
+              Tank = { a = UIParent, 		x= -300, y= 21},  
+              Raid = { a = UIParent,        x=	-77, y=  -53},   
+	         Party = { a = UIParent, 		x= -113, y=  -53},
+             Arena = { a = 'oUF_KBJTarget', x=  246, y=  -53},			  
 }
 
-  -----------------------------
-  -- Unit Frames Positions
-  -----------------------------
-  
- cfg.unit_positions = { 				
-             Player = { a = UIParent,           x= 110, y=  21},  
-             Target = { a = UIParent,           x=  260, y=  350},  
-       Targettarget = { a = 'oUF_KBJTarget', x=    0, y=  -64},  
-              Focus = { a = 'oUF_KBJPlayer', x= -105, y=  300},  
-        Focustarget = { a = 'oUF_KBJFocus',  x=   95, y=    0},  
-                Pet = { a = 'oUF_KBJPlayer', x=	  0, y=  -64},  
-               Boss = { a = 'oUF_KBJTarget', x=  120, y=  300},  
-               Tank = { a = 'oUF_KBJPlayer', x= 0, y=  600},  
-               Raid = { a = UIParent,           x=	 -77, y=  -53},   
-	          Party = { a = UIParent, 			x= -113, y=  -53},
-              Arena = { a = 'oUF_KBJTarget', x=  246, y=  -53},			  
-}
-  -----------------------------
-  -- Unit Frames Options
-  -----------------------------
-
+-----------------------------
+-- Unit Frames Options
+-----------------------------
 cfg.options = {
         healcomm = true,
-		hidepower = true,
-		TotemBar = false,
-		Maelstrom = true,
-		MushroomBar = true,
 		smooth = true,
-		showPlayer = true,              -- show player in party
-		disableRaidFrameManager = true,  -- disable default compact Raid Manager 
-		ResurrectIcon = false,
-}
-
-cfg.AltPowerBar = { 
-		player = {
-			enable = true,
-			pos = {'BOTTOM', UIParent, 0, 190},
-			width = 265,
-			height = 9,
-		},
-		boss = {
-			enable = true,
-			pos = {'TOP', 0, 13},
-			width = cfg.party.width,
-			height = 9,
-		},
+		disableRaidFrameManager = true,	-- disable default compact Raid Manager 
+		ResurrectIcon = true,
+		--TotemBar = false,
+		--Maelstrom = true,
+		--MushroomBar = true,
 }
 
 cfg.EclipseBar = { 
@@ -121,10 +96,9 @@ cfg.EclipseBar = {
         height = 9,
 }
 
-  -----------------------------
-  -- Auras 
-  -----------------------------
-
+-----------------------------
+-- Auras 
+-----------------------------
 cfg.aura = {
         --player
         player_debuffs = true,
@@ -158,9 +132,9 @@ cfg.aura = {
 		fontflag = 'Outlinemonochrome',
 }
 
-  -----------------------------
-  -- Plugins 
-  -----------------------------
+-----------------------------
+-- Plugins 
+-----------------------------
 
 --ThreatBar
 cfg.treat = {
@@ -307,27 +281,5 @@ cfg.arena_cb = {
 		height = 9,
 		width = 130,
 }
---"TOPRIGHT", self, "TOPLEFT"
------------------------------
--- CHARSPECIFIC REWRITES
------------------------------
-
-local playername, _ = UnitName('player')
-
-if playername == 'Чизкейк' then
-	cfg.treat.width = 444
-end
-
-if playername == '?ола?а?ка?' then
-	--cfg.treat.width = 389
-	cfg.treat.enable = false
-end
-  
-if playername == 'Сава?ен' then
-	cfg.treat.width = 500
-	cfg.treat.enable = false
-	cfg.dh.player = false
-	cfg.gcd.enable = false
-end
 
 ns.cfg = cfg
