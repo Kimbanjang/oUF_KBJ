@@ -19,12 +19,12 @@ local GetTrinketIcon = function(unit)
 end
 
 local Update = function(self, event, ...)
-	local _, instanceType = IsInInstance();
+	local _, instanceType = IsInInstance()
 	if instanceType ~= 'arena' then
-		self.Trinket:Show(); 
-		return;
+		self.Trinket:Show()
+		return
 	else
-		self.Trinket:Show(); 
+		self.Trinket:Show()
 	end
 	
 	if(self.Trinket.PreUpdate) then self.Trinket:PreUpdate(event) end

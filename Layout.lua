@@ -796,7 +796,9 @@ local UnitSpecific = {
     end,
 
 	targettarget = function(self, ...)
-	    Shared(self, ...)	    
+	    Shared(self, ...)
+
+	    self.unit = 'targettarget'
 		
 		self.framebd = framebd(self, self)		
 		self.DebuffHighlight = cfg.dh.targettarget
@@ -832,7 +834,7 @@ local UnitSpecific = {
 
 		self:SetSize(cfg.target.width, cfg.target.health+cfg.target.power+1)
 		self.Health:SetHeight(cfg.target.health)
-		--self.Health:SetReverseFill(true)
+		self.Health:SetReverseFill(true)
 		self.Power:SetHeight(cfg.target.power)
 		
 		local name = fs(self.Health, 'OVERLAY', cfg.font, cfg.fontsize, 'none', 1, 1, 1)
@@ -914,6 +916,9 @@ local UnitSpecific = {
 
     raid = function(self, ...)
 		Shared(self, ...)
+
+		self.unit = 'raid'
+		self:SetAttribute("type2", "focus")
 		
 		Power(self)
 		AuraTracker(self)
@@ -1096,7 +1101,7 @@ local UnitSpecific = {
 		ph(self)
 		
 		self.framebd = framebd(self, self)	
-		self.DebuffHighlight = cfg.dh.arena
+		--self.DebuffHighlight = cfg.dh.arena
 		
 		self:SetSize(cfg.target.width, cfg.target.health+cfg.target.power+1)
 		self.Health:SetHeight(cfg.target.health)
@@ -1180,25 +1185,25 @@ oUF:Factory(function(self)
 
     if cfg.uf.boss then
 	    for i = 1, MAX_BOSS_FRAMES do
-            spawnHelper(self, 'boss' .. i, 'LEFT', cfg.unit_positions.Boss.a, 'RIGHT', cfg.unit_positions.Boss.x, cfg.unit_positions.Boss.y - (35 * i))
+            spawnHelper(self, 'boss' .. i, 'LEFT', cfg.unit_positions.Boss.a, 'RIGHT', cfg.unit_positions.Boss.x, cfg.unit_positions.Boss.y - (40 * i))
         end
     end
 
     if cfg.uf.party then
 		self:SetActiveStyle'KBJ - Party'
-        local party = self:SpawnHeader('oUF_Party', nil, 'party,solo',
-		'showParty', true, 'showPlayer', true, 'showSolo', true,
+	    local party = self:SpawnHeader('oUF_Party', nil, 'custom [group:party,nogroup:raid][@raid6,noexists,group:raid] show; hide',
+		'showParty', true, 'showPlayer', true, 'showSolo', false, 'showRaid', false,
 		'yOffset', -12,
 		'oUF-initialConfigFunction', ([[
 		self:SetHeight(%d)
 		self:SetWidth(%d)
 		]]):format(cfg.target.health+cfg.target.power+1,cfg.target.width)
 		)
-        party:SetPoint('TOP', UIParent, 'CENTER', cfg.unit_positions.Party.x, cfg.unit_positions.Party.y)
+	    party:SetPoint('TOP', UIParent, 'CENTER', cfg.unit_positions.Party.x, cfg.unit_positions.Party.y)
 
-        self:SetActiveStyle'KBJ - Partypet'
-		local pets = self:SpawnHeader(nil, nil, 'raid,party,solo', -- raid,party,solo for debug
-		'showParty', true, 'showPlayer', true, 'showSolo', true, -- debug	
+	    self:SetActiveStyle'KBJ - Partypet'
+		local pets = self:SpawnHeader('oUF_PartyPets', nil, 'custom [group:party,nogroup:raid][@raid6,noexists,group:raid] show; hide',
+		'showParty', true, 'showPlayer', true, 'showSolo', false, 'showRaid', false,
 		'yOffset', -12,
 		'oUF-initialConfigFunction', ([[
 			self:SetAttribute('unitsuffix', 'pet')
@@ -1206,9 +1211,9 @@ oUF:Factory(function(self)
 		)
 		pets:SetPoint("TOPRIGHT", 'oUF_Party', "TOPLEFT", -4, 0)
 
-		self:SetActiveStyle'KBJ - Targettarget' --'custom [@raid6,exists] hide; show'
-		local partytargets = self:SpawnHeader('oUF_PartyTargets', nil, 'party,solo',
-		'showParty', true, 'showPlayer', true, 'showSolo',true,
+		self:SetActiveStyle'KBJ - Targettarget'
+		local partytargets = self:SpawnHeader('oUF_PartyTargets', nil, 'custom [group:party,nogroup:raid][@raid6,noexists,group:raid] show; hide',
+		'showParty', true, 'showPlayer', true, 'showSolo', false, 'showRaid', false,
 		'yOffset', -43,
 		'oUF-initialConfigFunction', ([[
 		self:SetAttribute('unitsuffix', 'target')
@@ -1227,19 +1232,19 @@ oUF:Factory(function(self)
 	end
 
 	if cfg.uf.raid then
-	    self:SetActiveStyle'KBJ - Raid'
-	    local raid = oUF:SpawnHeader(nil, nil, 'raid', --'custom [@raid6,exists] show; hide'
-	    'showParty', false, 'showPlayer', true, 'showSolo', false, 'showRaid', true,
-        'xoffset', 5,
-        'yOffset', -12,
-        'point', 'TOP',
-        'groupFilter', '1,2,3,4,5,6,7,8',
-        'groupingOrder', '1,2,3,4,5,6,7,8',
-        'groupBy', 'GROUP',
-        'maxColumns', 8,
-        'unitsPerColumn', 5,
-        'columnSpacing', 5,
-        'columnAnchorPoint', 'RIGHT',
+		self:SetActiveStyle'KBJ - Raid'
+		local raid = oUF:SpawnHeader('oUF_Raid', nil, 'raid10, raid25, raid40',
+		'showParty', false, 'showPlayer', true, 'showSolo', false, 'showRaid', true,
+		'xoffset', 5,
+		'yOffset', -12,
+		'point', 'TOP',
+		'groupFilter', '1,2,3,4,5,6,7,8',
+		'groupingOrder', '1,2,3,4,5,6,7,8',
+		'groupBy', 'GROUP',
+		'maxColumns', 8,
+		'unitsPerColumn', 5,
+		'columnSpacing', 5,
+		'columnAnchorPoint', 'RIGHT',
 		'oUF-initialConfigFunction', ([[
 			self:SetHeight(%d)
 			self:SetWidth(%d)
@@ -1249,7 +1254,7 @@ oUF:Factory(function(self)
 	end
 
 	if cfg.uf.tank then
-	    self:SetActiveStyle'KBJ - Party'
+	    self:SetActiveStyle'KBJ - Focus'
 	    local maintank = self:SpawnHeader('oUF_MainTank', nil, 'raid',
 		'showRaid', true,'showSolo',false, 'groupFilter', 'MAINTANK', 'yOffset', -23,
 		'oUF-initialConfigFunction', ([[

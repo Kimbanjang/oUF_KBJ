@@ -69,7 +69,7 @@ cfg.unit_positions = {
              Focus = { a = 'oUF_KBJPlayer', x= -105, y=  300},  
        Focustarget = { a = 'oUF_KBJFocus',  x=   95, y=    0},  
                Pet = { a = 'oUF_KBJPlayer', x=	  0, y=  -64},  
-              Boss = { a = 'oUF_KBJTarget', x= 	 73, y=  300},  
+              Boss = { a = 'oUF_KBJTarget', x= 	 82, y=  350},  
               Tank = { a = UIParent, 		x= -300, y= 21},  
               Raid = { a = UIParent,        x=	-77, y=  -53},   
 	         Party = { a = UIParent, 		x= -113, y=  -53},
