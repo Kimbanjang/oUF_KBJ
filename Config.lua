@@ -80,7 +80,7 @@ cfg.unit_positions = {
 -- Unit Frames Options
 -----------------------------
 cfg.options = {
-        healcomm = true,
+        healcomm = false,
 		smooth = true,
 		disableRaidFrameManager = true,	-- disable default compact Raid Manager 
 		ResurrectIcon = true,

@@ -258,3 +258,15 @@ oUF.Tags.Methods['resource:warlock'] = function(u)
     end
 end
 oUF.Tags.Events["resource:warlock"] = "UNIT_POWER SPELLS_CHANGED"
+
+-- Shaman Resource Tag
+oUF.Tags.Methods['resource:shaman'] = function(u)
+    local shamanSpec
+    if IsPlayerSpell(17364) then shamanSpec = 3 end
+    if shamanSpec == 3 then
+        local aura = GetSpellInfo(53817)
+        local name, rank, icon, count, debuffType, duration, expirationTime, caster = UnitAura('player', aura, nil, 'HELPFUL')
+        return count
+    end
+end
+oUF.Tags.Events["resource:shaman"] = "UNIT_AURA PLAYER_TALENT_UPDATE"

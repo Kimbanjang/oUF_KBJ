@@ -644,11 +644,12 @@ local UnitSpecific = {
 			self:Tag(classResource, '[color][shadoworbs]')
 		elseif (class == 'PALADIN') then
 			self:Tag(classResource, '[color][holypower]')
+		elseif (class == 'SHAMAN') then -- Maelstrom
+			self:Tag(classResource, '[color][resource:shaman]')
 			--'DRUID' and cfg.EclipseBar.enable		
 			--'DRUID' and cfg.options.MushroomBar
 			--'MONK' and cfg.options.stagger_bar
-			--'SHAMAN' and cfg.options.TotemBar
-			--'SHAMAN' and cfg.options.Maelstrom
+			--'SHAMAN' and cfg.options.TotemBar		
 			--'DEATHKNIGHT'
 		end
 				
