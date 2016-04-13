@@ -25,6 +25,16 @@ local function healthColor(value)
     return r, g, b
 end
 
+local function powerColor(unit)
+    if not unit then return end
+    local id, power, r, g, b = UnitPowerType(unit)
+    local color = PowerBarColor[power]
+    if color then
+        r, g, b = color.r, color.g, color.b
+    end
+    return r, g, b
+end
+
 local sValue = function(val)
 	if (val >= 1e6) then
         return ('%.fm'):format(val / 1e6)
@@ -178,29 +188,17 @@ oUF.Tags.Methods['unit:perhealth'] = function(u)
 end
 oUF.Tags.Events['unit:perhealth'] = "UNIT_HEALTH UNIT_CONNECTION"
 
-oUF.Tags.Methods['party:hp']  = function(u) 
-    local min, max = UnitHealth(u), UnitHealthMax(u)
-	if UnitIsDead(u) then
-        return '|cff559655 Dead|r'
-    elseif UnitIsGhost(u) then
-        return '|cff559655 Ghost|r'
-    elseif not UnitIsConnected(u) then
-        return '|cff559655 D/C|r'
-	else	
-        return ('|cff559655'..math.floor(min/max*100+.5)..'%')
-	end
+oUF.Tags.Methods['unit:pp'] = function(u)
+    local min, max = UnitPower(u), UnitPowerMax(u)
+    local powerValue = math.floor(min/max*100+.5)
+    
+    if powerColor(u) then        
+        return hex(powerColor(u))..powerValue
+    else
+        return "|cffff00ff"..powerValue.."|r"
+    end
 end
-oUF.Tags.Events['party:hp'] = 'UNIT_HEALTH UNIT_CONNECTION'
-
-oUF.Tags.Methods['boss:hp']  = function(u) 
-    local min, max = UnitHealth(u), UnitHealthMax(u)
-	if UnitIsDead(u) then
-        return '|cff559655 Dead|r'
-	else	
-        return ('|cff559655'..math.floor(min/max*100+.5)..'%')
-	end
-end
-oUF.Tags.Events['boss:hp'] = 'UNIT_HEALTH_FREQUENT UNIT_MAXHEALTH UNIT_TARGETABLE_CHANGED'
+oUF.Tags.Events['unit:pp'] = "UNIT_POWER UNIT_MAXPOWER PLAYER_SPECIALIZATION_CHANGED"
 
 oUF.Tags.Methods['altpower'] = function(u)
 	local cur = UnitPower(u, ALTERNATE_POWER_INDEX)
@@ -209,28 +207,6 @@ oUF.Tags.Methods['altpower'] = function(u)
 	return ('|cffCDC5C2'..sValue(cur))..('|cffCDC5C2 || ')..sValue(max)
 end
 oUF.Tags.Events['altpower'] = 'UNIT_POWER UNIT_MAXPOWER'
-
-oUF.Tags.Methods['player:power'] = function(u)
-    local spec = GetSpecialization()
-	local fury = UnitPower('player', SPELL_POWER_DEMONIC_FURY)
-	local mana = UnitPower('player', SPELL_POWER_MANA)
-	local stagger = UnitStagger('player')
-	if UnitIsDead(u) or UnitIsGhost(u) or not UnitIsConnected(u) then
-	    return nil 
-	elseif class == 'WARLOCK' and spec == SPEC_WARLOCK_DEMONOLOGY then
-		local r, g, b = 0.9, 0.37, 0.37
-	    return ('|cff559655 || ')..hex(r, g, b)..sValue(fury) 
-	elseif class == 'DRUID' and not UnitPowerType('player') == SPELL_POWER_MANA then
-		local r, g, b = oUF.colors.power['MANA']
-		return ('|cff559655 || ')..hex(r, g, b)..sValue(mana)
-	elseif class == 'MONK' and stagger > 0 then
-		local r, g, b = 0.52, 1.0, 0.52
-		return ('|cff559655 || ')..hex(r, g, b)..sValue(stagger)
-	else 
-	    return nil	
-	end
-end
-oUF.Tags.Events['player:power'] = 'UNIT_POWER PLAYER_SPECIALIZATION_CHANGED PLAYER_TALENT_UPDATE UNIT_HEALTH UNIT_CONNECTION'
 
 oUF.Tags.Methods['EclipseDirection'] = function(u)
     local direction = GetEclipseDirection()
@@ -270,3 +246,27 @@ oUF.Tags.Methods['resource:shaman'] = function(u)
     end
 end
 oUF.Tags.Events["resource:shaman"] = "UNIT_AURA PLAYER_TALENT_UPDATE"
+
+--[[
+oUF.Tags.Methods['player:power'] = function(u)
+    local spec = GetSpecialization()
+    local fury = UnitPower('player', SPELL_POWER_DEMONIC_FURY)
+    local mana = UnitPower('player', SPELL_POWER_MANA)
+    local stagger = UnitStagger('player')
+    if UnitIsDead(u) or UnitIsGhost(u) or not UnitIsConnected(u) then
+        return nil 
+    elseif class == 'WARLOCK' and spec == SPEC_WARLOCK_DEMONOLOGY then
+        local r, g, b = 0.9, 0.37, 0.37
+        return ('|cff559655 || ')..hex(r, g, b)..sValue(fury) 
+    elseif class == 'DRUID' and not UnitPowerType('player') == SPELL_POWER_MANA then
+        local r, g, b = oUF.colors.power['MANA']
+        return ('|cff559655 || ')..hex(r, g, b)..sValue(mana)
+    elseif class == 'MONK' and stagger > 0 then
+        local r, g, b = 0.52, 1.0, 0.52
+        return ('|cff559655 || ')..hex(r, g, b)..sValue(stagger)
+    else 
+        return nil  
+    end
+end
+oUF.Tags.Events['player:power'] = 'UNIT_POWER PLAYER_SPECIALIZATION_CHANGED PLAYER_TALENT_UPDATE UNIT_HEALTH UNIT_CONNECTION'
+]]

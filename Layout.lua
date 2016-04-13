@@ -622,6 +622,10 @@ local UnitSpecific = {
         htext:SetPoint('TOP', self.Health, 'TOP', 1.5, -1)        
         htext:SetJustifyH('CENTER')
         self:Tag(htext, '[unit:perhp]')
+        local ptext = fs(self.Power, 'OVERLAY', cfg.font, 10, cfg.fontflag, 1, 1, 1)
+        ptext:SetPoint('CENTER', self.Power, 'CENTER', 1, 0)        
+        ptext:SetJustifyH('CENTER')
+        self:Tag(ptext, '[unit:pp]')
 			
 		self.Combat = self.Health:CreateTexture(nil, 'OVERLAY')
 		self.Combat:SetSize(16, 16)
