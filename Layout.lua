@@ -650,11 +650,31 @@ local UnitSpecific = {
 			self:Tag(classResource, '[color][holypower]')
 		elseif (class == 'SHAMAN') then -- Maelstrom
 			self:Tag(classResource, '[color][resource:shaman]')
-			--'DRUID' and cfg.EclipseBar.enable		
+		elseif (class == 'DEATHKNIGHT')  then
+            local runes = CreateFrame('Frame', nil, self)
+            runes:SetPoint('BOTTOMRIGHT', self.Power, 'BOTTOMLEFT', -4, 0)
+            runes:SetSize(14, cfg.player.health+cfg.player.power+1)
+            runes.bg = framebd(runes, runes)
+			local i = 6
+            for index = 1, 6 do
+                runes[i] = createStatusbar(runes, cfg.texture, nil, (cfg.player.health+cfg.player.power+2)/6-1, 14, 1, 1, 1, 1)			
+			    if i == 6 then
+                    runes[i]:SetPoint('BOTTOM', runes)
+                else
+                    runes[i]:SetPoint('BOTTOMRIGHT', runes[i+1], 'TOPRIGHT', 0, 1)
+                end
+                runes[i].bg = runes[i]:CreateTexture(nil, 'BACKGROUND')
+                runes[i].bg:SetAllPoints(runes[i])
+                runes[i].bg:SetTexture(cfg.texture)
+                runes[i].bg.multiplier = .3
+
+                i=i-1
+            end
+            self.Runes = runes
+			--'DRUID' and cfg.EclipseBar.enable	
+			--'MONK' and cfg.options.stagger_bar	
 			--'DRUID' and cfg.options.MushroomBar
-			--'MONK' and cfg.options.stagger_bar
-			--'SHAMAN' and cfg.options.TotemBar		
-			--'DEATHKNIGHT'
+			--'SHAMAN' and cfg.options.TotemBar
 		end
 				
 		if cfg.gcd.enable then
