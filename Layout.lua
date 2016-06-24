@@ -653,11 +653,11 @@ local UnitSpecific = {
 		elseif (class == 'DEATHKNIGHT')  then
             local runes = CreateFrame('Frame', nil, self)
             runes:SetPoint('BOTTOMRIGHT', self.Power, 'BOTTOMLEFT', -4, 0)
-            runes:SetSize(14, cfg.player.health+cfg.player.power+1)
+            runes:SetSize(12, cfg.player.health+cfg.player.power+1)
             runes.bg = framebd(runes, runes)
 			local i = 6
             for index = 1, 6 do
-                runes[i] = createStatusbar(runes, cfg.texture, nil, (cfg.player.health+cfg.player.power+2)/6-1, 14, 1, 1, 1, 1)			
+                runes[i] = createStatusbar(runes, cfg.texture, nil, (cfg.player.health+cfg.player.power+2)/6-1, 12, 1, 1, 1, 1)			
 			    if i == 6 then
                     runes[i]:SetPoint('BOTTOM', runes)
                 else

@@ -64,6 +64,7 @@ oUF.colors.power['POWER_TYPE_PYRITE'] = {0.60, 0.09, 0.17}
 oUF.colors.power['POWER_TYPE_HEAT'] = {0.55,0.57,0.61}
 oUF.colors.power['POWER_TYPE_OOZE'] = {0.76,1,0}
 oUF.colors.power['POWER_TYPE_BLOOD_POWER'] = {0.7,0,1}
+oUF.colors.runes = { {196/255, 30/255, 58/255}; {173/255, 217/255, 25/255}; {35/255, 127/255, 255/255}; {178/255, 53/255, 240/255}; }
 
 oUF.Tags.Methods['color'] = function(u, r)
     local reaction = UnitReaction(u, 'player')
