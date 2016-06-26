@@ -18,7 +18,8 @@ Plugins\oUF_Smooth.lua
 Plugins\oUF_ThreatBar.lua
 Plugins\oUF_Trinkets.lua
 
-RaidDebuffs.lua
-CustomFunctions.lua
-CustomTags.lua
+Libs\RaidDebuffs.lua
+Libs\Function.lua
+Libs\Tags.lua
+
 Layout.lua

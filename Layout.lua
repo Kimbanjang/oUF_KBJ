@@ -708,6 +708,36 @@ local UnitSpecific = {
 	        treat.bg = framebd(treat, treat)
 			self.ThreatBar = treat
 		end
+
+		--if cfg.aura.target_buffs then
+            local defensiveBuff = CreateFrame('Frame', nil, self)
+			defensiveBuff.size = 43
+			defensiveBuff.spacing = 4
+		    defensiveBuff.num = 6
+            defensiveBuff:SetSize((defensiveBuff.size+defensiveBuff.spacing)*defensiveBuff.num-defensiveBuff.spacing, defensiveBuff.size)
+		    defensiveBuff:SetPoint('CENTER', UIParent, 'CENTER', -118, 23)
+            defensiveBuff.initialAnchor = 'CENTER'            
+            defensiveBuff['growth-x'] = 'LEFT' 
+            defensiveBuff['growth-y'] = 'DOWN'
+            defensiveBuff.PostCreateIcon = auraIcon
+            defensiveBuff.PostUpdateIcon = PostUpdateIcon
+            defensiveBuff.CustomFilter = CustomFilter
+            self.Auras = defensiveBuff
+		--end
+			local offensiveBuff = CreateFrame('Frame', nil, self)
+			offensiveBuff.size = 35
+			offensiveBuff.spacing = 4
+		    offensiveBuff.num = 7
+            offensiveBuff:SetSize((offensiveBuff.size+offensiveBuff.spacing)*offensiveBuff.num-offensiveBuff.spacing, offensiveBuff.size)
+		    offensiveBuff:SetPoint('BOTTOM', defensiveBuff, 'TOP', 0, 10)
+            offensiveBuff.initialAnchor = 'CENTER'            
+            offensiveBuff['growth-x'] = 'LEFT' 
+            offensiveBuff['growth-y'] = 'UP'
+            offensiveBuff.PostCreateIcon = auraIcon
+            offensiveBuff.PostUpdateIcon = PostUpdateIcon
+            offensiveBuff.CustomFilter = CustomFilter
+            self.Buffs = offensiveBuff
+
     end,
 
     target = function(self, ...)
