@@ -18,6 +18,7 @@ Plugins\oUF_Smooth.lua
 Plugins\oUF_ThreatBar.lua
 Plugins\oUF_Trinkets.lua
 
+Libs\AuraFilter.lua
 Libs\RaidDebuffs.lua
 Libs\Function.lua
 Libs\Tags.lua
