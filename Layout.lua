@@ -13,8 +13,8 @@ local backdrop = {
 local Loader = CreateFrame('Frame')
 Loader:RegisterEvent('ADDON_LOADED')
 Loader:SetScript('OnEvent', function(self, event, addon)
-	ActivityAuraList = ActivityAuraList or {}
-	PersonalAuraList = PersonalAuraList or {}
+	ActivityAuras = ActivityAuras or {}
+	PersonalAuras = PersonalAuras or {}
 	UpdateAuraList()
 end)
 
@@ -717,21 +717,6 @@ local UnitSpecific = {
 		end
 
 		--if cfg.aura.target_buffs then
-			local activityBuff = CreateFrame('Frame', nil, self)
-			activityBuff.size = 35
-			activityBuff.spacing = 4
-		    activityBuff.num = 7
-            activityBuff:SetSize((activityBuff.size+activityBuff.spacing)*activityBuff.num-activityBuff.spacing, activityBuff.size)
-		    activityBuff:SetPoint('BOTTOM', personalBuff, 'TOP', 0, 10)
-            activityBuff.initialAnchor = 'CENTER'
-            activityBuff['growth-x'] = 'LEFT'
-            activityBuff['growth-y'] = 'UP'
-            activityBuff.PostCreateIcon = auraIcon
-            activityBuff.PostUpdateIcon = PostUpdateIcon
-            activityBuff.CustomFilter = CustomAuraFilters.activity
-            --activityBuff.CustomFilter = ns.OffensiveCustomFilter
-            self.Buffs = activityBuff            
-		--end			
 			local personalBuff = CreateFrame('Frame', nil, self)
 			personalBuff.size = 43
 			personalBuff.spacing = 4
@@ -746,6 +731,21 @@ local UnitSpecific = {
             personalBuff.CustomFilter = CustomAuraFilters.personal            
             --personalBuff.CustomFilter = ns.DefensiveCustomFilter
             self.Auras = personalBuff
+		--end
+            local activityBuff = CreateFrame('Frame', nil, self)
+			activityBuff.size = 35
+			activityBuff.spacing = 4
+		    activityBuff.num = 7
+            activityBuff:SetSize((activityBuff.size+activityBuff.spacing)*activityBuff.num-activityBuff.spacing, activityBuff.size)
+		    activityBuff:SetPoint('BOTTOM', personalBuff, 'TOP', 0, 10)
+            activityBuff.initialAnchor = 'CENTER'
+            activityBuff['growth-x'] = 'LEFT'
+            activityBuff['growth-y'] = 'UP'
+            activityBuff.PostCreateIcon = auraIcon
+            activityBuff.PostUpdateIcon = PostUpdateIcon
+            activityBuff.CustomFilter = CustomAuraFilters.activity
+            --activityBuff.CustomFilter = ns.OffensiveCustomFilter
+            self.Buffs = activityBuff  
     end,
 
     target = function(self, ...)

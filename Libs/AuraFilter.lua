@@ -27,39 +27,208 @@ local PersonalAuras = {
 --	Death Knight
 
 if playerClass == "DEATHKNIGHT" then
-	-- Self Buffs	
-	PersonalAuras[101568] = 4 -- Dark Succor <= glyph
-	PersonalAuras[59052]  = 4 -- Freezing Fog <= Rime
-	PersonalAuras[46584]  = 4 -- Raise Dead
-	PersonalAuras[116888] = 4 -- Shroud of Purgatory
-	PersonalAuras[81340]  = 4 -- Sudden Doom
+	--PersonalAuras[46584]  = 4 -- Raise Dead
 
-	PersonalAuras[48707]  = 4 -- Anti-Magic Shell
-	PersonalAuras[48792]  = 4 -- Icebound Fortitude
-	ActivityAuras[53365]  = 4 -- Unholy Strength <= Rune of the Fallen Crusader
+	ActivityAuras[53365]  = 2 -- Unholy Strength <= Rune of the Fallen Crusader
+	PersonalAuras[48707]  = 2 -- Anti-Magic Shell
+	PersonalAuras[48792]  = 2 -- Icebound Fortitude	
+	PersonalAuras[101568] = 2 -- Dark Succor
 
 	ActivityAuras[115989] = 2 -- [T1/3] Unholy Blight
-	PersonalAuras[49039]  = 2 -- [T2/1] Lichborne	
-	PersonalAuras[51052]  = 2 -- [T2/2] Anti-Magic Zone
 	ActivityAuras[96268]  = 2 -- [T3/1] Death's Advance
-
-	PersonalAuras[51460]  = 2 -- [T4/3] Runic Corruption
-
+	ActivityAuras[114851] = 2 -- [T4/1] Blood Charge
 	ActivityAuras[108200] = 2 -- [T6/2] Remorseless Winter
+	ActivityAuras[81141]  = 2 -- [Blood] Crimson Scourge
+	ActivityAuras[81256]  = 2 -- [Blood] Dancing Rune Weapon	
+	ActivityAuras[59052]  = 2 -- [Frost] Freezing Fog
+	ActivityAuras[51124]  = 2 -- [Frost] Killing Machine
+	ActivityAuras[51271]  = 2 -- [Frost] Pillar of Frost	
+	ActivityAuras[81340]  = 2 -- [Unholy] Sudden Doom
+	ActivityAuras[49016]  = 2 -- [Unholy] Unholy Frenzy
 
+	PersonalAuras[49039]  = 2 -- [T2/1] Lichborne
+	PersonalAuras[51052]  = 2 -- [T2/2] Anti-Magic Zone	
+	PersonalAuras[116888] = 2 -- [T2/3] Shroud of Purgatory
+	PersonalAuras[51460]  = 2 -- [T4/3] Runic Corruption
 	PersonalAuras[119975] = 2 -- [T5/3] Conversion
-	PersonalAuras[164047] = 2 -- [Blood] Shadow of Death
-	PersonalAuras[55233]  = 2 -- [Blood] Vampiric Blood
 	PersonalAuras[77535]  = 2 -- [Blood] Blood Shield
 	PersonalAuras[49222]  = 2 -- [Blood] Bone Shield
 	PersonalAuras[50421]  = 2 -- [Blood] Scent of Blood
+	PersonalAuras[164047] = 2 -- [Blood] Shadow of Death
+	PersonalAuras[55233]  = 2 -- [Blood] Vampiric Blood
+end
 
-	ActivityAuras[114851] = 2 -- [T4/1] Blood Charge	
-	ActivityAuras[81141]  = 2 -- [Blood] Crimson Scourge
-	ActivityAuras[81256]  = 2 -- [Blood] Dancing Rune Weapon
-	ActivityAuras[51271]  = 2 -- [Frost] Pillar of Frost
-	ActivityAuras[51124]  = 2 -- [Frost] Killing Machine
-	ActivityAuras[49016]  = 2 -- [Unholy] Unholy Frenzy
+------------------------------------------------------------------------
+--	Monk
+
+if playerClass == "MONK" then
+	-- Self Buffs
+	BaseAuras[122278] = 4 -- Dampen Harm
+	BaseAuras[121125] = 4 -- Death Note
+	BaseAuras[122783] = 4 -- Diffuse Magic
+	BaseAuras[128939] = 4 -- Elusive Brew (stack)
+	BaseAuras[115308] = 4 -- Elusive Brew (consume)
+	BaseAuras[115288] = 4 -- Energizing Brew
+	BaseAuras[115203] = 4 -- Fortifying Brew
+	BaseAuras[115295] = 4 -- Guard
+	BaseAuras[123402] = 4 -- Guard (glyphed)
+	BaseAuras[124458] = 4 -- Healing Sphere (count)
+	BaseAuras[115867] = 4 -- Mana Tea (stack)
+	BaseAuras[119085] = 4 -- Momentum
+	BaseAuras[124968] = 4 -- Retreat
+	BaseAuras[127722] = 4 -- Serpent's Zeal
+	BaseAuras[125359] = 4 -- Tiger Power
+	BaseAuras[116841] = 4 -- Tiger's Lust
+	BaseAuras[125195] = 4 -- Tigereye Brew (stack)
+	BaseAuras[116740] = 4 -- Tigereye Brew (consume)
+	BaseAuras[122470] = 4 -- Touch of Karma
+	BaseAuras[118674] = 4 -- Vital Mists
+
+	-- Buffs
+	BaseAuras[132120] = 2 -- Enveloping Mist
+	BaseAuras[116849] = 3 -- Life Cocoon
+	BaseAuras[119607] = 2 -- Renewing Mist (jump)
+	BaseAuras[119611] = 2 -- Renewing Mist (hot)
+	BaseAuras[124081] = 2 -- Zen Sphere
+
+	-- Debuffs
+	BaseAuras[123393] = 2 -- Breath of Fire (disorient)
+	BaseAuras[123725] = 2 -- Breath of Fire (dot)
+	BaseAuras[119392] = 2 -- Charging Ox Wave
+	BaseAuras[122242] = 2 -- Clash (stun) -- NEEDS CHECK
+	BaseAuras[126451] = 2 -- Clash (stun) -- NEEDS CHECK
+	BaseAuras[128846] = 2 -- Clash (stun) -- NEEDS CHECK
+	BaseAuras[116095] = 2 -- Disable
+	BaseAuras[116330] = 2 -- Dizzying Haze -- NEEDS CHECK
+	BaseAuras[123727] = 2 -- Dizzying Haze -- NEEDS CHECK
+	BaseAuras[117368] = 2 -- Grapple Weapon
+	BaseAuras[118585] = 2 -- Leer of the Ox
+	BaseAuras[119381] = 2 -- Leg Sweep
+	BaseAuras[115078] = 2 -- Paralysis
+	BaseAuras[118635] = 2 -- Provoke -- NEEDS CHECK
+	BaseAuras[116189] = 2 -- Provoke -- NEEDS CHECK
+	BaseAuras[130320] = 2 -- Rising Sun Kick
+	BaseAuras[116847] = 2 -- Rushing Jade Wind
+	BaseAuras[116709] = 2 -- Spear Hand Strike
+	BaseAuras[123407] = 2 -- Spinning Fire Blossom
+end
+
+------------------------------------------------------------------------
+--	Warlock
+
+if playerClass == "WARLOCK" then
+	-- Self Buffs
+	BaseAuras[116198] = 2 -- Aura of Enfeeblement
+	BaseAuras[116202] = 2 -- Aura of the Elements
+	BaseAuras[117828] = 4 -- Backdraft
+	BaseAuras[111400] = 4 -- Burning Rush
+	BaseAuras[114168] = 4 -- Dark Apotheosis
+	BaseAuras[110913] = 4 -- Dark Bargain (absorb)
+	BaseAuras[110914] = 4 -- Dark Bargain (dot)
+	BaseAuras[108359] = 4 -- Dark Regeneration
+	BaseAuras[113858] = 4 -- Dark Soul: Instability
+	BaseAuras[113861] = 4 -- Dark Soul: Knowledge
+	BaseAuras[113860] = 4 -- Dark Soul: Misery
+	BaseAuras[88448]  = 4 -- Demonic Rebirth
+	BaseAuras[126]    = 4 -- Eye of Kilrogg
+	BaseAuras[108683] = 4 -- Fire and Brimstone
+	BaseAuras[119839] = 4 -- Fury Ward
+	BaseAuras[119049] = 4 -- Kil'jaeden's Cunning
+	BaseAuras[126090] = 4 -- Molten Core -- NEEDS CHECK
+	BaseAuras[122355] = 4 -- Molten Core -- NEEDS CHECK
+	BaseAuras[104232] = 4 -- Rain of Fire
+	BaseAuras[108416] = 4 -- Sacrificial Pact
+	BaseAuras[86211]  = 4 -- Soul Swap
+	BaseAuras[104773] = 4 -- Unending Resolve
+
+	-- Buffs
+	BaseAuras[20707]  = 1 -- Soulstone
+
+	-- Debuffs
+	BaseAuras[980]    = 2 -- Agony
+	BaseAuras[108505] = 2 -- Archimonde's Vengeance
+	BaseAuras[124915] = 2 -- Chaos Wave
+	BaseAuras[17962]  = 2 -- Conflagrate (slow)
+	BaseAuras[172]    = 2 -- Corruption
+	BaseAuras[109466] = 2 -- Curse of Enfeeblement
+	BaseAuras[18223]  = 2 -- Curse of Exhaustion
+	BaseAuras[1490]   = 2 -- Curse of the Elements
+	BaseAuras[603]    = 2 -- Doom
+	BaseAuras[48181]  = 2 -- Haunt
+	BaseAuras[80240]  = 2 -- Havoc
+	BaseAuras[348]    = 2 -- Immolate
+	BaseAuras[108686] = 2 -- Immolate <= Fire and Brimstone
+	BaseAuras[60947]  = 2 -- Nightmare
+	BaseAuras[30108]  = 2 -- Seed of Corruption
+	BaseAuras[47960]  = 2 -- Shadowflame
+	BaseAuras[30283]  = 2 -- Shadowfury
+	BaseAuras[27243]  = 2 -- Unstable Affliction
+
+	-- Debuffs - Crowd Control
+	BaseAuras[170]    = 2 -- Banish
+	BaseAuras[111397] = 2 -- Blood Fear
+	BaseAuras[137143] = 2 -- Blood Horror
+	BaseAuras[1098]   = 2 -- Enslave Demon
+	BaseAuras[5782]   = 2 -- Fear
+	BaseAuras[5484]   = 2 -- Howl of Terror
+	BaseAuras[6789]   = 2 -- Mortal Coil
+end
+
+------------------------------------------------------------------------
+--	Warrior
+
+if playerClass == "WARRIOR" then
+	-- Self Buffs
+	BaseAuras[107574] = 4 -- Avatar
+	BaseAuras[18499]  = 4 -- Berserker Rage
+	BaseAuras[46924]  = 4 -- Bladestorm
+	BaseAuras[12292]  = 4 -- Bloodbath
+	BaseAuras[46916]  = 4 -- Bloodsurge
+	BaseAuras[85730]  = 4 -- Deadly Calm
+	BaseAuras[125565] = 4 -- Demoralizing Shout
+	BaseAuras[118038] = 4 -- Die by the Sword
+	BaseAuras[12880]  = 4 -- Enrage
+	BaseAuras[55964]  = 4 -- Enraged Regeneration
+	BaseAuras[115945] = 4 -- Glyph of Hamstring
+	BaseAuras[12975]  = 4 -- Last Stand
+	BaseAuras[114028] = 4 -- Mass Spell Reflection
+	BaseAuras[85739]  = 4 -- Meat Cleaver
+	BaseAuras[114192] = 4 -- Mocking Banner
+	BaseAuras[97463]  = 4 -- Rallying Cry
+	BaseAuras[1719]   = 4 -- Recklessness
+	BaseAuras[112048] = 4 -- Shield Barrier
+	BaseAuras[2565]   = 4 -- Shield Block
+	BaseAuras[871]    = 4 -- Shield Wall
+	BaseAuras[114206] = 4 -- Skull Banner
+	BaseAuras[23920]  = 4 -- Spell Banner
+	BaseAuras[52437]  = 4 -- Sudden Death
+	BaseAuras[12328]  = 4 -- Sweeping Strikes
+	BaseAuras[50227]  = 4 -- Sword and Board
+	BaseAuras[125831] = 4 -- Taste for Blood
+	BaseAuras[122510] = 4 -- Ultimatum
+
+	-- Buffs
+	BaseAuras[46947]  = 3 -- Safeguard (damage reduction)
+	BaseAuras[114029] = 3 -- Safeguard (intercept)
+	BaseAuras[114030] = 3 -- Vigilance
+
+	-- Debuffs
+	BaseAuras[86346]  = 2 -- Colossus Smash
+	BaseAuras[114205] = 2 -- Demoralizing Banner
+	BaseAuras[1160]   = 2 -- Demoralizing Shout
+	BaseAuras[676]    = 2 -- Disarm
+	BaseAuras[118895] = 2 -- Dragon Roar
+	BaseAuras[1715]   = 2 -- Hamstring
+	BaseAuras[5246]   = 2 -- Intimidating Shout -- NEEDS CHECK
+	BaseAuras[20511]  = 2 -- Intimidating Shout -- NEEDS CHECK
+	BaseAuras[12323]  = 2 -- Piercing Howl
+	BaseAuras[64382]  = 2 -- Shattering Throw
+	BaseAuras[46968]  = 2 -- Shockwave
+	BaseAuras[18498]  = 2 -- Silenced - Gag Order
+	BaseAuras[107566] = 2 -- Staggering Shout
+	BaseAuras[107570] = 2 -- Storm Bolt
+	BaseAuras[355]    = 2 -- Taunt
+	BaseAuras[105771] = 2 -- Warbringer
 end
 
 ------------------------------------------------------------------------
@@ -269,61 +438,6 @@ if playerClass == "MAGE" then
 	BaseAuras[82691]  = 2 -- Ring of Frost
 	BaseAuras[55021]  = 2 -- Silenced - Improved Counterspell
 	BaseAuras[31589]  = 2 -- Slow
-end
-
-------------------------------------------------------------------------
---	Monk
-
-if playerClass == "MONK" then
-	-- Self Buffs
-	BaseAuras[122278] = 4 -- Dampen Harm
-	BaseAuras[121125] = 4 -- Death Note
-	BaseAuras[122783] = 4 -- Diffuse Magic
-	BaseAuras[128939] = 4 -- Elusive Brew (stack)
-	BaseAuras[115308] = 4 -- Elusive Brew (consume)
-	BaseAuras[115288] = 4 -- Energizing Brew
-	BaseAuras[115203] = 4 -- Fortifying Brew
-	BaseAuras[115295] = 4 -- Guard
-	BaseAuras[123402] = 4 -- Guard (glyphed)
-	BaseAuras[124458] = 4 -- Healing Sphere (count)
-	BaseAuras[115867] = 4 -- Mana Tea (stack)
-	BaseAuras[119085] = 4 -- Momentum
-	BaseAuras[124968] = 4 -- Retreat
-	BaseAuras[127722] = 4 -- Serpent's Zeal
-	BaseAuras[125359] = 4 -- Tiger Power
-	BaseAuras[116841] = 4 -- Tiger's Lust
-	BaseAuras[125195] = 4 -- Tigereye Brew (stack)
-	BaseAuras[116740] = 4 -- Tigereye Brew (consume)
-	BaseAuras[122470] = 4 -- Touch of Karma
-	BaseAuras[118674] = 4 -- Vital Mists
-
-	-- Buffs
-	BaseAuras[132120] = 2 -- Enveloping Mist
-	BaseAuras[116849] = 3 -- Life Cocoon
-	BaseAuras[119607] = 2 -- Renewing Mist (jump)
-	BaseAuras[119611] = 2 -- Renewing Mist (hot)
-	BaseAuras[124081] = 2 -- Zen Sphere
-
-	-- Debuffs
-	BaseAuras[123393] = 2 -- Breath of Fire (disorient)
-	BaseAuras[123725] = 2 -- Breath of Fire (dot)
-	BaseAuras[119392] = 2 -- Charging Ox Wave
-	BaseAuras[122242] = 2 -- Clash (stun) -- NEEDS CHECK
-	BaseAuras[126451] = 2 -- Clash (stun) -- NEEDS CHECK
-	BaseAuras[128846] = 2 -- Clash (stun) -- NEEDS CHECK
-	BaseAuras[116095] = 2 -- Disable
-	BaseAuras[116330] = 2 -- Dizzying Haze -- NEEDS CHECK
-	BaseAuras[123727] = 2 -- Dizzying Haze -- NEEDS CHECK
-	BaseAuras[117368] = 2 -- Grapple Weapon
-	BaseAuras[118585] = 2 -- Leer of the Ox
-	BaseAuras[119381] = 2 -- Leg Sweep
-	BaseAuras[115078] = 2 -- Paralysis
-	BaseAuras[118635] = 2 -- Provoke -- NEEDS CHECK
-	BaseAuras[116189] = 2 -- Provoke -- NEEDS CHECK
-	BaseAuras[130320] = 2 -- Rising Sun Kick
-	BaseAuras[116847] = 2 -- Rushing Jade Wind
-	BaseAuras[116709] = 2 -- Spear Hand Strike
-	BaseAuras[123407] = 2 -- Spinning Fire Blossom
 end
 
 ------------------------------------------------------------------------
@@ -558,144 +672,26 @@ if playerClass == "SHAMAN" then
 	--BaseAuras[51490]  = 1 -- Thunderstorm
 end
 
-------------------------------------------------------------------------
---	Warlock
-
-if playerClass == "WARLOCK" then
-	-- Self Buffs
-	BaseAuras[116198] = 2 -- Aura of Enfeeblement
-	BaseAuras[116202] = 2 -- Aura of the Elements
-	BaseAuras[117828] = 4 -- Backdraft
-	BaseAuras[111400] = 4 -- Burning Rush
-	BaseAuras[114168] = 4 -- Dark Apotheosis
-	BaseAuras[110913] = 4 -- Dark Bargain (absorb)
-	BaseAuras[110914] = 4 -- Dark Bargain (dot)
-	BaseAuras[108359] = 4 -- Dark Regeneration
-	BaseAuras[113858] = 4 -- Dark Soul: Instability
-	BaseAuras[113861] = 4 -- Dark Soul: Knowledge
-	BaseAuras[113860] = 4 -- Dark Soul: Misery
-	BaseAuras[88448]  = 4 -- Demonic Rebirth
-	BaseAuras[126]    = 4 -- Eye of Kilrogg
-	BaseAuras[108683] = 4 -- Fire and Brimstone
-	BaseAuras[119839] = 4 -- Fury Ward
-	BaseAuras[119049] = 4 -- Kil'jaeden's Cunning
-	BaseAuras[126090] = 4 -- Molten Core -- NEEDS CHECK
-	BaseAuras[122355] = 4 -- Molten Core -- NEEDS CHECK
-	BaseAuras[104232] = 4 -- Rain of Fire
-	BaseAuras[108416] = 4 -- Sacrificial Pact
-	BaseAuras[86211]  = 4 -- Soul Swap
-	BaseAuras[104773] = 4 -- Unending Resolve
-
-	-- Buffs
-	BaseAuras[20707]  = 1 -- Soulstone
-
-	-- Debuffs
-	BaseAuras[980]    = 2 -- Agony
-	BaseAuras[108505] = 2 -- Archimonde's Vengeance
-	BaseAuras[124915] = 2 -- Chaos Wave
-	BaseAuras[17962]  = 2 -- Conflagrate (slow)
-	BaseAuras[172]    = 2 -- Corruption
-	BaseAuras[109466] = 2 -- Curse of Enfeeblement
-	BaseAuras[18223]  = 2 -- Curse of Exhaustion
-	BaseAuras[1490]   = 2 -- Curse of the Elements
-	BaseAuras[603]    = 2 -- Doom
-	BaseAuras[48181]  = 2 -- Haunt
-	BaseAuras[80240]  = 2 -- Havoc
-	BaseAuras[348]    = 2 -- Immolate
-	BaseAuras[108686] = 2 -- Immolate <= Fire and Brimstone
-	BaseAuras[60947]  = 2 -- Nightmare
-	BaseAuras[30108]  = 2 -- Seed of Corruption
-	BaseAuras[47960]  = 2 -- Shadowflame
-	BaseAuras[30283]  = 2 -- Shadowfury
-	BaseAuras[27243]  = 2 -- Unstable Affliction
-
-	-- Debuffs - Crowd Control
-	BaseAuras[170]    = 2 -- Banish
-	BaseAuras[111397] = 2 -- Blood Fear
-	BaseAuras[137143] = 2 -- Blood Horror
-	BaseAuras[1098]   = 2 -- Enslave Demon
-	BaseAuras[5782]   = 2 -- Fear
-	BaseAuras[5484]   = 2 -- Howl of Terror
-	BaseAuras[6789]   = 2 -- Mortal Coil
-end
-
-------------------------------------------------------------------------
---	Warrior
-
-if playerClass == "WARRIOR" then
-	-- Self Buffs
-	BaseAuras[107574] = 4 -- Avatar
-	BaseAuras[18499]  = 4 -- Berserker Rage
-	BaseAuras[46924]  = 4 -- Bladestorm
-	BaseAuras[12292]  = 4 -- Bloodbath
-	BaseAuras[46916]  = 4 -- Bloodsurge
-	BaseAuras[85730]  = 4 -- Deadly Calm
-	BaseAuras[125565] = 4 -- Demoralizing Shout
-	BaseAuras[118038] = 4 -- Die by the Sword
-	BaseAuras[12880]  = 4 -- Enrage
-	BaseAuras[55964]  = 4 -- Enraged Regeneration
-	BaseAuras[115945] = 4 -- Glyph of Hamstring
-	BaseAuras[12975]  = 4 -- Last Stand
-	BaseAuras[114028] = 4 -- Mass Spell Reflection
-	BaseAuras[85739]  = 4 -- Meat Cleaver
-	BaseAuras[114192] = 4 -- Mocking Banner
-	BaseAuras[97463]  = 4 -- Rallying Cry
-	BaseAuras[1719]   = 4 -- Recklessness
-	BaseAuras[112048] = 4 -- Shield Barrier
-	BaseAuras[2565]   = 4 -- Shield Block
-	BaseAuras[871]    = 4 -- Shield Wall
-	BaseAuras[114206] = 4 -- Skull Banner
-	BaseAuras[23920]  = 4 -- Spell Banner
-	BaseAuras[52437]  = 4 -- Sudden Death
-	BaseAuras[12328]  = 4 -- Sweeping Strikes
-	BaseAuras[50227]  = 4 -- Sword and Board
-	BaseAuras[125831] = 4 -- Taste for Blood
-	BaseAuras[122510] = 4 -- Ultimatum
-
-	-- Buffs
-	BaseAuras[46947]  = 3 -- Safeguard (damage reduction)
-	BaseAuras[114029] = 3 -- Safeguard (intercept)
-	BaseAuras[114030] = 3 -- Vigilance
-
-	-- Debuffs
-	BaseAuras[86346]  = 2 -- Colossus Smash
-	BaseAuras[114205] = 2 -- Demoralizing Banner
-	BaseAuras[1160]   = 2 -- Demoralizing Shout
-	BaseAuras[676]    = 2 -- Disarm
-	BaseAuras[118895] = 2 -- Dragon Roar
-	BaseAuras[1715]   = 2 -- Hamstring
-	BaseAuras[5246]   = 2 -- Intimidating Shout -- NEEDS CHECK
-	BaseAuras[20511]  = 2 -- Intimidating Shout -- NEEDS CHECK
-	BaseAuras[12323]  = 2 -- Piercing Howl
-	BaseAuras[64382]  = 2 -- Shattering Throw
-	BaseAuras[46968]  = 2 -- Shockwave
-	BaseAuras[18498]  = 2 -- Silenced - Gag Order
-	BaseAuras[107566] = 2 -- Staggering Shout
-	BaseAuras[107570] = 2 -- Storm Bolt
-	BaseAuras[355]    = 2 -- Taunt
-	BaseAuras[105771] = 2 -- Warbringer
-end
-
 -- ADD Racials
 if playerRace == "Draenei" then
-	PersonalAuras[59545]  = 4 -- Gift of the Naaru (death knight)
-	PersonalAuras[59543]  = 4 -- Gift of the Naaru (hunter)
-	PersonalAuras[59548]  = 4 -- Gift of the Naaru (mage)
-	PersonalAuras[121093] = 4 -- Gift of the Naaru (monk)
-	PersonalAuras[59542]  = 4 -- Gift of the Naaru (paladin)
-	PersonalAuras[59544]  = 4 -- Gift of the Naaru (priest)
-	PersonalAuras[59547]  = 4 -- Gift of the Naaru (shaman)
-	PersonalAuras[28880]  = 4 -- Gift of the Naaru (warrior)
+	ActivityAuras[59545]  = 4 -- Gift of the Naaru (death knight)
+	ActivityAuras[59543]  = 4 -- Gift of the Naaru (hunter)
+	ActivityAuras[59548]  = 4 -- Gift of the Naaru (mage)
+	ActivityAuras[121093] = 4 -- Gift of the Naaru (monk)
+	ActivityAuras[59542]  = 4 -- Gift of the Naaru (paladin)
+	ActivityAuras[59544]  = 4 -- Gift of the Naaru (priest)
+	ActivityAuras[59547]  = 4 -- Gift of the Naaru (shaman)
+	ActivityAuras[28880]  = 4 -- Gift of the Naaru (warrior)
 elseif playerRace == "Dwarf" then
 	PersonalAuras[20594]  = 4 -- Stoneform
 elseif playerRace == "NightElf" then
 	PersonalAuras[58984]  = 4 -- Shadowmeld
 elseif playerRace == "Orc" then
-	PersonalAuras[20572]  = 4 -- Blood Fury (attack power)
-	PersonalAuras[33702]  = 4 -- Blood Fury (spell power)
-	PersonalAuras[33697]  = 4 -- Blood Fury (attack power and spell damage)
+	ActivityAuras[20572]  = 4 -- Blood Fury (attack power)
+	ActivityAuras[33702]  = 4 -- Blood Fury (spell power)
+	ActivityAuras[33697]  = 4 -- Blood Fury (attack power and spell damage)
 elseif playerRace == "Troll" then
-	PersonalAuras[26297]  = 4 -- Berserking
+	ActivityAuras[26297]  = 4 -- Berserking
 end
 
 local activityAuraList = {}
@@ -707,11 +703,11 @@ UpdateAuraList = function()
 	wipe(activityAuraList)	
 	wipe(personalAuraList)
 	-- Add base auras
-	for offAura, offFilter in pairs(ActivityAuras) do
-		activityAuraList[offAura] = offFilter
+	for ativityAura, activityFilter in pairs(ActivityAuras) do
+		activityAuraList[ativityAura] = activityFilter
 	end
-	for defAura, defFilter in pairs(PersonalAuras) do
-		personalAuraList[defAura] = defFilter
+	for personalAura, personalFilter in pairs(PersonalAuras) do
+		personalAuraList[personalAura] = personalFilter
 	end
 	-- Add auras that depend on spec or PVP mode
 	for i = 1, #updateFuncs do
@@ -722,6 +718,9 @@ UpdateAuraList = function()
 	end
 	-- Update all the things
 	for _, obj in pairs(oUF.objects) do
+		if obj.Auras then
+			obj.Auras:ForceUpdate()
+		end
 		if obj.Buffs then
 			obj.Buffs:ForceUpdate()
 		end
