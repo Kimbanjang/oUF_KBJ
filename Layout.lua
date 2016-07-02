@@ -382,7 +382,7 @@ local PostCastStart = function(self, unit)
 		end
 	end
 	if unit ~= 'player' and self.interrupt and UnitCanAttack('player', unit) then
-        self:SetStatusBarColor(1, .9, .4)
+        self:SetStatusBarColor(1, 1, 1)
     end
 end
 
@@ -715,7 +715,7 @@ local UnitSpecific = {
 	        treat.bg = framebd(treat, treat)
 			self.ThreatBar = treat
 		end
-
+--[[
 		--if cfg.aura.target_buffs then
 			local personalBuff = CreateFrame('Frame', nil, self)
 			personalBuff.size = 43
@@ -746,6 +746,7 @@ local UnitSpecific = {
             activityBuff.CustomFilter = CustomAuraFilters.activity
             --activityBuff.CustomFilter = ns.OffensiveCustomFilter
             self.Buffs = activityBuff  
+]]
     end,
 
     target = function(self, ...)

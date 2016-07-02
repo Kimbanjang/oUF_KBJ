@@ -35,7 +35,6 @@ if playerClass == "DEATHKNIGHT" then
 	PersonalAuras[101568] = 2 -- Dark Succor
 
 	ActivityAuras[115989] = 2 -- [T1/3] Unholy Blight
-	ActivityAuras[96268]  = 2 -- [T3/1] Death's Advance
 	ActivityAuras[114851] = 2 -- [T4/1] Blood Charge
 	ActivityAuras[108200] = 2 -- [T6/2] Remorseless Winter
 	ActivityAuras[81141]  = 2 -- [Blood] Crimson Scourge
@@ -49,13 +48,27 @@ if playerClass == "DEATHKNIGHT" then
 	PersonalAuras[49039]  = 2 -- [T2/1] Lichborne
 	PersonalAuras[51052]  = 2 -- [T2/2] Anti-Magic Zone	
 	PersonalAuras[116888] = 2 -- [T2/3] Shroud of Purgatory
+	ActivityAuras[96268]  = 2 -- [T3/1] Death's Advance
 	PersonalAuras[51460]  = 2 -- [T4/3] Runic Corruption
+	PersonalAuras[48743]  = 2 -- [T5/1] Death Pact(Debuff)
 	PersonalAuras[119975] = 2 -- [T5/3] Conversion
 	PersonalAuras[77535]  = 2 -- [Blood] Blood Shield
 	PersonalAuras[49222]  = 2 -- [Blood] Bone Shield
 	PersonalAuras[50421]  = 2 -- [Blood] Scent of Blood
 	PersonalAuras[164047] = 2 -- [Blood] Shadow of Death
-	PersonalAuras[55233]  = 2 -- [Blood] Vampiric Blood
+	PersonalAuras[55233]  = 2 -- [Blood] Vampiric Blood	
+
+--[[ recommand from elvUI
+	[SpellName(48797)] = Defaults(), -- Anti-Magic Shell
+	[SpellName(48792)] = Defaults(), -- Icebound Fortitude
+	[SpellName(49039)] = Defaults(), -- Lichborne
+	[SpellName(87256)] = Defaults(), -- Dancing Rune Weapon
+	[SpellName(49222)] = Defaults(), -- Bone Shield
+	[SpellName(55233)] = Defaults(), -- Vampiric Blood
+	[SpellName(50461)] = Defaults(), -- Anti-Magic Zone
+	[SpellName(51271)] = Defaults(), -- Pillar of Frost
+	[SpellName(96268)] = Defaults(), -- Death's Advance
+]]
 end
 
 ------------------------------------------------------------------------
