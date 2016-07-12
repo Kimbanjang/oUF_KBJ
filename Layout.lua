@@ -715,14 +715,14 @@ local UnitSpecific = {
 	        treat.bg = framebd(treat, treat)
 			self.ThreatBar = treat
 		end
---[[
 		--if cfg.aura.target_buffs then
 			local personalBuff = CreateFrame('Frame', nil, self)
 			personalBuff.size = 43
 			personalBuff.spacing = 4
 		    personalBuff.num = 6
             personalBuff:SetSize((personalBuff.size+personalBuff.spacing)*personalBuff.num-personalBuff.spacing, personalBuff.size)
-		    personalBuff:SetPoint('CENTER', UIParent, 'CENTER', -118, 23)
+            -- personalBuff:SetPoint('CENTER', UIParent, 'CENTER', -118, 23)
+		    personalBuff:SetPoint('CENTER', UIParent, 'CENTER', -152, 50)
             personalBuff.initialAnchor = 'CENTER'            
             personalBuff['growth-x'] = 'LEFT' 
             personalBuff['growth-y'] = 'DOWN'
@@ -746,7 +746,6 @@ local UnitSpecific = {
             activityBuff.CustomFilter = CustomAuraFilters.activity
             --activityBuff.CustomFilter = ns.OffensiveCustomFilter
             self.Buffs = activityBuff  
-]]
     end,
 
     target = function(self, ...)
