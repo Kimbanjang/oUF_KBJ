@@ -259,11 +259,11 @@ end
 local channelingTicks = {
 	-- Druid
 	[GetSpellInfo(740)] = 4,	-- Tranquility
-	[GetSpellInfo(16914)] = 10,	-- Hurricane
-	[GetSpellInfo(106996)] = 10,-- Astral Storm
+--	[GetSpellInfo(16914)] = 10,	-- Hurricane
+--	[GetSpellInfo(106996)] = 10,-- Astral Storm
 	-- Mage
 	[GetSpellInfo(5143)] = 5,	-- Arcane Missiles
-	[GetSpellInfo(10)] = 8,		-- Blizzard
+--	[GetSpellInfo(10)] = 8,		-- Blizzard
 	[GetSpellInfo(12051)] = 4,	-- Evocation
 	-- Monk
 	[GetSpellInfo(115175)] = 9,	-- Soothing Mist
@@ -275,12 +275,12 @@ local channelingTicks = {
 	[GetSpellInfo(64843)] = 4,	-- Divine Hymn
 	-- Warlock
 	[GetSpellInfo(689)] = 6,	-- Drain Life
-	[GetSpellInfo(108371)] = 6, -- Harvest Life
-	[GetSpellInfo(103103)] = 3,	-- Drain Soul
+--	[GetSpellInfo(108371)] = 6, -- Harvest Life
+--	[GetSpellInfo(103103)] = 3,	-- Drain Soul
 	[GetSpellInfo(755)] = 6,	-- Health Funnel
-	[GetSpellInfo(1949)] = 15,	-- Hellfire
+--	[GetSpellInfo(1949)] = 15,	-- Hellfire
 	[GetSpellInfo(5740)] = 4,	-- Rain of Fire
-	[GetSpellInfo(103103)] = 3,	-- Malefic Grasp
+--	[GetSpellInfo(103103)] = 3,	-- Malefic Grasp
 }
 
 local ticks = {}
@@ -508,6 +508,7 @@ local Healcomm = function(self)
 end
 
 local AuraTracker = function(self)
+--[[
 	self.PortraitTimer = CreateFrame('Frame', nil, self.Health)
     self.PortraitTimer.Icon = self.PortraitTimer:CreateTexture(nil, 'BACKGROUND')
     self.PortraitTimer.Icon:SetSize(32, 32)
@@ -517,6 +518,7 @@ local AuraTracker = function(self)
     self.PortraitTimer.Remaining:SetPoint('BOTTOM', self.PortraitTimer.Icon)
     self.PortraitTimer.Remaining:SetFont(cfg.font, 15, 'THINOUTLINE')
     self.PortraitTimer.Remaining:SetTextColor(1, 1, 1)
+   ]]
 end
 
 local Health = function(self) 
@@ -664,7 +666,7 @@ local UnitSpecific = {
             runes.bg = framebd(runes, runes)
 			local i = 6
             for index = 1, 6 do
-                runes[i] = createStatusbar(runes, cfg.texture, nil, (cfg.player.health+cfg.player.power+2)/6-1, 12, 1, 1, 1, 1)			
+                runes[i] = createStatusbar(runes, cfg.texture, nil, (cfg.player.health+cfg.player.power+2)/6-1, 12, 0.14, 0.5, 0.6, 1)			
 			    if i == 6 then
                     runes[i]:SetPoint('BOTTOM', runes)
                 else
