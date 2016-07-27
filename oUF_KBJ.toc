@@ -1,17 +1,15 @@
-## Interface: 60200
+## Interface: 70000
 ## Title: oUF_KBJ
 ## Author: Kimbanjang
 ## Notes: oUF layout
 ## OptionalDeps: oUF
-## SavedVariablesPerCharacter: SavedOptionsPerChar
-## X-SlashCmdList: /omf
 
 Config.lua
 
 Plugins\oUF_AuraWatch.lua
 Plugins\oUF_DebuffHighlight.lua
 Plugins\oUF_GCD.lua
-## Plugins\oUF_Portraittimers.lua
+Plugins\oUF_Portraittimers.lua
 Plugins\oUF_PVPSpecIcons.lua
 Plugins\oUF_RaidDebuffs.lua
 Plugins\oUF_Smooth.lua

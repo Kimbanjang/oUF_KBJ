@@ -3,7 +3,6 @@ local oUF = ns.oUF or oUF
 
 ns.PortraitTimerDB = {
     -- Immunitys
-    '5384',
     '45438',    -- Ice Block
     '33786',    -- Cyclone
     '642',      -- Divine Shield
@@ -16,19 +15,19 @@ ns.PortraitTimerDB = {
     '1833',     -- Cheap Shot
     '46968',    -- Shockwave
     '853',      -- Hammer of Justice
-    '44572',    -- Deep Freeze
-    '5211',     -- Bash
+    --'44572',    -- Deep Freeze
+    '5211',     -- Mighty Bash
     '30283',    -- Shadowfury
     '89766',    -- Axe Toss
     '22570',    -- Maim
     '47481',    -- Gnaw
     '1776',     -- Gouge
     '6770',     -- Sap
-    '87195',    -- Paralysis
+    '115078',    -- Paralysis
     '88625',    -- Holy Word: Chastise   
-    '65929',    -- Charge Stun
+    '7922',    -- Charge Stun
     '91797',    -- Monstrous Blow (Gnaw with DT)
-    '108194',   -- DK Asphy
+    '108194',   -- Asphyxiate
 
     -- CC
     '91807',    -- Shambling Rush (Leap with DT)
@@ -41,15 +40,15 @@ ns.PortraitTimerDB = {
     '5246',     -- Intimidating Shout 
     '8122',     -- Psychic Scream
     '5484',     -- Howl of Terror
-    '5782',     -- Fear
+    '118699',     -- Fear
     '6358',     -- Seduction
-    '1499',     -- Freezing Trap
+    '3355',     -- Freezing Trap
     '20066',    -- Repentance
     '339',      -- Entangling Roots
-    '8377',     -- Earthgrab
+    '64695',     -- Earthgrab
     '31661',    -- Dragon's Breath
     '82691',    -- Ring of Frost
-    '19387',    -- Entrapment
+    '64803',    -- Entrapment
 
     -- CC immune
     '53271',    -- Master's Call
@@ -60,7 +59,7 @@ ns.PortraitTimerDB = {
 
     -- Dmg reductions
     '48707',    -- Anti-Magic Shell
-    '30823',    -- Shamanistic Rage 
+    --'30823',    -- Shamanistic Rage 
     '33206',    -- Pain Suppression
     '47585',    -- Dispersion
     '871',      -- Shield Wall
@@ -76,12 +75,12 @@ ns.PortraitTimerDB = {
     '47476',    -- Strangulate
     '1330',     -- Garrote - Silence
     '15487',    -- Silence (priest)
-    '19647',    -- Spell Lock
+    --'19647',    -- Spell Lock
     '28730',    -- Arcane Torrent
 
     -- Dmg buffs  
     '31884',    -- Avenging Wrath
-    '51713',    -- Shadow Dance 
+    --'51713',    -- Shadow Dance 
 
     -- Helpful buffs
     '6940',     -- Hand of Sacrifice

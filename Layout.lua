@@ -430,6 +430,7 @@ local castbar = function(self, unit)
 		cb.SafeZone = cb:CreateTexture(nil, 'ARTWORK')
 		cb.SafeZone:SetTexture(cfg.texture)
 		cb.SafeZone:SetVertexColor(.8,.11,.15, .7)
+		--[[
 		cb.Lag = fs(cb, 'OVERLAY', cfg.font, cfg.fontsize, cfg.fontflag, 1, 1, 1)
 		cb.Lag:SetPoint('TOPRIGHT', 0, 12)
 		cb.Lag:SetJustifyH('RIGHT')
@@ -438,6 +439,7 @@ local castbar = function(self, unit)
 			self.Castbar.SafeZone.sendTime = GetTime()
 				end
 		end, true)
+		]]
 	elseif self.unit == 'target' then
 		cb:SetPoint(unpack(cfg.target_cb.pos))
 		cb:SetSize(cfg.target_cb.width, cfg.target_cb.height)
@@ -508,7 +510,6 @@ local Healcomm = function(self)
 end
 
 local AuraTracker = function(self)
---[[
 	self.PortraitTimer = CreateFrame('Frame', nil, self.Health)
     self.PortraitTimer.Icon = self.PortraitTimer:CreateTexture(nil, 'BACKGROUND')
     self.PortraitTimer.Icon:SetSize(32, 32)
@@ -518,7 +519,6 @@ local AuraTracker = function(self)
     self.PortraitTimer.Remaining:SetPoint('BOTTOM', self.PortraitTimer.Icon)
     self.PortraitTimer.Remaining:SetFont(cfg.font, 15, 'THINOUTLINE')
     self.PortraitTimer.Remaining:SetTextColor(1, 1, 1)
-   ]]
 end
 
 local Health = function(self) 
@@ -643,14 +643,14 @@ local UnitSpecific = {
 		self.Resting:SetSize(18, 18)
 		self.Resting:SetPoint('BOTTOMRIGHT', self, 'TOPLEFT', 3, 0)
 
-		-- Class Resource
-		local classResource = fs(self, 'OVERLAY', cfg.font, 40, cfg.fontflag)
+--[[	-- Class Resource
+		local classResource = fs(self, 'OVERLAY', cfg.font, 34, cfg.fontflag)
 		classResource:SetPoint('TOPRIGHT', self.Health, 'TOPLEFT', -2, 4)
-		classResource:SetAlpha(.7)
+		classResource:SetAlpha(.8)
 		if (class == 'ROGUE' or class == 'DRUID') then
 			self:Tag(classResource, '[color][cpoints]') 
 		elseif (class == 'WARLOCK') then
-			self:Tag(classResource, '[color][resource:warlock]')
+			self:Tag(classResource, '[color][soulshards]')
 		elseif (class == 'MONK') then
 			self:Tag(classResource, '[color][chi]')
 		elseif (class == 'PRIEST') then
@@ -680,6 +680,20 @@ local UnitSpecific = {
                 i=i-1
             end
             self.Runes = runes
+			--'DRUID' and cfg.EclipseBar.enable	
+			--'MONK' and cfg.options.stagger_bar	
+			--'DRUID' and cfg.options.MushroomBar
+			--'SHAMAN' and cfg.options.TotemBar
+		end
+]]
+		-- Class Resource : 7.0.2 temp
+		local classResource = fs(self, 'OVERLAY', cfg.font, 34, cfg.fontflag)
+		classResource:SetPoint('TOPRIGHT', self.Health, 'TOPLEFT', -2, 4)
+		classResource:SetAlpha(.8)
+		if (class == 'ROGUE') then
+			self:Tag(classResource, '[color][resource:rogue]') 
+		elseif (class == 'WARLOCK') then
+			self:Tag(classResource, '[color][resource:warlock]')
 			--'DRUID' and cfg.EclipseBar.enable	
 			--'MONK' and cfg.options.stagger_bar	
 			--'DRUID' and cfg.options.MushroomBar
@@ -889,7 +903,7 @@ local UnitSpecific = {
 		
 		Power(self)
 		AuraTracker(self)
-		createAuraWatch(self)
+		--createAuraWatch(self)
 		ph(self)
 		
 		self.framebd = framebd(self, self)	
@@ -987,7 +1001,7 @@ local UnitSpecific = {
 		
 		Power(self)
 		AuraTracker(self)
-		createAuraWatch(self)
+		--createAuraWatch(self)
 		ph(self)
 		
 		self.framebd = framebd(self, self)
