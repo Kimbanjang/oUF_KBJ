@@ -702,7 +702,7 @@ local UnitSpecific = {
             runes.bg = framebd(runes, runes)
 			local i = 6
             for index = 1, 6 do
-                runes[i] = createStatusbar(runes, cfg.texture, nil, (cfg.player.health+cfg.player.power+2)/6-1, 12, 0.14, 0.5, 0.6, 1)			
+                runes[i] = createStatusbar(runes, cfg.texture, nil, (cfg.player.health+cfg.player.power+2)/6-1, 12, 0.21, 0.6, 0.7, 1)
 			    if i == 6 then
                     runes[i]:SetPoint('BOTTOM', runes)
                 else
