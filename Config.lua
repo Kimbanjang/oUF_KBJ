@@ -12,6 +12,7 @@ cfg.glow = mediaPath..'glowTex'
 
 --Unit Frames Font
 cfg.font, cfg.fontsize, cfg.shadowoffsetX, cfg.shadowoffsetY, cfg.fontflag = mediaPath..'fontThick.ttf', 10, 0, 0,  'THINOUTLINE' -- '' for none THINOUTLINE Outlinemonochrome
+cfg.krfont, cfg.krfontsize, cfg.krshadowoffsetX, cfg.krshadowoffsetY, cfg.krfontflag = STANDARD_TEXT_FONT, 10, 0, 0,  'THINOUTLINE' -- '' for none THINOUTLINE Outlinemonochrome
 
 
 -----------------------------
@@ -30,6 +31,7 @@ cfg.uf = {
 -----------------------------
 -- Unit Frames Size
 -----------------------------
+-- 4/5/6 = H59 / 
 cfg.player = { 
         width = 28 ,
         health = 41,

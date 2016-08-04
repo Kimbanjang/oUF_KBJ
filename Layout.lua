@@ -412,7 +412,7 @@ local castbar = function(self, unit)
     cbbg:SetVertexColor(1, 1, 1, .2)
     cb.Time = fs(cb, 'OVERLAY', cfg.font, cfg.fontsize, cfg.fontflag, 1, 1, 1)
 	cb.Time:SetPoint('RIGHT', cb, -2, 0)		
-	cb.Text = fs(cb, 'OVERLAY', cfg.font, cfg.fontsize, cfg.fontflag, 1, 1, 1, 'LEFT')
+	cb.Text = fs(cb, 'OVERLAY', cfg.krfont, 12, cfg.krfontflag, 1, 1, 1, 'LEFT')
     cb.Text:SetPoint('LEFT', cb, 2, 0)
     cb.Text:SetPoint('RIGHT', cb.Time, 'LEFT')
 	cb.CastingColor = {1, 0.7, 0}
@@ -430,6 +430,7 @@ local castbar = function(self, unit)
 		cb.SafeZone = cb:CreateTexture(nil, 'ARTWORK')
 		cb.SafeZone:SetTexture(cfg.texture)
 		cb.SafeZone:SetVertexColor(.8,.11,.15, .7)
+
 		--[[
 		cb.Lag = fs(cb, 'OVERLAY', cfg.font, cfg.fontsize, cfg.fontflag, 1, 1, 1)
 		cb.Lag:SetPoint('TOPRIGHT', 0, 12)
@@ -694,6 +695,27 @@ local UnitSpecific = {
 			self:Tag(classResource, '[color][resource:rogue]') 
 		elseif (class == 'WARLOCK') then
 			self:Tag(classResource, '[color][resource:warlock]')
+		elseif (class == 'DEATHKNIGHT')  then
+            local runes = CreateFrame('Frame', nil, self)
+            runes:SetPoint('BOTTOMRIGHT', self.Power, 'BOTTOMLEFT', -4, 0)
+            runes:SetSize(12, cfg.player.health+cfg.player.power+1)
+            runes.bg = framebd(runes, runes)
+			local i = 6
+            for index = 1, 6 do
+                runes[i] = createStatusbar(runes, cfg.texture, nil, (cfg.player.health+cfg.player.power+2)/6-1, 12, 0.14, 0.5, 0.6, 1)			
+			    if i == 6 then
+                    runes[i]:SetPoint('BOTTOM', runes)
+                else
+                    runes[i]:SetPoint('BOTTOMRIGHT', runes[i+1], 'TOPRIGHT', 0, 1)
+                end
+                runes[i].bg = runes[i]:CreateTexture(nil, 'BACKGROUND')
+                runes[i].bg:SetAllPoints(runes[i])
+                runes[i].bg:SetTexture(cfg.texture)
+                runes[i].bg.multiplier = .3
+
+                i=i-1
+            end
+            self.Runes = runes
 			--'DRUID' and cfg.EclipseBar.enable	
 			--'MONK' and cfg.options.stagger_bar	
 			--'DRUID' and cfg.options.MushroomBar
@@ -783,7 +805,7 @@ local UnitSpecific = {
 		self.Health:SetHeight(cfg.target.health)
 	    self.Power:SetHeight(cfg.target.power)
 
-	    local name = fs(self.Health, 'OVERLAY', cfg.font, 11, cfg.fontflag, 1, 1, 1)
+	    local name = fs(self.Health, 'OVERLAY', cfg.krfont, 11, cfg.krfontflag, 1, 1, 1)
         name:SetPoint('TOPLEFT', self.Health, 'TOPRIGHT', 4, 0)        
         name:SetJustifyH('LEFT')
 		self:Tag(name, '[unit:lv] [color][name]')
@@ -848,7 +870,7 @@ local UnitSpecific = {
 		self.Health:SetHeight(cfg.focus.health)
 		self.Power:SetHeight(cfg.focus.power)
 		
-		local name = fs(self.Health, 'OVERLAY', cfg.font, cfg.fontsize, cfg.fontflag, 1, 1, 1)
+		local name = fs(self.Health, 'OVERLAY', cfg.krfont, cfg.krfontsize, cfg.krfontflag, 1, 1, 1)
         name:SetPoint('TOPLEFT', -1, 12)
         name:SetJustifyH('LEFT')
 		self:Tag(name, '[unit:name10]')
@@ -884,7 +906,7 @@ local UnitSpecific = {
 
 		self:SetSize(cfg.ttarget.width, cfg.ttarget.height)
 		
-		local name = fs(self.Health, 'OVERLAY', cfg.font, cfg.fontsize, 'none', 1, 1, 1)
+		local name = fs(self.Health, 'OVERLAY', cfg.krfont, cfg.krfontsize, 'none', 1, 1, 1)
         name:SetPoint('LEFT', 2, 0)
         name:SetJustifyH('LEFT')
 		name:SetShadowOffset(1, -1)
@@ -916,7 +938,7 @@ local UnitSpecific = {
 		self.Health:SetReverseFill(true)
 		self.Power:SetHeight(cfg.target.power)
 		
-		local name = fs(self.Health, 'OVERLAY', cfg.font, cfg.fontsize, 'none', 1, 1, 1)
+		local name = fs(self.Health, 'OVERLAY', cfg.krfont, cfg.krfontsize, 'none', 1, 1, 1)
 		name:SetPoint('TOPLEFT', 1, 0)
 	    name:SetJustifyH('LEFT')
 	    name:SetShadowOffset(1, -1)
@@ -1014,7 +1036,7 @@ local UnitSpecific = {
 		
 		if cfg.options.healcomm then Healcomm(self) end
 		
-		local name = fs(self.Health, 'OVERLAY', cfg.font, cfg.fontsize, 'none', 1, 1, 1)
+		local name = fs(self.Health, 'OVERLAY', cfg.krfont, cfg.krfontsize, 'none', 1, 1, 1)
 		name:SetPoint('TOPLEFT', 1, 0)		
 		name:SetShadowOffset(1, -1)
 	    name:SetJustifyH('LEFT')
@@ -1111,7 +1133,7 @@ local UnitSpecific = {
 		self.Health.frequentUpdates = true
 	    self.Power:SetHeight(cfg.focus.power)
 		
-		local name = fs(self.Health, 'OVERLAY', cfg.font, cfg.fontsize, cfg.fontflag, 1, 1, 1)
+		local name = fs(self.Health, 'OVERLAY', cfg.krfont, cfg.krfontsize, cfg.krfontflag, 1, 1, 1)
         name:SetPoint('TOPLEFT', -1, 12)
         name:SetJustifyH('LEFT')
 		self:Tag(name, '[color][unit:name10]')
@@ -1189,7 +1211,7 @@ local UnitSpecific = {
 		if cfg.arena_cb.enable then castbar(self) end		
 		if cfg.options.healcomm then Healcomm(self) end
 		
-		local name = fs(self.Health, 'OVERLAY', cfg.font, cfg.fontsize, 'none', 1, 1, 1)
+		local name = fs(self.Health, 'OVERLAY', cfg.krfont, cfg.krfontsize, 'none', 1, 1, 1)
 		name:SetPoint('TOPLEFT', 1, 0)
 	    name:SetJustifyH('LEFT')
 	    name:SetShadowOffset(1, -1)
