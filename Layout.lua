@@ -406,45 +406,53 @@ local castbar = function(self, unit)
     cbbg:SetTexture(cfg.texture)
     cbbg:SetVertexColor(1, 1, 1, .2)
     cb.Time = fs(cb, 'OVERLAY', cfg.font, cfg.fontsize, cfg.fontflag, 1, 1, 1)
-	cb.Time:SetPoint('RIGHT', cb, -2, 0)		
-	cb.Text = fs(cb, 'OVERLAY', cfg.krfont, 12, cfg.krfontflag, 1, 1, 1, 'LEFT')
-    cb.Text:SetPoint('LEFT', cb, 2, 0)
-    cb.Text:SetPoint('RIGHT', cb.Time, 'LEFT')
+	cb.Time:SetPoint('RIGHT', cb, -2, 0)	
 	cb.CastingColor = {1, 0.7, 0}
 	cb.CompleteColor = {0.12, 0.86, 0.15}
 	cb.FailColor = {1.0, 0.09, 0}
 	cb.ChannelingColor = {0.65, 0.4, 0}
 	cb.Icon = cb:CreateTexture(nil, 'ARTWORK')
-	cb.Icon:SetPoint('TOPRIGHT', cb, 'TOPLEFT', -1, 0)
+	cb.Icon:SetPoint('BOTTOMRIGHT', cb, 'BOTTOMLEFT', -3, 0)
     cb.Icon:SetTexCoord(.1, .9, .1, .9)
 
 	if self.unit == 'player' then
 		cb:SetPoint(unpack(cfg.player_cb.pos))
 		cb:SetSize(cfg.player_cb.width, cfg.player_cb.height)
-	    cb.Icon:SetSize(cfg.player_cb.height, cfg.player_cb.height)
+	    cb.Icon:SetSize(cfg.player_cb.height*2, cfg.player_cb.height*2)
 		cb.SafeZone = cb:CreateTexture(nil, 'ARTWORK')
 		cb.SafeZone:SetTexture(cfg.texture)
 		cb.SafeZone:SetVertexColor(.8,.11,.15, .7)
-
 		cb.Lag = fs(cb, 'OVERLAY', cfg.font, cfg.fontsize, cfg.fontflag, 1, 1, 1)
-		cb.Lag:SetPoint('TOPRIGHT', 0, 12)
+		cb.Lag:SetPoint('TOPRIGHT', 3, 13)
 		cb.Lag:SetJustifyH('RIGHT')
 	elseif self.unit == 'target' then
 		cb:SetPoint(unpack(cfg.target_cb.pos))
 		cb:SetSize(cfg.target_cb.width, cfg.target_cb.height)
 	    cb.Icon:SetSize(cfg.target_cb.height, cfg.target_cb.height)
+	    cb.Text = fs(cb, 'OVERLAY', cfg.krfont, 12, cfg.krfontflag, 1, 1, 1, 'LEFT')
+		cb.Text:SetPoint('LEFT', cb, 2, 0)
+		cb.Text:SetPoint('RIGHT', cb.Time, 'LEFT')
 	elseif self.unit == 'focus' then
 		cb:SetPoint(unpack(cfg.focus_cb.pos))
 		cb:SetSize(cfg.focus_cb.width, cfg.focus_cb.height)
 		cb.Icon:SetSize(cfg.focus_cb.height, cfg.focus_cb.height)
+		cb.Text = fs(cb, 'OVERLAY', cfg.krfont, 12, cfg.krfontflag, 1, 1, 1, 'LEFT')
+		cb.Text:SetPoint('LEFT', cb, 2, 0)
+		cb.Text:SetPoint('RIGHT', cb.Time, 'LEFT')
 	elseif self.unit == 'boss' then
 		cb:SetPoint(unpack(cfg.boss_cb.pos))
 		cb:SetSize(cfg.boss_cb.width, cfg.boss_cb.height)
 		cb.Icon:SetSize(cfg.boss_cb.height, cfg.boss_cb.height)
+		cb.Text = fs(cb, 'OVERLAY', cfg.krfont, 12, cfg.krfontflag, 1, 1, 1, 'LEFT')
+		cb.Text:SetPoint('LEFT', cb, 2, 0)
+		cb.Text:SetPoint('RIGHT', cb.Time, 'LEFT')
 	elseif self.unit == 'arena' then
 		cb:SetPoint(unpack(cfg.arena_cb.pos))
 		cb:SetSize(cfg.arena_cb.width, cfg.arena_cb.height)
 		cb.Icon:SetSize(cfg.arena_cb.height, cfg.arena_cb.height)
+		cb.Text = fs(cb, 'OVERLAY', cfg.krfont, 12, cfg.krfontflag, 1, 1, 1, 'LEFT')
+		cb.Text:SetPoint('LEFT', cb, 2, 0)
+		cb.Text:SetPoint('RIGHT', cb.Time, 'LEFT')
 	end
 	
 	cb.Spark = cb:CreateTexture(nil,'OVERLAY')
@@ -669,7 +677,7 @@ local UnitSpecific = {
                 i=i-1
             end
             self.Runes = runes
-			--'DRUID' and cfg.EclipseBar.enable	
+			--'DRUID'
 			--'MONK' and cfg.options.stagger_bar	
 			--'DRUID' and cfg.options.MushroomBar
 			--'SHAMAN' and cfg.options.TotemBar
@@ -704,14 +712,14 @@ local UnitSpecific = {
                 i=i-1
             end
             self.Runes = runes
-			--'DRUID' and cfg.EclipseBar.enable	
+			--'DRUID'
 			--'MONK' and cfg.options.stagger_bar	
 			--'DRUID' and cfg.options.MushroomBar
 			--'SHAMAN' and cfg.options.TotemBar
 		end
 				
 		if cfg.gcd.enable then
-		    local gcd = createStatusbar(self, cfg.texture, nil, cfg.player_cb.height/6, cfg.player_cb.width, class_color.r, class_color.g, class_color.b, 1)
+		    local gcd = createStatusbar(self, cfg.texture, nil, cfg.player_cb.height/4, cfg.player_cb.width-2, class_color.r, class_color.g, class_color.b, 1)
 		    gcd:SetPoint(unpack(cfg.gcd.pos))
 			gcd.bg = gcd:CreateTexture(nil, 'BORDER')
             gcd.bg:SetAllPoints(gcd)
