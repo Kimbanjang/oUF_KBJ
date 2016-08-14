@@ -5,27 +5,25 @@ local oUF = ns.oUF or oUF
 if not cfg.gcd.enable then return end
 
 local referenceSpells = {
-	48266,			-- Death Knight
-	3044,			-- Hunter
-	585,			-- Priest
-	105361,			-- Paladin
-	686,			-- Warlock
-	44614,			-- Mage
-	34428,			-- Warrior
-	403,			-- Shaman
-	1752,			-- Rogue
-	5176,			-- Druid
-	100780,         -- Monk
+	3714,		-- Death Knight /  Path of Frost
+	6197,		-- Hunter / Eagle Eye
+	2006,		-- Priest / Resurrection
+	7328,		-- Paladin / Redemption
+	130,		-- Mage / Slow Fall
+	34428,	-- Warrior / Victory Rush	
+	100780,	-- Monk / Tiger Palm	
+	162794,	-- Demon Hunter / Chaos Strike
+	2008,		-- Shaman / Ancestral Spirit
+	50769,	-- Druid / Revive
+	5697,		-- Warlock / Unending Breath
+	1966,		-- Rogue / Feint
 }
-
 
 local GetTime = GetTime
 local BOOKTYPE_SPELL = BOOKTYPE_SPELL
 local GetSpellCooldown = GetSpellCooldown
 
-
 local spellid = nil
-
 
 --
 -- find a spell to use.
@@ -61,7 +59,6 @@ local Init = function()
 	return spellid
 end
 
-
 local OnUpdateGCD = function(self)
 	local perc = (GetTime() - self.starttime) / self.duration
 	if perc > 1 then
@@ -71,16 +68,13 @@ local OnUpdateGCD = function(self)
 	end
 end
 
-
 local OnHideGCD = function(self)
  	self:SetScript('OnUpdate', nil)
 end
 
-
 local OnShowGCD = function(self)
 	self:SetScript('OnUpdate', OnUpdateGCD)
 end
-
 
 local Update = function(self, event, unit)
 	if self.GCD then
@@ -105,7 +99,6 @@ local Update = function(self, event, unit)
 	end
 end
 
-
 local Enable = function(self)
 	if (self.GCD) then
 		self.GCD:Hide()
@@ -119,13 +112,11 @@ local Enable = function(self)
 	end
 end
 
-
 local Disable = function(self)
 	if (self.GCD) then
 		self:UnregisterEvent('ACTIONBAR_UPDATE_COOLDOWN')
 		self.GCD:Hide()  
 	end
 end
-
 
 oUF:AddElement('GCD', Update, Enable, Disable)

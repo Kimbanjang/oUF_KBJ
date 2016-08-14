@@ -431,16 +431,14 @@ local castbar = function(self, unit)
 		cb.SafeZone:SetTexture(cfg.texture)
 		cb.SafeZone:SetVertexColor(.8,.11,.15, .7)
 
-		--[[
 		cb.Lag = fs(cb, 'OVERLAY', cfg.font, cfg.fontsize, cfg.fontflag, 1, 1, 1)
 		cb.Lag:SetPoint('TOPRIGHT', 0, 12)
 		cb.Lag:SetJustifyH('RIGHT')
-		self:RegisterEvent('UNIT_SPELLCAST_SENT', function(_, _, caster)
+		self:RegisterEvent('UNIT_SPELLCAST_SENT', function(_, _, caster, _, _)
 			if (caster == 'player' or caster == 'vehicle') and self.Castbar.SafeZone then
 			self.Castbar.SafeZone.sendTime = GetTime()
 				end
 		end, true)
-		]]
 	elseif self.unit == 'target' then
 		cb:SetPoint(unpack(cfg.target_cb.pos))
 		cb:SetSize(cfg.target_cb.width, cfg.target_cb.height)
