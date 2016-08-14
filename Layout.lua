@@ -309,6 +309,7 @@ end
 
 local OnCastbarUpdate = function(self, elapsed)
 	local currentTime = GetTime()
+	local _, _, _, latencyWorld = GetNetStats()
 	if self.casting or self.channeling then
 		local parent = self:GetParent()
 		local duration = self.casting and self.duration + elapsed or self.duration - elapsed
@@ -321,13 +322,8 @@ local OnCastbarUpdate = function(self, elapsed)
 			if self.delay ~= 0 then
 				self.Time:SetFormattedText('%.1f | %.1f |cffff0000|%.1f|r', duration, self.max, self.delay )
 			elseif self.Lag then
-				if self.SafeZone.timeDiff >= (self.max*.5) or self.SafeZone.timeDiff == 0 then
-					self.Time:SetFormattedText('%.1f | %.1f', duration, self.max)
-					self.Lag:SetFormattedText('')
-				else
-					self.Time:SetFormattedText('%.1f | %.1f', duration, self.max)
-					self.Lag:SetFormattedText('%d ms', self.SafeZone.timeDiff * 1000)
-				end
+				self.Time:SetFormattedText('%.1f | %.1f', duration, self.max)
+				self.Lag:SetFormattedText('%d ms', latencyWorld)
 			else
 				self.Time:SetFormattedText('%.1f | %.1f', duration, self.max)
 			end
@@ -363,14 +359,13 @@ local PostCastStart = function(self, unit)
 		self.Lag:Hide()
 	elseif unit == 'player' then
 		local sf = self.SafeZone
+		local _, _, _, latencyWorld = GetNetStats()
 		if not sf then return end
-		if not sf.sendTime then sf.sendTime = GetTime() end
-		sf.timeDiff = GetTime() - sf.sendTime
-		sf.timeDiff = sf.timeDiff > self.max and self.max or sf.timeDiff
-		if sf.timeDiff >= (self.max*.5) or sf.timeDiff == 0 then
+		sf.latencyWorld = latencyWorld * 0.8 / 1000
+		if sf.latencyWorld <= 0 then
 			sf:SetWidth(0.01)
 		else
-			sf:SetWidth(self:GetWidth() * sf.timeDiff / self.max)
+			sf:SetWidth(self:GetWidth() * sf.latencyWorld / self.max)
 		end
 		if not UnitInVehicle('player') then sf:Show() else sf:Hide() end
 		if self.casting then
@@ -434,11 +429,6 @@ local castbar = function(self, unit)
 		cb.Lag = fs(cb, 'OVERLAY', cfg.font, cfg.fontsize, cfg.fontflag, 1, 1, 1)
 		cb.Lag:SetPoint('TOPRIGHT', 0, 12)
 		cb.Lag:SetJustifyH('RIGHT')
-		self:RegisterEvent('UNIT_SPELLCAST_SENT', function(_, _, caster, _, _)
-			if (caster == 'player' or caster == 'vehicle') and self.Castbar.SafeZone then
-			self.Castbar.SafeZone.sendTime = GetTime()
-				end
-		end, true)
 	elseif self.unit == 'target' then
 		cb:SetPoint(unpack(cfg.target_cb.pos))
 		cb:SetSize(cfg.target_cb.width, cfg.target_cb.height)
