@@ -358,16 +358,7 @@ local PostCastStart = function(self, unit)
 		self.SafeZone:Hide()
 		self.Lag:Hide()
 	elseif unit == 'player' then
-		local sf = self.SafeZone
-		local _, _, _, latencyWorld = GetNetStats()
-		if not sf then return end
-		sf.latencyWorld = latencyWorld * 0.8 / 1000
-		if sf.latencyWorld <= 0 then
-			sf:SetWidth(0.01)
-		else
-			sf:SetWidth(self:GetWidth() * sf.latencyWorld / self.max)
-		end
-		if not UnitInVehicle('player') then sf:Show() else sf:Hide() end
+		if not UnitInVehicle('player') then self.SafeZone:Show() else self.SafeZone:Hide() end
 		if self.casting then
 			setBarTicks(self, 0)
 		else
@@ -432,6 +423,9 @@ local castbar = function(self, unit)
 	    cb.Text = fs(cb, 'OVERLAY', cfg.krfont, 12, cfg.krfontflag, 1, 1, 1, 'LEFT')
 		cb.Text:SetPoint('LEFT', cb, 2, 0)
 		cb.Text:SetPoint('RIGHT', cb.Time, 'LEFT')
+		cb.SafeZone = cb:CreateTexture(nil, 'ARTWORK')
+		cb.SafeZone:SetTexture(cfg.texture)
+		cb.SafeZone:SetVertexColor(.8,.11,.15, .7)
 	elseif self.unit == 'focus' then
 		cb:SetPoint(unpack(cfg.focus_cb.pos))
 		cb:SetSize(cfg.focus_cb.width, cfg.focus_cb.height)
@@ -439,6 +433,9 @@ local castbar = function(self, unit)
 		cb.Text = fs(cb, 'OVERLAY', cfg.krfont, 12, cfg.krfontflag, 1, 1, 1, 'LEFT')
 		cb.Text:SetPoint('LEFT', cb, 2, 0)
 		cb.Text:SetPoint('RIGHT', cb.Time, 'LEFT')
+		cb.SafeZone = cb:CreateTexture(nil, 'ARTWORK')
+		cb.SafeZone:SetTexture(cfg.texture)
+		cb.SafeZone:SetVertexColor(.8,.11,.15, .7)
 	elseif self.unit == 'boss' then
 		cb:SetPoint(unpack(cfg.boss_cb.pos))
 		cb:SetSize(cfg.boss_cb.width, cfg.boss_cb.height)

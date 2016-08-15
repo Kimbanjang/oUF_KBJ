@@ -60,7 +60,7 @@ cfg.unit_positions = {
           Player = { a = UIParent,		  x=  110, y=   21},  
           Target = { a = 'oUF_KBJPlayer', x=  260, y=  350},  
     Targettarget = { a = 'oUF_KBJTarget', x=    0, y=  -64},  
-           Focus = { a = 'oUF_KBJPlayer', x= -105, y=  300},  
+           Focus = { a = 'oUF_KBJPlayer', x= -105, y=  320},  
      Focustarget = { a = 'oUF_KBJFocus',  x=   95, y=    0},  
              Pet = { a = 'oUF_KBJPlayer', x=	0, y=  -64},  
             Boss = { a = 'oUF_KBJTarget', x=   82, y=  350},  
@@ -74,13 +74,13 @@ cfg.unit_positions = {
 -- Unit Frames Options
 -----------------------------
 cfg.options = {
-        healcomm = false,
-		smooth = true,
-		disableRaidFrameManager = true,	-- disable default compact Raid Manager 
-		ResurrectIcon = true,
-		--TotemBar = false,
-		--Maelstrom = true,
-		--MushroomBar = true,
+	healcomm = false,
+	smooth = true,
+	disableRaidFrameManager = true,	-- disable default compact Raid Manager 
+	ResurrectIcon = true,
+	--TotemBar = false,
+	--Maelstrom = true,
+	--MushroomBar = true,
 }
 
 -----------------------------
@@ -240,17 +240,17 @@ cfg.player_cb = {
 -- Target
 cfg.target_cb = {
 	enable = true,
-	pos = {'CENTER', UIParent, 0, 210},
-	width = 210,
-	height = 30,
+	pos = {'CENTER', UIParent, 0, 240},
+	width = 180,
+	height = 22,
 }
 
 -- Focus
 cfg.focus_cb = {
 	enable = true,
-	pos = {'CENTER', UIParent, 0, 243},
-	width = 210,
-	height = 20,
+	pos = {'CENTER', UIParent, 0, 280},
+	width = 180,
+	height = 18,
 }
 
 -- Boss
