@@ -51,6 +51,22 @@ local function menu(self)
 	return ToggleDropDownMenu(1, nil, dropdown, self:GetName(), -3, 0)
 end
 
+local function UpdateExperienceTooltip(self)
+	if(not (UnitLevel('player') == MAX_PLAYER_LEVEL and IsWatchingHonorAsXP())) then
+		local cur = UnitXP('player')
+		local max = UnitXPMax('player')
+		local per = math.floor(cur / max * 100 + 0.5)
+		local rested = math.floor((GetXPExhaustion() or 0) / max * 100 + 0.5)
+
+		GameTooltip:SetOwner(self, 'ANCHOR_NONE')
+		GameTooltip:SetPoint('TOPLEFT', self, 'BOTTOMLEFT', -3, -3)
+		GameTooltip:SetText(string.format('%s / %s (%s%%)', BreakUpLargeNumbers(cur), BreakUpLargeNumbers(max), per))
+		GameTooltip:AddLine(string.format('REST : %s%%', rested))
+		GameTooltip:AddLine(string.format('TNL : %s', max - cur))
+		GameTooltip:Show()
+	end
+end
+
 local init = function(self)
 	local unit = self:GetParent().unit
 	local menu, name, id
@@ -776,7 +792,27 @@ local UnitSpecific = {
             activityBuff.PostUpdateIcon = PostUpdateIcon
             activityBuff.CustomFilter = CustomAuraFilters.activity
             --activityBuff.CustomFilter = ns.OffensiveCustomFilter
-            self.Buffs = activityBuff  
+            self.Buffs = activityBuff
+
+        local Experience = CreateFrame('StatusBar', nil, self)
+		Experience:SetPoint('BOTTOM', 0, -10)
+		Experience:SetSize(cfg.player.width, 4)
+		Experience:SetStatusBarTexture(cfg.texture)
+		Experience.framebd = framebd(Experience, Experience)	
+		Experience:SetScript('OnEnter', UpdateExperienceTooltip)
+		Experience:SetScript('OnLeave', GameTooltip_Hide)
+		self.Experience = Experience
+
+		local Rested = CreateFrame('StatusBar', nil, Experience)
+		Rested:SetAllPoints()
+		Rested:SetStatusBarTexture(cfg.texture)
+		Rested:SetBackdrop(backdrop)
+		Rested:SetBackdropColor(0, 0, 0)
+		Experience.Rested = Rested
+
+		local ExperienceBG = Rested:CreateTexture(nil, 'BORDER')
+		ExperienceBG:SetAllPoints()
+		ExperienceBG:SetColorTexture(1/3, 1/3, 1/3)
     end,
 
     target = function(self, ...)

@@ -8,6 +8,7 @@ Config.lua
 
 Plugins\oUF_AuraWatch.lua
 Plugins\oUF_DebuffHighlight.lua
+Plugins\oUF_Experience.lua
 Plugins\oUF_GCD.lua
 Plugins\oUF_Portraittimers.lua
 Plugins\oUF_PVPSpecIcons.lua
