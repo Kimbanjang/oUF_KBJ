@@ -640,14 +640,17 @@ local UnitSpecific = {
         local htext = fs(self.Health, 'OVERLAY', cfg.font, 15, cfg.fontflag, 1, 1, 1)
         htext:SetPoint('TOP', self.Health, 'TOP', 1.5, -1)        
         htext:SetJustifyH('CENTER')
-        self:Tag(htext, '[unit:perhp]')
+        self:Tag(htext, '[unit:HPpercent]')
         local ptext = fs(self.Power, 'OVERLAY', cfg.font, 10, cfg.fontflag, 1, 1, 1)
         ptext:SetPoint('CENTER', self.Power, 'CENTER', 1, 0)        
         ptext:SetJustifyH('CENTER')
-        self:Tag(ptext, '[unit:pp]')
+        self:Tag(ptext, '[unit:PPflex]')
         local classResource = fs(self, 'OVERLAY', cfg.font, 34, cfg.fontflag)
 		classResource:SetPoint('TOPRIGHT', self.Health, 'TOPLEFT', -2, 4)
 		classResource:SetAlpha(.8)
+		local subMana = fs(self.Power, 'OVERLAY', cfg.font, 10, cfg.fontflag)
+		subMana:SetPoint('RIGHT', self.Power, 'LEFT', -1, 0)        
+        subMana:SetJustifyH('CENTER')        
 
 		if class == 'DEATHKNIGHT' then
 			local runes = CreateFrame('Frame', nil, self)
@@ -671,33 +674,24 @@ local UnitSpecific = {
             end
             self.Runes = runes
 		elseif class == 'ROGUE' then
-			self:Tag(classResource, '[color][resource:combopoints]')
-		elseif class == 'MONK' then -- ?????
-			if GetSpecializationInfo(GetSpecialization()) == 268 then
-				-- self:Tag(classResource, '[color][resource:stagger]')
-			elseif GetSpecializationInfo(GetSpecialization()) == 269 then
-				-- self:Tag(classResource, '[color][resource:chi]')
-			end
+			self:Tag(classResource, '[color][resource:ComboPoints]')
+		elseif class == 'MONK' then
+			self:Tag(classResource, '[color][resource:ChiStagger]')
 		elseif class == 'WARLOCK' then
-			self:Tag(classResource, '[color][resource:soulshards]')
-		elseif class == 'DRUID' then -- ?????
-			-- MushroomBar
-		elseif class == 'PALADIN' then -- ?????
-			if GetSpecializationInfo(GetSpecialization()) == 70 then
-				-- self:Tag(classResource, '[color][resource:holypower]')
-			end
-		elseif class == 'SHAMAN' then -- ?????
-			if GetSpecializationInfo(GetSpecialization()) == 264 then	
-			else
-				-- self:Tag(classResource, '[color][resource:maelstorm]')
-				-- TotemBar
-			end
-		elseif class == 'MAGE' then -- ?????
-			if GetSpecializationInfo(GetSpecialization()) == 62 then
-				-- self:Tag(classResource, '[color][resource:achange]')
-			end
+			self:Tag(classResource, '[color][resource:SoulShards]')
+		elseif class == 'DRUID' then
+			self:Tag(classResource, '[color][resource:ComboPoints]')
+			self:Tag(subMana, '[resource:SubMana]')
+			-- MushroomBar?
+		elseif class == 'PALADIN' then
+			self:Tag(classResource, '[color][resource:HolyPower]')
+		elseif class == 'SHAMAN' then
+			self:Tag(subMana, '[resource:SubMana]')
+			-- TotemBar?
+		elseif class == 'MAGE' then
+			self:Tag(classResource, '[color][resource:ArcaneCharges]')
 		end
-        
+
         self.Combat = self.Health:CreateTexture(nil, 'OVERLAY')
 		self.Combat:SetSize(16, 16)
 		self.Combat:SetPoint('CENTER', self, 'CENTER',0, 2)
@@ -705,71 +699,6 @@ local UnitSpecific = {
 		self.Resting:SetSize(18, 18)
 		self.Resting:SetPoint('BOTTOMRIGHT', self, 'TOPLEFT', 3, 0)
 
---[[	-- Class Resource
-
-
-
-		--Some classes need another set of different classbars.
-		if E.myclass == "DEATHKNIGHT" then
-			frame.Runes = self:Construct_DeathKnightResourceBar(frame)
-			frame.ClassBar = 'Runes'
-		elseif E.myclass == "DRUID" then
-			frame.AdditionalPower = self:Construct_AdditionalPowerBar(frame)
-		elseif E.myclass == "MONK" then
-			frame.Stagger = self:Construct_Stagger(frame)
-		elseif E.myclass == 'PRIEST' then
-			frame.AdditionalPower = self:Construct_AdditionalPowerBar(frame)
-		elseif E.myclass == 'SHAMAN' then
-			frame.AdditionalPower = self:Construct_AdditionalPowerBar(frame)
-		end
-
-
-
-
-		local classResource = fs(self, 'OVERLAY', cfg.font, 34, cfg.fontflag)
-		classResource:SetPoint('TOPRIGHT', self.Health, 'TOPLEFT', -2, 4)
-		classResource:SetAlpha(.8)
-		if (class == 'ROGUE' or class == 'DRUID') then
-			self:Tag(classResource, '[color][cpoints]') 
-		elseif (class == 'WARLOCK') then
-			self:Tag(classResource, '[color][soulshards]')
-		elseif (class == 'MONK') then
-			self:Tag(classResource, '[color][chi]')
-		elseif (class == 'PRIEST') then
-			self:Tag(classResource, '[color][shadoworbs]')
-		elseif (class == 'PALADIN') then
-			self:Tag(classResource, '[color][holypower]')
-		elseif (class == 'SHAMAN') then -- Maelstrom
-			self:Tag(classResource, '[color][resource:shaman]')
-		elseif (class == 'DEATHKNIGHT')  then
-            local runes = CreateFrame('Frame', nil, self)
-            runes:SetPoint('BOTTOMRIGHT', self.Power, 'BOTTOMLEFT', -4, 0)
-            runes:SetSize(12, cfg.player.health+cfg.player.power+1)
-            runes.bg = framebd(runes, runes)
-			local i = 6
-            for index = 1, 6 do
-                runes[i] = createStatusbar(runes, cfg.texture, nil, (cfg.player.health+cfg.player.power+2)/6-1, 12, 0.14, 0.5, 0.6, 1)			
-			    if i == 6 then
-                    runes[i]:SetPoint('BOTTOM', runes)
-                else
-                    runes[i]:SetPoint('BOTTOMRIGHT', runes[i+1], 'TOPRIGHT', 0, 1)
-                end
-                runes[i].bg = runes[i]:CreateTexture(nil, 'BACKGROUND')
-                runes[i].bg:SetAllPoints(runes[i])
-                runes[i].bg:SetTexture(cfg.texture)
-                runes[i].bg.multiplier = .3
-
-                i=i-1
-            end
-            self.Runes = runes
-			--'DRUID'
-			--'MONK' and cfg.options.stagger_bar	
-			--'DRUID' and cfg.options.MushroomBar
-			--'SHAMAN' and cfg.options.TotemBar
-		end
-]]
-		-- Class Resource : 7.0.2 temp
-				
 		if cfg.gcd.enable then
 		    local gcd = createStatusbar(self, cfg.texture, nil, cfg.player_cb.height/4, cfg.player_cb.width-2, class_color.r, class_color.g, class_color.b, 1)
 		    gcd:SetPoint(unpack(cfg.gcd.pos))
@@ -880,11 +809,11 @@ local UnitSpecific = {
         local htext = fs(self.Health, 'OVERLAY', cfg.font, 15, cfg.fontflag, 1, 1, 1)
         htext:SetPoint('TOPLEFT', 1, -1)
         htext:SetJustifyH('LEFT')
-        self:Tag(htext, '[unit:perhp]')
+        self:Tag(htext, '[unit:HPpercent]')
         local htextsub = fs(self.Health, 'OVERLAY', cfg.font, cfg.fontsize, cfg.fontflag, 1, 1, 1)
         htextsub:SetPoint('BOTTOMRIGHT', 1, 1)
         htextsub:SetJustifyH('RIGHT')
-        self:Tag(htextsub, '[unit:perhealth]')
+        self:Tag(htextsub, '[unit:HPstring]')
 
         self.RaidIcon = self.Health:CreateTexture(nil, "OVERLAY")
 		self.RaidIcon:SetSize(16, 16)
@@ -945,7 +874,7 @@ local UnitSpecific = {
 		local htext = fs(self.Health, 'OVERLAY', cfg.font, 15, cfg.fontflag, 1, 1, 1)
         htext:SetPoint('LEFT', 1, 0)
         htext:SetJustifyH('LEFT')
-        self:Tag(htext, '[unit:perhp]')
+        self:Tag(htext, '[unit:HPpercent]')
 
         self.RaidIcon = self.Health:CreateTexture(nil, "OVERLAY")
 		self.RaidIcon:SetSize(16, 16)
@@ -982,7 +911,7 @@ local UnitSpecific = {
 		local htext = fs(self.Health, 'OVERLAY', cfg.font, cfg.fontsize, cfg.fontflag, 1, 1, 1)
         htext:SetPoint('RIGHT', self.Health, 'RIGHT', 1, 0)
         htext:SetJustifyH('RIGHT')
-        self:Tag(htext, '[color][unit:perhp]')
+        self:Tag(htext, '[color][unit:HPpercent]')
     end,
 	
 	party = function(self, ...)
@@ -1014,7 +943,7 @@ local UnitSpecific = {
         local htext = fs(self.Health, 'OVERLAY', cfg.font, cfg.fontsize, cfg.fontflag, 1, 1, 1)
         htext:SetPoint('BOTTOMRIGHT', 2, 0)
 		htext:SetJustifyH('RIGHT')
-        self:Tag(htext, '[unit:hp]')
+        self:Tag(htext, '[unit:HPcombo]')
 
         self.Leader = self.Health:CreateTexture(nil, "OVERLAY")
 		self.Leader:SetSize(11, 11)
@@ -1112,7 +1041,7 @@ local UnitSpecific = {
         local htext = fs(self.Health, 'OVERLAY', cfg.font, cfg.fontsize, cfg.fontflag, 1, 1, 1)
         htext:SetPoint('BOTTOMRIGHT', 2, 0)
 		htext:SetJustifyH('RIGHT')
-        self:Tag(htext, '[unit:perhp]')
+        self:Tag(htext, '[unit:HPpercent]')
 
         self.Leader = self.Health:CreateTexture(nil, "OVERLAY")
 		self.Leader:SetSize(11, 11)
@@ -1208,7 +1137,7 @@ local UnitSpecific = {
 		local htext = fs(self.Health, 'OVERLAY', cfg.font, 15, cfg.fontflag, 1, 1, 1)
         htext:SetPoint('LEFT', 1, 0)
         name:SetJustifyH('LEFT')
-        self:Tag(htext, '[unit:hp]')
+        self:Tag(htext, '[unit:HPcombo]')
 
         self.RaidIcon = self.Health:CreateTexture(nil, "OVERLAY")
 		self.RaidIcon:SetSize(14, 14)
@@ -1287,7 +1216,7 @@ local UnitSpecific = {
         local htext = fs(self.Health, 'OVERLAY', cfg.font, cfg.fontsize, cfg.fontflag, 1, 1, 1)
         htext:SetPoint('BOTTOMLEFT', -1, 0)
 		htext:SetJustifyH('LEFT')
-        self:Tag(htext, '[unit:hp]')
+        self:Tag(htext, '[unit:HPcombo]')
 
 		self.RaidIcon = self.Health:CreateTexture(nil, "OVERLAY")
 		self.RaidIcon:SetSize(16, 16)

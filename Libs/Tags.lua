@@ -3,6 +3,11 @@ local oUF = ns.oUF or oUF
 local cfg = ns.cfg
 local class = select(2, UnitClass('player'))
 
+-- Custom Power Color
+oUF.colors.power['MANA'] = { 0.37, 0.6, 1 }
+oUF.colors.power['RAGE'] = { 0.9,  0.3,  0.23 }
+oUF.colors.power['RUNIC_POWER'] = { 0, 0.81, 1 }
+
 local function healthColor(value)    
     local r, g, b;
     local min, max = 0, 100
@@ -50,21 +55,8 @@ local function hex(r, g, b)
     if(type(r) == 'table') then
         if(r.r) then r, g, b = r.r, r.g, r.b else r, g, b = unpack(r) end
     end
-    return ('|cff%02x%02x%02x'):format(r * 255, g * 255, b * 255)
+    return ("|cff%02x%02x%02x"):format(r * 255, g * 255, b * 255)
 end
-
-oUF.colors.power['MANA'] = {0.37, 0.6, 1}
-oUF.colors.power['RAGE']  = {0.9,  0.3,  0.23}
-oUF.colors.power['FOCUS']  = {1, 0.81,  0.27}
-oUF.colors.power['RUNIC_POWER']  = {0, 0.81, 1}
-oUF.colors.power['AMMOSLOT'] = {0.78,1, 0.78}
-oUF.colors.power['FUEL'] = {0.9,  0.3,  0.23}
-oUF.colors.power['POWER_TYPE_STEAM'] = {0.55, 0.57, 0.61}
-oUF.colors.power['POWER_TYPE_PYRITE'] = {0.60, 0.09, 0.17}	
-oUF.colors.power['POWER_TYPE_HEAT'] = {0.55,0.57,0.61}
-oUF.colors.power['POWER_TYPE_OOZE'] = {0.76,1,0}
-oUF.colors.power['POWER_TYPE_BLOOD_POWER'] = {0.7,0,1}
---oUF.colors.runes = { {196/255, 30/255, 58/255}; {173/255, 217/255, 25/255}; {35/255, 127/255, 255/255}; {178/255, 53/255, 240/255}; }
 
 oUF.Tags.Methods['color'] = function(u, r)
     local reaction = UnitReaction(u, 'player')
@@ -149,15 +141,37 @@ oUF.Tags.Methods['unit:lv'] = function(u)
     end
 end
 
-oUF.Tags.Methods['unit:hp'] = function(u)
+oUF.Tags.Methods['unit:HPpercent'] = function(u)
     local min, max = UnitHealth(u), UnitHealthMax(u)
 
     if UnitIsDead(u) then
-        return '|cff666666Dead|r'
+        return "|cff666666Dead|r"
     elseif UnitIsGhost(u) then
-        return '|cff666666Ghost|r'
+        return "|cff666666Ghost|r"
     elseif not UnitIsConnected(u) then
-        return '|cffe50000Offline|r'           
+        return "|cffe50000Offline|r"
+    else
+        local healthValue = math.floor(min/max*100+.5)
+        return hex(healthColor(healthValue))..healthValue
+    end
+end
+oUF.Tags.Events['unit:HPpercent'] = 'UNIT_HEALTH UNIT_CONNECTION'
+
+oUF.Tags.Methods['unit:HPstring'] = function(u)
+    local min = UnitHealth(u)
+    return sValue(min)
+end
+oUF.Tags.Events['unit:HPstring'] = 'UNIT_HEALTH UNIT_CONNECTION'
+
+oUF.Tags.Methods['unit:HPcombo'] = function(u)
+    local min, max = UnitHealth(u), UnitHealthMax(u)
+
+    if UnitIsDead(u) then
+        return "|cff666666Dead|r"
+    elseif UnitIsGhost(u) then
+        return "|cff666666Ghost|r"
+    elseif not UnitIsConnected(u) then
+        return "|cffe50000Offline|r"
     elseif (min < max) then
         local healthValue = math.floor(min/max*100+.5)
         return hex(healthColor(healthValue))..healthValue
@@ -165,56 +179,46 @@ oUF.Tags.Methods['unit:hp'] = function(u)
         return sValue(min)
     end
 end
-oUF.Tags.Events['unit:hp'] = "UNIT_HEALTH UNIT_CONNECTION"
+oUF.Tags.Events['unit:HPcombo'] = 'UNIT_HEALTH UNIT_CONNECTION'
 
-oUF.Tags.Methods['unit:perhp'] = function(u)
-    local min, max = UnitHealth(u), UnitHealthMax(u)
-
-    if UnitIsDead(u) then
-        return '|cff666666Dead|r'
-    elseif UnitIsGhost(u) then
-        return '|cff666666Ghost|r'
-    elseif not UnitIsConnected(u) then
-        return '|cffe50000Offline|r'           
-    else
-        local healthValue = math.floor(min/max*100+.5)
-        return hex(healthColor(healthValue))..healthValue
-    end
-end
-oUF.Tags.Events['unit:perhp'] = "UNIT_HEALTH UNIT_CONNECTION"
-
-oUF.Tags.Methods['unit:perhealth'] = function(u)
-    local min = UnitHealth(u)
-    return sValue(min)
-end
-oUF.Tags.Events['unit:perhealth'] = "UNIT_HEALTH UNIT_CONNECTION"
-
-oUF.Tags.Methods['unit:pp'] = function(u)
+oUF.Tags.Methods['unit:PPflex'] = function(u)
     local min, max = UnitPower(u), UnitPowerMax(u)
     local ptype = UnitPowerType(u)
     local powerValue = math.floor(min/max*100+.5)
 
     if ptype == SPELL_POWER_MANA then
         return hex(powerColor(u))..powerValue
-    elseif ptype then
+    elseif powerColor(u) then
         return hex(powerColor(u))..min
     else
         return "|cffff00ff"..min.."|r"
     end
 end
-oUF.Tags.Events['unit:pp'] = 'UNIT_DISPLAYPOWER UNIT_POWER_FREQUENT UNIT_MAXPOWER'
+oUF.Tags.Events['unit:PPflex'] = 'UNIT_DISPLAYPOWER UNIT_POWER_FREQUENT UNIT_MAXPOWER'
 
-oUF.Tags.Methods['altpower'] = function(u)
-	local cur = UnitPower(u, ALTERNATE_POWER_INDEX)
-	local max = UnitPowerMax(u, ALTERNATE_POWER_INDEX)
-    local per = math.floor(cur/max*100+.5)
-	return ('|cffCDC5C2'..sValue(cur))..('|cffCDC5C2 || ')..sValue(max)
+-- Sub Mana Resource
+oUF.Tags.Methods['resource:SubMana'] = function(u)
+    if GetSpecializationInfo(GetSpecialization()) == 263 -- ele
+    or GetSpecializationInfo(GetSpecialization()) == 262 -- enh
+    or GetSpecializationInfo(GetSpecialization()) == 104 -- feral
+    or GetSpecializationInfo(GetSpecialization()) == 103 -- guardian
+    or GetSpecializationInfo(GetSpecialization()) == 102 -- boomkin
+    then
+        local min, max = UnitPower(u, SPELL_POWER_MANA), UnitPowerMax(u, SPELL_POWER_MANA)
+        local powerValue = math.floor(min/max*100+.5)
+
+        return "|cff5e99ff"..powerValue.."|r"
+    end
 end
-oUF.Tags.Events['altpower'] = 'UNIT_POWER UNIT_MAXPOWER'
+oUF.Tags.Events['resource:SubMana'] = 'UNIT_POWER_FREQUENT UNIT_MAXPOWER'
 
--- Rouge, Feral Resource
-oUF.Tags.Methods['resource:combopoints'] = function(u)
-    local cp
+-- Rouge, Cat Form Resource
+oUF.Tags.Methods['resource:ComboPoints'] = function(u)
+    if class == 'ROGUE'
+    or GetSpecializationInfo(GetSpecialization()) == 104
+    or GetSpecializationInfo(GetSpecialization()) == 103
+    then
+        local cp
         if (UnitHasVehicleUI'player') then
             cp = GetComboPoints('vehicle', 'target')
         else
@@ -224,53 +228,52 @@ oUF.Tags.Methods['resource:combopoints'] = function(u)
         if(cp > 0) then
             return cp
         end
+    -- elseif mushrooms bar
+    end
 end
-oUF.Tags.Events["resource:combopoints"] = "UNIT_POWER_FREQUENT PLAYER_TARGET_CHANGED"
+oUF.Tags.Events['resource:ComboPoints'] = 'UNIT_POWER_FREQUENT PLAYER_TARGET_CHANGED'
+
+-- Monk Resource
+oUF.Tags.Methods['resource:ChiStagger'] = function(u)
+    if GetSpecialization() == SPEC_MONK_WINDWALKER then
+        local num = UnitPower('player', SPELL_POWER_CHI)
+        if num > 0 then
+            return num
+        end
+    --[[ elseif GetSpecialization() == SPEC_MONK_BREWMASTER then
+        local
+    ]]
+    end
+end
+oUF.Tags.Events['resource:ChiStagger'] = 'UNIT_POWER SPELLS_CHANGED'
 
 -- Warlock Resource
-oUF.Tags.Methods['resource:soulshards'] = function(u)
+oUF.Tags.Methods['resource:SoulShards'] = function(u)
     local num = UnitPower('player', SPELL_POWER_SOUL_SHARDS)
     if(num > 0) then
         return num
     end
 end
-oUF.Tags.Events["resource:soulshards"] = "UNIT_POWER"
+oUF.Tags.Events['resource:SoulShards'] = 'UNIT_POWER SPELLS_CHANGED'
 
--- Shaman Resource Tag
-oUF.Tags.Methods['resource:shaman'] = function(u)
-    local shamanSpec
-    if IsPlayerSpell(17364) then shamanSpec = 3 end
-    if shamanSpec == 3 then
-        local aura = GetSpellInfo(53817)
-        local name, rank, icon, count, debuffType, duration, expirationTime, caster = UnitAura('player', aura, nil, 'HELPFUL')
-        return count
+-- Paladin Resource
+oUF.Tags.Methods['resource:HolyPower'] = function(u)
+    if GetSpecialization() == SPEC_PALADIN_RETRIBUTION then
+        local num = UnitPower('player', SPELL_POWER_HOLY_POWER)
+        if num > 0 then
+            return num
+        end
     end
 end
-oUF.Tags.Events["resource:shaman"] = "UNIT_AURA PLAYER_TALENT_UPDATE"
+oUF.Tags.Events['resource:HolyPower'] = 'UNIT_POWER SPELLS_CHANGED'
 
---[[
-oUF.Tags.Methods['player:power'] = function(u)
-    local spec = GetSpecialization()
-    local fury = UnitPower('player', SPELL_POWER_DEMONIC_FURY)
-    local mana = UnitPower('player', SPELL_POWER_MANA)
-    local stagger = UnitStagger('player')
-    if UnitIsDead(u) or UnitIsGhost(u) or not UnitIsConnected(u) then
-        return nil 
-    elseif class == 'WARLOCK' and spec == SPEC_WARLOCK_DEMONOLOGY then
-        local r, g, b = 0.9, 0.37, 0.37
-        return ('|cff559655 || ')..hex(r, g, b)..sValue(fury) 
-    elseif class == 'DRUID' and not UnitPowerType('player') == SPELL_POWER_MANA then
-        local r, g, b = oUF.colors.power['MANA']
-        return ('|cff559655 || ')..hex(r, g, b)..sValue(mana)
-    elseif class == 'MONK' and stagger > 0 then
-        local r, g, b = 0.52, 1.0, 0.52
-        return ('|cff559655 || ')..hex(r, g, b)..sValue(stagger)
-    else 
-        return nil  
+-- Mage Resource
+oUF.Tags.Methods['resource:ArcaneCharges'] = function(u)
+    if GetSpecialization() == SPEC_MAGE_ARCANE then
+        local num = UnitPower('player', SPELL_POWER_ARCANE_CHARGES)
+        if num > 0 then
+            return num
+        end
     end
 end
-oUF.Tags.Events['player:power'] = 'UNIT_POWER PLAYER_SPECIALIZATION_CHANGED PLAYER_TALENT_UPDATE UNIT_HEALTH UNIT_CONNECTION'
-]]
-
--- TEMP 7.0.3
-
+oUF.Tags.Events['resource:ArcaneCharges'] = 'UNIT_POWER SPELLS_CHANGED'
