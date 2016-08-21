@@ -191,15 +191,18 @@ oUF.Tags.Events['unit:perhealth'] = "UNIT_HEALTH UNIT_CONNECTION"
 
 oUF.Tags.Methods['unit:pp'] = function(u)
     local min, max = UnitPower(u), UnitPowerMax(u)
+    local ptype = UnitPowerType(u)
     local powerValue = math.floor(min/max*100+.5)
-    
-    if powerColor(u) then        
+
+    if ptype == SPELL_POWER_MANA then
         return hex(powerColor(u))..powerValue
+    elseif ptype then
+        return hex(powerColor(u))..min
     else
-        return "|cffff00ff"..powerValue.."|r"
+        return "|cffff00ff"..min.."|r"
     end
 end
-oUF.Tags.Events['unit:pp'] = "UNIT_POWER UNIT_MAXPOWER PLAYER_SPECIALIZATION_CHANGED"
+oUF.Tags.Events['unit:pp'] = 'UNIT_DISPLAYPOWER UNIT_POWER_FREQUENT UNIT_MAXPOWER'
 
 oUF.Tags.Methods['altpower'] = function(u)
 	local cur = UnitPower(u, ALTERNATE_POWER_INDEX)
@@ -209,34 +212,29 @@ oUF.Tags.Methods['altpower'] = function(u)
 end
 oUF.Tags.Events['altpower'] = 'UNIT_POWER UNIT_MAXPOWER'
 
-oUF.Tags.Methods['EclipseDirection'] = function(u)
-    local direction = GetEclipseDirection()
-	if direction == 'sun' then
-		return '  '..' |cff4478BC>>|r'
-	elseif direction == 'moon' then
-		return '|cffE5994C<<|r '..'  '
-	end
+-- Rouge, Feral Resource
+oUF.Tags.Methods['resource:combopoints'] = function(u)
+    local cp
+        if (UnitHasVehicleUI'player') then
+            cp = GetComboPoints('vehicle', 'target')
+        else
+            cp = GetComboPoints('player', 'target')
+        end
+
+        if(cp > 0) then
+            return cp
+        end
 end
-oUF.Tags.Events['EclipseDirection'] = 'UNIT_POWER ECLIPSE_DIRECTION_CHANGE'
+oUF.Tags.Events["resource:combopoints"] = "UNIT_POWER_FREQUENT PLAYER_TARGET_CHANGED"
 
--- Warlock Resource Tag
-oUF.Tags.Methods['resource:warlock'] = function(u)
-    --[[
-    local warlockSpec
-    if IsPlayerSpell(WARLOCK_METAMORPHOSIS) then warlockSpec = 2
-    elseif IsPlayerSpell(WARLOCK_BURNING_EMBERS) then warlockSpec = 3
-    else warlockSpec = 1 end
-
-    if warlockSpec == 2 then
-        return UnitPower(u, SPELL_POWER_SOUL_SHARDS)
-    elseif warlockSpec == 3 then
-        return UnitPower(u, SPELL_POWER_BURNING_EMBERS)
-    else
-        return UnitPower(u, SPELL_POWER_SOUL_SHARDS)
+-- Warlock Resource
+oUF.Tags.Methods['resource:soulshards'] = function(u)
+    local num = UnitPower('player', SPELL_POWER_SOUL_SHARDS)
+    if(num > 0) then
+        return num
     end
-    ]]
 end
-oUF.Tags.Events["resource:warlock"] = "UNIT_POWER SPELLS_CHANGED"
+oUF.Tags.Events["resource:soulshards"] = "UNIT_POWER"
 
 -- Shaman Resource Tag
 oUF.Tags.Methods['resource:shaman'] = function(u)
@@ -275,24 +273,4 @@ oUF.Tags.Events['player:power'] = 'UNIT_POWER PLAYER_SPECIALIZATION_CHANGED PLAY
 ]]
 
 -- TEMP 7.0.3
-oUF.Tags.Methods['resource:rogue'] = function(u)
-    local cp
-		if (UnitHasVehicleUI'player') then
-			cp = GetComboPoints('vehicle', 'target')
-		else
-			cp = GetComboPoints('player', 'target')
-		end
 
-		if(cp > 0) then
-			return cp
-		end
-end
-oUF.Tags.Events["resource:rogue"] = "UNIT_POWER_FREQUENT PLAYER_TARGET_CHANGED"
-
-oUF.Tags.Methods['resource:warlock'] = function(u)
-	local num = UnitPower('player', SPELL_POWER_SOUL_SHARDS)
-	if(num > 0) then
-		return num
-	end
-end
-oUF.Tags.Events["resource:warlock"] = "UNIT_POWER"
