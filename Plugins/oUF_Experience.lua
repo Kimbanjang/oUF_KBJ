@@ -2,23 +2,18 @@ local _, ns = ...
 local oUF = ns.oUF or oUF
 assert(oUF, 'oUF Experience was unable to locate oUF install')
 
-local isBetaClient = select(4, GetBuildInfo()) >= 70000
-if(not isBetaClient) then
-	IsWatchingHonorAsXP = function() end
-end
-
 for tag, func in next, {
 	['curxp'] = function(unit)
-		return (IsWatchingHonorAsXP() and UnitHonor or UnitXP) (unit)
+		return (IsWatchingHonorAsXP() and UnitHonor or UnitXP) ('player')
 	end,
 	['maxxp'] = function(unit)
-		return (IsWatchingHonorAsXP() and UnitHonorMax or UnitXPMax) (unit)
+		return (IsWatchingHonorAsXP() and UnitHonorMax or UnitXPMax) ('player')
 	end,
 	['perxp'] = function(unit)
 		return math.floor(_TAGS.curxp(unit) / _TAGS.maxxp(unit) * 100 + 0.5)
 	end,
 	['currested'] = function()
-		return (IsWatchingHonorAsXP() and UnitHonor or GetXPExhaustion) ()
+		return (IsWatchingHonorAsXP() and GetHonorExhaustion or GetXPExhaustion) ()
 	end,
 	['perrested'] = function(unit)
 		local rested = _TAGS.currested()
@@ -28,18 +23,26 @@ for tag, func in next, {
 	end,
 } do
 	oUF.Tags.Methods[tag] = func
-	oUF.Tags.Events[tag] = 'PLAYER_XP_UPDATE PLAYER_LEVEL_UP UPDATE_EXHAUSTION'
+	oUF.Tags.Events[tag] = 'PLAYER_XP_UPDATE PLAYER_LEVEL_UP UPDATE_EXHAUSTION HONOR_XP_UPDATE HONOR_LEVEL_UPDATE HONOR_PRESTIGE_UPDATE'
 end
+
+oUF.Tags.SharedEvents.PLAYER_LEVEL_UP = true
 
 local function UpdateColor(element, showHonor)
 	if(showHonor) then
 		element:SetStatusBarColor(1, 1/4, 0)
+		if(element.SetAnimatedTextureColors) then
+			element:SetAnimatedTextureColors(1, 1/4, 0)
+		end
 
 		if(element.Rested) then
 			element.Rested:SetStatusBarColor(1, 3/4, 0)
 		end
 	else
 		element:SetStatusBarColor(1/6, 2/3, 1/5)
+		if(element.SetAnimatedTextureColors) then
+			element:SetAnimatedTextureColors(1/6, 2/3, 1/5)
+		end
 
 		if(element.Rested) then
 			element.Rested:SetStatusBarColor(0, 2/5, 1)
@@ -61,6 +64,7 @@ local function Update(self, event, unit)
 		if(IsWatchingHonorAsXP() and element.__accountMaxLevel == MAX_PLAYER_LEVEL) then
 			element:Show()
 			showHonor = true
+			level = UnitHonorLevel(unit)
 		else
 			return element:Hide()
 		end
@@ -71,20 +75,26 @@ local function Update(self, event, unit)
 	local cur = (showHonor and UnitHonor or UnitXP)(unit)
 	local max = (showHonor and UnitHonorMax or UnitXPMax)(unit)
 
-	if(showHonor and UnitHonorLevel(unit) == GetMaxPlayerHonorLevel()) then
+	if(showHonor and level == GetMaxPlayerHonorLevel()) then
 		cur, max = 1, 1
 	end
 
-	element:SetMinMaxValues(0, max)
-	element:SetValue(cur)
+	if(element.SetAnimatedValues) then
+		element:SetAnimatedValues(cur, 0, max, level)
+	else
+		element:SetMinMaxValues(0, max)
+		element:SetValue(cur)
+	end
 
+	local exhaustion
 	if(element.Rested) then
-		local exhaustion = (showHonor and GetHonorExhaustion or GetXPExhaustion)() or 0
+		exhaustion = (showHonor and GetHonorExhaustion or GetXPExhaustion)() or 0
+
 		element.Rested:SetMinMaxValues(0, max)
 		element.Rested:SetValue(math.min(cur + exhaustion, max))
 	end
 
-	(self.OverrideUpdateColor or UpdateColor)(element, showHonor)
+	(element.OverrideUpdateColor or UpdateColor)(element, showHonor)
 
 	if(element.PostUpdate) then
 		return element:PostUpdate(unit, cur, max, exhaustion, showHonor)
@@ -118,15 +128,13 @@ local function Enable(self, unit)
 		self:RegisterEvent('DISABLE_XP_GAIN', Path, true)
 		self:RegisterEvent('ENABLE_XP_GAIN', Path, true)
 
-		if(isBetaClient) then
-			self:RegisterEvent('HONOR_XP_UPDATE', Path)
-			self:RegisterEvent('HONOR_LEVEL_UPDATE', Path)
-			self:RegisterEvent('HONOR_PRESTIGE_UPDATE', Path)
+		self:RegisterEvent('HONOR_XP_UPDATE', Path)
+		self:RegisterEvent('HONOR_LEVEL_UPDATE', Path)
+		self:RegisterEvent('HONOR_PRESTIGE_UPDATE', Path)
 
-			hooksecurefunc('SetWatchingHonorAsXP', function()
-				Path(self, 'HONOR_XP_UPDATE', 'player')
-			end)
-		end
+		hooksecurefunc('SetWatchingHonorAsXP', function()
+			Path(self, 'HONOR_XP_UPDATE', 'player')
+		end)
 
 		local child = element.Rested
 		if(child) then
@@ -152,13 +160,11 @@ local function Disable(self)
 		self:UnregisterEvent('PLAYER_XP_UPDATE', Path)
 		self:UnregisterEvent('PLAYER_LEVEL_UP', Path)
 
-		if(isBetaClient) then
-			self:UnregisterEvent('HONOR_XP_UPDATE', Path)
-			self:UnregisterEvent('HONOR_LEVEL_UPDATE', Path)
-			self:UnregisterEvent('HONOR_PRESTIGE_UPDATE', Path)
+		self:UnregisterEvent('HONOR_XP_UPDATE', Path)
+		self:UnregisterEvent('HONOR_LEVEL_UPDATE', Path)
+		self:UnregisterEvent('HONOR_PRESTIGE_UPDATE', Path)
 
-			-- Can't undo secure hooks
-		end
+		-- Can't undo secure hooks
 
 		if(element.Rested) then
 			self:UnregisterEvent('UPDATE_EXHAUSTION', Path)
