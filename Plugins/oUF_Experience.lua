@@ -9,6 +9,9 @@ for tag, func in next, {
 	['maxxp'] = function(unit)
 		return (IsWatchingHonorAsXP() and UnitHonorMax or UnitXPMax) ('player')
 	end,
+	['tnlxp'] = function(unit)
+		return math.floor(_TAGS.maxxp(unit) - _TAGS.curxp(unit))
+	end,
 	['perxp'] = function(unit)
 		return math.floor(_TAGS.curxp(unit) / _TAGS.maxxp(unit) * 100 + 0.5)
 	end,

@@ -1,6 +1,5 @@
 local _, ns = ...
 local oUF = ns.oUF or oUF
-local cfg = ns.cfg
 local class = select(2, UnitClass('player'))
 
 -- Custom Power Color
@@ -198,44 +197,34 @@ end
 oUF.Tags.Events['unit:PPflex'] = 'UNIT_DISPLAYPOWER UNIT_POWER_FREQUENT UNIT_MAXPOWER'
 
 oUF.Tags.Methods['unit:Resource'] = function(u)
+    local num = 0
+
     if UnitHasVehicleUI'player' then
-        local num = UnitPower('vehicle', SPELL_POWER_COMBO_POINTS)
-        if(num > 0) then
-            return num
-        end
+        num = UnitPower('vehicle', SPELL_POWER_COMBO_POINTS)
     -- Soul Shard
     elseif class == 'WARLOCK' then
-        local num = UnitPower('player', SPELL_POWER_SOUL_SHARDS)
-        if(num > 0) then
-            return num
-        end
+        num = UnitPower('player', SPELL_POWER_SOUL_SHARDS)
     -- Combo Points
     elseif class == 'ROGUE'
     or GetSpecializationInfo(GetSpecialization()) == 104 -- feral
     or GetSpecializationInfo(GetSpecialization()) == 103 -- guardian
-    then
-        local num = UnitPower('player', SPELL_POWER_COMBO_POINTS)
-        if(num > 0) then
-            return num
-        end
+        then
+        num = UnitPower('player', SPELL_POWER_COMBO_POINTS)
     -- Chi
     elseif GetSpecialization() == SPEC_MONK_WINDWALKER then
-        local num = UnitPower('player', SPELL_POWER_CHI)
-        if num > 0 then
-            return num
-        end
+        num = UnitPower('player', SPELL_POWER_CHI)
     -- Holy Power
     elseif GetSpecialization() == SPEC_PALADIN_RETRIBUTION then
-        local num = UnitPower('player', SPELL_POWER_HOLY_POWER)
-        if num > 0 then
-            return num
-        end
+        num = UnitPower('player', SPELL_POWER_HOLY_POWER)
     -- Arcane Charge
     elseif GetSpecialization() == SPEC_MAGE_ARCANE then
-        local num = UnitPower('player', SPELL_POWER_ARCANE_CHARGES)
-        if num > 0 then
-            return num
-        end
+        num = UnitPower('player', SPELL_POWER_ARCANE_CHARGES)
+    else
+        return
+    end
+
+    if(num > 0) then
+        return num
     end
 end
 oUF.Tags.Events['unit:Resource'] = 'UNIT_POWER SPELLS_CHANGED'

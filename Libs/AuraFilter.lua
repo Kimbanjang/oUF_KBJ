@@ -12,6 +12,7 @@ local updateFuncs = {} -- functions to call to add/remove auras
 local BaseAuras = { }
 
 local ActivityAuras = {
+	[201405] = 4, -- H.Trinket STR
 	[90355]  = 4, -- Ancient Hysteria (core hound)
 	[2825]   = 4, -- Bloodlust (shaman)
 	[32182]  = 4, -- Heroism (shaman)
@@ -27,33 +28,32 @@ local PersonalAuras = {
 --	Death Knight
 
 if playerClass == "DEATHKNIGHT" then
-	--PersonalAuras[46584]  = 4 -- Raise Dead
-
-	ActivityAuras[77616]  = 2 -- DarkSimulacrum
 	ActivityAuras[53365]  = 2 -- Unholy Strength <= Rune of the Fallen Crusader
 	PersonalAuras[48707]  = 2 -- Anti-Magic Shell
 	PersonalAuras[48792]  = 2 -- Icebound Fortitude	
+	PersonalAuras[212552] = 2 -- Wraith Walk
 	PersonalAuras[101568] = 2 -- Dark Succor
 
-	ActivityAuras[115989] = 2 -- [T1/3] Unholy Blight
-	ActivityAuras[96268]  = 2 -- [T3/1] Death's Advance
-	ActivityAuras[114851] = 2 -- [T4/1] Blood Charge
-	ActivityAuras[108200] = 2 -- [T6/2] Remorseless Winter
-	ActivityAuras[81141]  = 2 -- [Blood] Crimson Scourge
-	ActivityAuras[81256]  = 2 -- [Blood] Dancing Rune Weapon	
-	ActivityAuras[59052]  = 2 -- [Frost] Freezing Fog
-	ActivityAuras[51124]  = 2 -- [Frost] Killing Machine
-	ActivityAuras[51271]  = 2 -- [Frost] Pillar of Frost	
+	--ActivityAuras[115989] = 2 -- [T1/3] Unholy Blight
+	--ActivityAuras[96268]  = 2 -- [T3/1] Death's Advance
+	--ActivityAuras[114851] = 2 -- [T4/1] Blood Charge
+	--ActivityAuras[108200] = 2 -- [T6/2] Remorseless Winter
+	--ActivityAuras[81141]  = 2 -- [Blood] Crimson Scourge
+	--ActivityAuras[81256]  = 2 -- [Blood] Dancing Rune Weapon	
+	--ActivityAuras[59052]  = 2 -- [Frost] Freezing Fog
+	--ActivityAuras[51124]  = 2 -- [Frost] Killing Machine
+	--ActivityAuras[51271]  = 2 -- [Frost] Pillar of Frost	
 	ActivityAuras[81340]  = 2 -- [Unholy] Sudden Doom
 	ActivityAuras[49016]  = 2 -- [Unholy] Unholy Frenzy
-
-	PersonalAuras[49039]  = 2 -- [T2/1] Lichborne
-	PersonalAuras[51052]  = 2 -- [T2/2] Anti-Magic Zone	
+	ActivityAuras[188290] = 2 -- [Unholy] Death and Decay	
+	ActivityAuras[215711] = 2 -- [Unholy] Soul Reaper
+	--PersonalAuras[49039]  = 2 -- [T2/1] Lichborne
+	--PersonalAuras[51052]  = 2 -- [T2/2] Anti-Magic Zone	
 	--PersonalAuras[51460]  = 2 -- [T4/3] Runic Corruption
-	PersonalAuras[48743]  = 2 -- [T5/1] Death Pact(Debuff)
+	--PersonalAuras[48743]  = 2 -- [T5/1] Death Pact(Debuff)
 	--PersonalAuras[119975] = 2 -- [T5/3] Conversion
-	PersonalAuras[49222]  = 2 -- [Blood] Bone Shield
-	PersonalAuras[55233]  = 2 -- [Blood] Vampiric Blood	
+	--PersonalAuras[49222]  = 2 -- [Blood] Bone Shield
+	--PersonalAuras[55233]  = 2 -- [Blood] Vampiric Blood	
 
 --[[ recommand from elvUI
 	[SpellName(48797)] = Defaults(), -- Anti-Magic Shell

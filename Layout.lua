@@ -253,23 +253,6 @@ local createAuraWatch = function(self, unit)
 	end
 end
 
-local UpdateExperienceTooltip = function(self)
-	if not (UnitLevel('player') == MAX_PLAYER_LEVEL and IsWatchingHonorAsXP()) then
-		local level = UnitLevel('player')
-		local cur = UnitXP('player')
-		local max = UnitXPMax('player')
-		local per = math.floor(cur / max * 100 + 0.5)
-		local rested = math.floor((GetXPExhaustion() or 0) / max * 100 + 0.5)
-
-		GameTooltip:SetOwner(self, 'ANCHOR_BOTTOMLEFT')
-		GameTooltip:AddLine(string.format('Level : %s', level))
-		GameTooltip:AddLine(string.format('%s / %s (%s%%)', BreakUpLargeNumbers(cur), BreakUpLargeNumbers(max), per))
-		GameTooltip:AddLine(string.format('REST : %s%%', rested))
-		GameTooltip:AddLine(string.format('TNL : %s', max - cur))
-		GameTooltip:Show()
-	end
-end
-
 local Healcomm = function(self) 
 	local myBar = createStatusbar(self.Health, cfg.texture, nil, nil, self:GetWidth(), 0.33, 0.59, 0.33, 0.6)
 	myBar:SetPoint('TOP')
@@ -291,13 +274,13 @@ local Healcomm = function(self)
     healAbsorbBar:SetPoint('BOTTOM')
     healAbsorbBar:SetPoint('LEFT', self.Health:GetStatusBarTexture(), 'RIGHT')
    
-   self.HealPrediction = {
-      myBar = myBar,
-      otherBar = otherBar,
-      absorbBar = absorbBar,
-      healAbsorbBar = healAbsorbBar,
-      maxOverflow = 1,
-      frequentUpdates = true,
+	self.HealPrediction = {
+		myBar = myBar,
+		otherBar = otherBar,
+		absorbBar = absorbBar,
+		healAbsorbBar = healAbsorbBar,
+		maxOverflow = 1,
+		frequentUpdates = true,
    }
 end
 
@@ -511,24 +494,34 @@ local UnitSpecific = {
 
         -- EXP Bar
         local Experience = CreateFrame('StatusBar', nil, self)
-		Experience:SetPoint('BOTTOM', 0, -10)
-		Experience:SetSize(cfg.player.width, 4)
+		Experience:SetPoint('TOP', UIParent, 'TOP',0, -5)
+		Experience:SetSize(300, 8)
 		Experience:SetStatusBarTexture(cfg.texture)
-		Experience.framebd = framebd(Experience, Experience)	
-		Experience:SetScript('OnEnter', UpdateExperienceTooltip)
-		Experience:SetScript('OnLeave', GameTooltip_Hide)
-		self.Experience = Experience
+		Experience.framebd = framebd(Experience, Experience)
 
 		local Rested = CreateFrame('StatusBar', nil, Experience)
 		Rested:SetAllPoints()
 		Rested:SetStatusBarTexture(cfg.texture)
+		Rested:SetAlpha(0.7)
 		Rested:SetBackdrop(backdrop)
 		Rested:SetBackdropColor(0, 0, 0)
-		Experience.Rested = Rested
+
+		local ExperienceLv = fs(Experience, 'OVERLAY', cfg.font, 11, cfg.fontflag, 1, 1, 1)
+		ExperienceLv:SetPoint('RIGHT', Experience, 'LEFT', -1, 0)        
+        ExperienceLv:SetJustifyH('CENTER')
+        self:Tag(ExperienceLv, 'Lv [level]')
+
+		local ExperienceInfo = fs(Experience, 'OVERLAY', cfg.font, 9, cfg.fontflag, 1, 1, 1)
+		ExperienceInfo:SetPoint('CENTER', Experience, 'CENTER', 0, 0)        
+        ExperienceInfo:SetJustifyH('CENTER')
+        self:Tag(ExperienceInfo, '[perxp]% / TNL : [tnlxp] (Rest : [perrested]%)')
 
 		local ExperienceBG = Rested:CreateTexture(nil, 'BORDER')
 		ExperienceBG:SetAllPoints()
 		ExperienceBG:SetColorTexture(1/3, 1/3, 1/3)
+
+        self.Experience = Experience
+		self.Experience.Rested = Rested
 
 		--if cfg.aura.target_buffs then
 			local personalBuff = CreateFrame('Frame', nil, self)
@@ -537,7 +530,7 @@ local UnitSpecific = {
 		    personalBuff.num = 6
             personalBuff:SetSize((personalBuff.size+personalBuff.spacing)*personalBuff.num-personalBuff.spacing, personalBuff.size)
             -- personalBuff:SetPoint('CENTER', UIParent, 'CENTER', -118, 23)
-		    personalBuff:SetPoint('CENTER', UIParent, 'CENTER', -152, 50)
+		    personalBuff:SetPoint('CENTER', UIParent, 'CENTER', -150, 0)
             personalBuff.initialAnchor = 'CENTER'            
             personalBuff['growth-x'] = 'LEFT' 
             personalBuff['growth-y'] = 'DOWN'
@@ -548,11 +541,11 @@ local UnitSpecific = {
             self.Auras = personalBuff
 		--end
             local activityBuff = CreateFrame('Frame', nil, self)
-			activityBuff.size = 35
+			activityBuff.size = 32
 			activityBuff.spacing = 4
 		    activityBuff.num = 7
             activityBuff:SetSize((activityBuff.size+activityBuff.spacing)*activityBuff.num-activityBuff.spacing, activityBuff.size)
-		    activityBuff:SetPoint('BOTTOM', personalBuff, 'TOP', 0, 10)
+		    activityBuff:SetPoint('BOTTOM', personalBuff, 'TOP', 0, 8)
             activityBuff.initialAnchor = 'CENTER'
             activityBuff['growth-x'] = 'LEFT'
             activityBuff['growth-y'] = 'UP'
