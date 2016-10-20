@@ -1115,13 +1115,13 @@ oUF:Factory(function(self)
 		'maxColumns', 8,
 		'unitsPerColumn', 5,
 		'columnSpacing', 5,
-		'columnAnchorPoint', 'RIGHT',
+		'columnAnchorPoint', 'LEFT',
 		'oUF-initialConfigFunction', ([[
 			self:SetHeight(%d)
 			self:SetWidth(%d)
 		]]):format(cfg.raid.health+cfg.raid.power+1, cfg.raid.width)
 		)
-		raid:SetPoint('TOPRIGHT', cfg.unit_positions.Raid.a, 'CENTER', cfg.unit_positions.Raid.x, cfg.unit_positions.Raid.y)
+		raid:SetPoint('TOPLEFT', cfg.unit_positions.Raid.a, 'TOPLEFT', cfg.unit_positions.Raid.x, cfg.unit_positions.Raid.y)
 	end
 
 	if cfg.uf.tank then

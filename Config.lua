@@ -65,7 +65,7 @@ cfg.unit_positions = {
              Pet = { a = 'oUF_KBJPlayer', x=	0, y=  -64},  
             Boss = { a = 'oUF_KBJTarget', x=   82, y=  350},  
             Tank = { a = UIParent,		  x= -300, y=   21},  
-            Raid = { a = UIParent,		  x=  -97, y=  -53},   
+            Raid = { a = UIParent,		  x=  15, y=  -100},   
 	       Party = { a = UIParent,		  x= -133, y=  -53},
            Arena = { a = 'oUF_KBJTarget', x=  246, y=  -53},			  
 }
