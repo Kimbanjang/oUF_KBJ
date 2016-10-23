@@ -5,7 +5,7 @@ local class = select(2, UnitClass('player'))
 local powerType, powerTypeString = UnitPowerType('player')
 
 local backdrop = {
-    bgFile = [=[Interface\ChatFrame\ChatFrameBackground]=],
+    bgFile = 'Interface\\ChatFrame\\ChatFrameBackground',
     insets = {top = -1, left = -1, bottom = -1, right = -1},
 }
 

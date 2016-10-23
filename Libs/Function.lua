@@ -8,7 +8,7 @@ framebd = function(parent, anchor)
     frame:SetPoint('BOTTOMRIGHT', anchor, 'BOTTOMRIGHT', 3, -3)
     frame:SetBackdrop({
     edgeFile = cfg.glow, edgeSize = 3,
-    bgFile = [=[Interface\ChatFrame\ChatFrameBackground]=],
+    bgFile = 'Interface\\ChatFrame\\ChatFrameBackground',
     insets = {left = 3, right = 3, top = 3, bottom = 3}})
     frame:SetBackdropColor(0, 0, 0)
     frame:SetBackdropBorderColor(0, 0, 0)
